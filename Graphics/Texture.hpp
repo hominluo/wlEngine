@@ -1,8 +1,8 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include <SDL.h>
+#include <SDL_image.h>
 #include <string>
 
 namespace wlEngine {
@@ -28,7 +28,9 @@ namespace wlEngine {
         int getWidth();
         int getHeight();
 
-        SDL_Texture* getTexture() {return mTexture;}
+        //SDL_Texture* getTexture() {return mTexture;}
+        
+        operator SDL_Texture* () const {return mTexture;}
     private:
         SDL_Texture* mTexture;
 

@@ -1,16 +1,5 @@
-#include "Graphics/GraphicsManager.hpp"
-
-namespace wlEngine {
-    class wlEngine {
-        public:
-            static wlEngine* getwlEngine();
-            ~wlEngine();
-
-        private:
-            static wlEngine* engine;
-
-            wlEngine();
-            void initializeManagers();
-
-    };
-}
+#ifndef WLENGINE_H
+#define WLENGINE_H
+#include "EngineManager.hpp"
+#include "Graphics/Texture.hpp"
+#endif
