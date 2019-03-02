@@ -13,17 +13,20 @@
 namespace wlEngine {
     class GraphicsManager {
     public:
-        GraphicsManager();
         ~GraphicsManager();
 
+        /* w: window width
+         * h: window height*/
         static void initialize(const std::string& winTitle, int w, int h);
         static GraphicsManager* getGraphicsManager();
         
-        SDL_Renderer* getRenderer();
+        SDL_Renderer* createRenderer();
+
     private:
+        GraphicsManager();
+
         static GraphicsManager* graphicsManager;
 
-        SDL_Renderer* mWindowRenderer;
         SDL_Window* mWindow;
     };
 }

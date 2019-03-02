@@ -57,9 +57,22 @@ include CMakeFiles/wlEngine.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/wlEngine.dir/flags.make
 
+CMakeFiles/wlEngine.dir/Math/Vector3.cpp.o: CMakeFiles/wlEngine.dir/flags.make
+CMakeFiles/wlEngine.dir/Math/Vector3.cpp.o: ../Math/Vector3.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/wlEngine.dir/Math/Vector3.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/wlEngine.dir/Math/Vector3.cpp.o -c /Users/jiehongjiang/Desktop/under_sky/wlEngine/Math/Vector3.cpp
+
+CMakeFiles/wlEngine.dir/Math/Vector3.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/wlEngine.dir/Math/Vector3.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jiehongjiang/Desktop/under_sky/wlEngine/Math/Vector3.cpp > CMakeFiles/wlEngine.dir/Math/Vector3.cpp.i
+
+CMakeFiles/wlEngine.dir/Math/Vector3.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/wlEngine.dir/Math/Vector3.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jiehongjiang/Desktop/under_sky/wlEngine/Math/Vector3.cpp -o CMakeFiles/wlEngine.dir/Math/Vector3.cpp.s
+
 CMakeFiles/wlEngine.dir/GameObject/GameObject.cpp.o: CMakeFiles/wlEngine.dir/flags.make
 CMakeFiles/wlEngine.dir/GameObject/GameObject.cpp.o: ../GameObject/GameObject.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/wlEngine.dir/GameObject/GameObject.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/wlEngine.dir/GameObject/GameObject.cpp.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/wlEngine.dir/GameObject/GameObject.cpp.o -c /Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/GameObject.cpp
 
 CMakeFiles/wlEngine.dir/GameObject/GameObject.cpp.i: cmake_force
@@ -70,9 +83,35 @@ CMakeFiles/wlEngine.dir/GameObject/GameObject.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/wlEngine.dir/GameObject/GameObject.cpp.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/GameObject.cpp -o CMakeFiles/wlEngine.dir/GameObject/GameObject.cpp.s
 
+CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.o: CMakeFiles/wlEngine.dir/flags.make
+CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.o: ../GameObject/Scene.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.o -c /Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Scene.cpp
+
+CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Scene.cpp > CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.i
+
+CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Scene.cpp -o CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.s
+
+CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.o: CMakeFiles/wlEngine.dir/flags.make
+CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.o: ../GameObject/Transform.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.o -c /Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Transform.cpp
+
+CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Transform.cpp > CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.i
+
+CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Transform.cpp -o CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.s
+
 CMakeFiles/wlEngine.dir/Graphics/GraphicsManager.cpp.o: CMakeFiles/wlEngine.dir/flags.make
 CMakeFiles/wlEngine.dir/Graphics/GraphicsManager.cpp.o: ../Graphics/GraphicsManager.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/wlEngine.dir/Graphics/GraphicsManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/wlEngine.dir/Graphics/GraphicsManager.cpp.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/wlEngine.dir/Graphics/GraphicsManager.cpp.o -c /Users/jiehongjiang/Desktop/under_sky/wlEngine/Graphics/GraphicsManager.cpp
 
 CMakeFiles/wlEngine.dir/Graphics/GraphicsManager.cpp.i: cmake_force
@@ -85,7 +124,7 @@ CMakeFiles/wlEngine.dir/Graphics/GraphicsManager.cpp.s: cmake_force
 
 CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.o: CMakeFiles/wlEngine.dir/flags.make
 CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.o: ../Graphics/Texture.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.o -c /Users/jiehongjiang/Desktop/under_sky/wlEngine/Graphics/Texture.cpp
 
 CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.i: cmake_force
@@ -96,21 +135,42 @@ CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jiehongjiang/Desktop/under_sky/wlEngine/Graphics/Texture.cpp -o CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.s
 
+CMakeFiles/wlEngine.dir/EngineManager.cpp.o: CMakeFiles/wlEngine.dir/flags.make
+CMakeFiles/wlEngine.dir/EngineManager.cpp.o: ../EngineManager.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/wlEngine.dir/EngineManager.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/wlEngine.dir/EngineManager.cpp.o -c /Users/jiehongjiang/Desktop/under_sky/wlEngine/EngineManager.cpp
+
+CMakeFiles/wlEngine.dir/EngineManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/wlEngine.dir/EngineManager.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/jiehongjiang/Desktop/under_sky/wlEngine/EngineManager.cpp > CMakeFiles/wlEngine.dir/EngineManager.cpp.i
+
+CMakeFiles/wlEngine.dir/EngineManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/wlEngine.dir/EngineManager.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/jiehongjiang/Desktop/under_sky/wlEngine/EngineManager.cpp -o CMakeFiles/wlEngine.dir/EngineManager.cpp.s
+
 # Object files for target wlEngine
 wlEngine_OBJECTS = \
+"CMakeFiles/wlEngine.dir/Math/Vector3.cpp.o" \
 "CMakeFiles/wlEngine.dir/GameObject/GameObject.cpp.o" \
+"CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.o" \
+"CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.o" \
 "CMakeFiles/wlEngine.dir/Graphics/GraphicsManager.cpp.o" \
-"CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.o"
+"CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.o" \
+"CMakeFiles/wlEngine.dir/EngineManager.cpp.o"
 
 # External object files for target wlEngine
 wlEngine_EXTERNAL_OBJECTS =
 
+libwlEngine.dylib: CMakeFiles/wlEngine.dir/Math/Vector3.cpp.o
 libwlEngine.dylib: CMakeFiles/wlEngine.dir/GameObject/GameObject.cpp.o
+libwlEngine.dylib: CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.o
+libwlEngine.dylib: CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.o
 libwlEngine.dylib: CMakeFiles/wlEngine.dir/Graphics/GraphicsManager.cpp.o
 libwlEngine.dylib: CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.o
+libwlEngine.dylib: CMakeFiles/wlEngine.dir/EngineManager.cpp.o
 libwlEngine.dylib: CMakeFiles/wlEngine.dir/build.make
 libwlEngine.dylib: CMakeFiles/wlEngine.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX shared library libwlEngine.dylib"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX shared library libwlEngine.dylib"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/wlEngine.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

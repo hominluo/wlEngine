@@ -17,6 +17,7 @@ file(GLOB source_file
     "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Memory/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
 add_library(wlEngine SHARED

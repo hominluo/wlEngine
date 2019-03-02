@@ -4,9 +4,13 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/Users/jiehongjiang/Desktop/under_sky/wlEngine/EngineManager.cpp" "/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles/wlEngine.dir/EngineManager.cpp.o"
   "/Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/GameObject.cpp" "/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles/wlEngine.dir/GameObject/GameObject.cpp.o"
+  "/Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Scene.cpp" "/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.o"
+  "/Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Transform.cpp" "/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.o"
   "/Users/jiehongjiang/Desktop/under_sky/wlEngine/Graphics/GraphicsManager.cpp" "/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles/wlEngine.dir/Graphics/GraphicsManager.cpp.o"
   "/Users/jiehongjiang/Desktop/under_sky/wlEngine/Graphics/Texture.cpp" "/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.o"
+  "/Users/jiehongjiang/Desktop/under_sky/wlEngine/Math/Vector3.cpp" "/Users/jiehongjiang/Desktop/under_sky/wlEngine/build/CMakeFiles/wlEngine.dir/Math/Vector3.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
 

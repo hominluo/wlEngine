@@ -1,3 +1,5 @@
+#ifndef GAMEOBJECT_H
+#define GAMEOBJECT_H
 #include <set>
 
 #include "Transform.hpp"
@@ -7,6 +9,8 @@ namespace wlEngine {
     class GameObject {
     public:
         bool moveToParent(GameObject*);
+
+        void update();
     private:
         uint tag; 
 
@@ -18,3 +22,4 @@ namespace wlEngine {
         void render();
     };
 }
+#endif

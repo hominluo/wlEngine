@@ -123,6 +123,33 @@ wlEngine/fast:
 	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/build
 .PHONY : wlEngine/fast
 
+EngineManager.o: EngineManager.cpp.o
+
+.PHONY : EngineManager.o
+
+# target to build an object file
+EngineManager.cpp.o:
+	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/EngineManager.cpp.o
+.PHONY : EngineManager.cpp.o
+
+EngineManager.i: EngineManager.cpp.i
+
+.PHONY : EngineManager.i
+
+# target to preprocess a source file
+EngineManager.cpp.i:
+	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/EngineManager.cpp.i
+.PHONY : EngineManager.cpp.i
+
+EngineManager.s: EngineManager.cpp.s
+
+.PHONY : EngineManager.s
+
+# target to generate assembly for a file
+EngineManager.cpp.s:
+	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/EngineManager.cpp.s
+.PHONY : EngineManager.cpp.s
+
 GameObject/GameObject.o: GameObject/GameObject.cpp.o
 
 .PHONY : GameObject/GameObject.o
@@ -149,6 +176,60 @@ GameObject/GameObject.s: GameObject/GameObject.cpp.s
 GameObject/GameObject.cpp.s:
 	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/GameObject/GameObject.cpp.s
 .PHONY : GameObject/GameObject.cpp.s
+
+GameObject/Scene.o: GameObject/Scene.cpp.o
+
+.PHONY : GameObject/Scene.o
+
+# target to build an object file
+GameObject/Scene.cpp.o:
+	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.o
+.PHONY : GameObject/Scene.cpp.o
+
+GameObject/Scene.i: GameObject/Scene.cpp.i
+
+.PHONY : GameObject/Scene.i
+
+# target to preprocess a source file
+GameObject/Scene.cpp.i:
+	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.i
+.PHONY : GameObject/Scene.cpp.i
+
+GameObject/Scene.s: GameObject/Scene.cpp.s
+
+.PHONY : GameObject/Scene.s
+
+# target to generate assembly for a file
+GameObject/Scene.cpp.s:
+	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/GameObject/Scene.cpp.s
+.PHONY : GameObject/Scene.cpp.s
+
+GameObject/Transform.o: GameObject/Transform.cpp.o
+
+.PHONY : GameObject/Transform.o
+
+# target to build an object file
+GameObject/Transform.cpp.o:
+	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.o
+.PHONY : GameObject/Transform.cpp.o
+
+GameObject/Transform.i: GameObject/Transform.cpp.i
+
+.PHONY : GameObject/Transform.i
+
+# target to preprocess a source file
+GameObject/Transform.cpp.i:
+	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.i
+.PHONY : GameObject/Transform.cpp.i
+
+GameObject/Transform.s: GameObject/Transform.cpp.s
+
+.PHONY : GameObject/Transform.s
+
+# target to generate assembly for a file
+GameObject/Transform.cpp.s:
+	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/GameObject/Transform.cpp.s
+.PHONY : GameObject/Transform.cpp.s
 
 Graphics/GraphicsManager.o: Graphics/GraphicsManager.cpp.o
 
@@ -204,6 +285,33 @@ Graphics/Texture.cpp.s:
 	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/Graphics/Texture.cpp.s
 .PHONY : Graphics/Texture.cpp.s
 
+Math/Vector3.o: Math/Vector3.cpp.o
+
+.PHONY : Math/Vector3.o
+
+# target to build an object file
+Math/Vector3.cpp.o:
+	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/Math/Vector3.cpp.o
+.PHONY : Math/Vector3.cpp.o
+
+Math/Vector3.i: Math/Vector3.cpp.i
+
+.PHONY : Math/Vector3.i
+
+# target to preprocess a source file
+Math/Vector3.cpp.i:
+	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/Math/Vector3.cpp.i
+.PHONY : Math/Vector3.cpp.i
+
+Math/Vector3.s: Math/Vector3.cpp.s
+
+.PHONY : Math/Vector3.s
+
+# target to generate assembly for a file
+Math/Vector3.cpp.s:
+	$(MAKE) -f CMakeFiles/wlEngine.dir/build.make CMakeFiles/wlEngine.dir/Math/Vector3.cpp.s
+.PHONY : Math/Vector3.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -213,15 +321,27 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... wlEngine"
+	@echo "... EngineManager.o"
+	@echo "... EngineManager.i"
+	@echo "... EngineManager.s"
 	@echo "... GameObject/GameObject.o"
 	@echo "... GameObject/GameObject.i"
 	@echo "... GameObject/GameObject.s"
+	@echo "... GameObject/Scene.o"
+	@echo "... GameObject/Scene.i"
+	@echo "... GameObject/Scene.s"
+	@echo "... GameObject/Transform.o"
+	@echo "... GameObject/Transform.i"
+	@echo "... GameObject/Transform.s"
 	@echo "... Graphics/GraphicsManager.o"
 	@echo "... Graphics/GraphicsManager.i"
 	@echo "... Graphics/GraphicsManager.s"
 	@echo "... Graphics/Texture.o"
 	@echo "... Graphics/Texture.i"
 	@echo "... Graphics/Texture.s"
+	@echo "... Math/Vector3.o"
+	@echo "... Math/Vector3.i"
+	@echo "... Math/Vector3.s"
 .PHONY : help
 
 

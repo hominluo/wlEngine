@@ -1,9 +1,14 @@
 #include "GameObject.hpp"
 
 namespace wlEngine {
-    bool GameObject::moveToParent(GameObject*) {
+    void GameObject::update() {
+        render();
+    }
+    bool GameObject::moveToParent(GameObject* parent) {
+        transform->moveToParent(parent->transform);
+
         for (auto iter = childs.begin(); iter != childs.end(); iter++) {
-            childs.rend();
+            (*iter)->render();
         }
 
         render();

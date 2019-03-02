@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "Texture.hpp"
-#include "GraphicsManager.hpp"
+#include "../EngineManager.hpp"
 
 namespace wlEngine {
     Texture::Texture(): mTexture(nullptr), mWidth(0), mHeight(0) {
@@ -24,8 +24,8 @@ namespace wlEngine {
         }
 
         //Render to screen
-        auto graphicsManager = GraphicsManager::getGraphicsManager();
-        SDL_RenderCopy( graphicsManager->getRenderer(), mTexture, clip, &renderQuad );
+        auto engine = EngineManager::getwlEngine();
+        SDL_RenderCopy( engine->getRenderer(), mTexture, clip, &renderQuad );
     }
 
     bool Texture::loadFromFile(std::string path) {
@@ -39,8 +39,8 @@ namespace wlEngine {
             return false;
         }
 
-        GraphicsManager* gm = GraphicsManager::getGraphicsManager();
-        newTexture = SDL_CreateTextureFromSurface(gm->getRenderer(), loadedSurface);
+        auto engine = EngineManager::getwlEngine();
+        newTexture = SDL_CreateTextureFromSurface(engine->getRenderer(), loadedSurface);
         if (!newTexture) {
             std::cerr << "unable to create texture from surface: " << SDL_GetError() << std::endl;
             return false;

@@ -6,8 +6,6 @@
 
 #IncludeRegexTransform: 
 
-../Math/Vector3.hpp
-
 ../SDL2/include/SDL.h
 SDL_main.h
 ../SDL2/include/SDL_main.h
@@ -612,25 +610,53 @@ close_code.h
 
 ../SDL2/include/close_code.h
 
-../private_include/Math.hpp
-../Math/Vector3.hpp
-../Math/Vector3.hpp
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/EngineManager.cpp
+EngineManager.hpp
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/EngineManager.hpp
+
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/EngineManager.hpp
+Graphics/GraphicsManager.hpp
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/Graphics/GraphicsManager.hpp
+GameObject/GameObject.hpp
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/GameObject.hpp
+GameObject/Scene.hpp
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Scene.hpp
 
 /Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/GameObject.cpp
 GameObject.hpp
 /Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/GameObject.hpp
 
 /Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/GameObject.hpp
-vector
+set
 -
 Transform.hpp
 /Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Transform.hpp
 ../Graphics/Texture.hpp
 /Users/jiehongjiang/Desktop/under_sky/wlEngine/Graphics/Texture.hpp
 
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Scene.cpp
+Scene.hpp
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Scene.hpp
+../Graphics/GraphicsManager.hpp
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/Graphics/GraphicsManager.hpp
+
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Scene.hpp
+set
+-
+SDL.h
+-
+../GameObject/GameObject.hpp
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/GameObject.hpp
+../Graphics/Texture.hpp
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/Graphics/Texture.hpp
+
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Transform.cpp
+Transform.hpp
 /Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Transform.hpp
-Math.hpp
-/Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Math.hpp
+
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/GameObject/Transform.hpp
+../Math/Vector3.hpp
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/Math/Vector3.hpp
 
 /Users/jiehongjiang/Desktop/under_sky/wlEngine/Graphics/GraphicsManager.cpp
 iostream
@@ -651,8 +677,8 @@ iostream
 -
 Texture.hpp
 /Users/jiehongjiang/Desktop/under_sky/wlEngine/Graphics/Texture.hpp
-GraphicsManager.hpp
-/Users/jiehongjiang/Desktop/under_sky/wlEngine/Graphics/GraphicsManager.hpp
+../EngineManager.hpp
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/EngineManager.hpp
 
 /Users/jiehongjiang/Desktop/under_sky/wlEngine/Graphics/Texture.hpp
 SDL.h
@@ -661,4 +687,10 @@ SDL_image.h
 -
 string
 -
+
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/Math/Vector3.cpp
+Vector3.hpp
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/Math/Vector3.hpp
+
+/Users/jiehongjiang/Desktop/under_sky/wlEngine/Math/Vector3.hpp
 

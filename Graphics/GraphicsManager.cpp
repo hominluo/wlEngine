@@ -34,20 +34,10 @@ namespace wlEngine {
             exit(-1);
         }
 
-        graphicsManager->mWindowRenderer = SDL_CreateRenderer(graphicsManager->mWindow, -1 , SDL_RENDERER_ACCELERATED);
-        if (!graphicsManager->mWindowRenderer) {
-            std::cerr << "SDL could not initialize window renderer: " << SDL_GetError() << std::endl;
-            exit(-1);
-        }
-
-        SDL_SetRenderDrawColor(graphicsManager->mWindowRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
         if (!IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG)) {
             std::cerr << "SDL_image could not initialize: " << SDL_GetError() << std::endl;
             exit(-1);
         }
-
-
     }
 
     GraphicsManager* GraphicsManager::getGraphicsManager() {
@@ -57,7 +47,17 @@ namespace wlEngine {
         return graphicsManager;
     }
 
-    SDL_Renderer* GraphicsManager::getRenderer() {
-        return mWindowRenderer;
+    SDL_Renderer* GraphicsManager::createRenderer() {
+        auto renderer = SDL_CreateRenderer(mWindow, -1 , SDL_RENDERER_ACCELERATED);
+
+        if (!renderer) {
+            std::cerr << "SDL could not initialize window renderer: " << SDL_GetError() << std::endl;
+            exit(-1);
+        }
+
+        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+        return renderer;
     }
+
+
 }
