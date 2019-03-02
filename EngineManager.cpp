@@ -27,6 +27,7 @@ namespace wlEngine {
 
     void EngineManager::update() {
         SDL_RenderClear(currentScene->sceneRenderer);
+        GameObject();
         currentScene->update();
         SDL_RenderPresent(currentScene->sceneRenderer);
     }

@@ -1,6 +1,5 @@
 2019.03.01
 TO_DO: 
 stack allocator 
-Each scene can have one render
-
-    
+Each scene can have one render [D]
+More on GameObject

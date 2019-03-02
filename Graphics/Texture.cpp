@@ -56,7 +56,8 @@ namespace wlEngine {
     }
 
     void Texture::free() {
-        SDL_DestroyTexture(mTexture);
+        if (mTexture) SDL_DestroyTexture(mTexture);
+        mTexture = nullptr;
     }
 
     int Texture::getWidth() {

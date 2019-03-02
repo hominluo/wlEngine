@@ -8,16 +8,22 @@
 namespace wlEngine {
     class GameObject {
     public:
+        GameObject();
+
         bool moveToParent(GameObject*);
 
         void update();
+        void loadTexture(const char* path);
+        void setPosition(float x, float y, float z);
+        void setLocalPosition(float x, float y, float z);
     private:
         uint tag; 
 
         Texture* texture;
         Transform* transform;
 
-        std::set<GameObject*> childs;
+        GameObject* parent;
+        std::set<GameObject*> children;
 
         void render();
     };

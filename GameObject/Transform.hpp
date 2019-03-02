@@ -11,6 +11,9 @@ namespace wlEngine {
         
         Vector3<float> getPosition(); // this function should do some calculation about 2.5 D when z has some value
         Vector3<float> getLocalPosition();
+
+        void setLocalPosition(float x, float y, float z);
+        void setPosition(float x, float y, float z);
     private:
 
         void moveToParent(Transform*);
