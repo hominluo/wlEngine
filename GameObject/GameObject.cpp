@@ -6,39 +6,41 @@ namespace wlEngine {
     }
 
     void GameObject::update() {
+		for (auto iter = children.begin(); iter != children.end(); iter++) {
+			(*iter)->update();
+		}
+	}
 
-        render();
-    }
-    bool GameObject::moveToParent(GameObject* parent) {
-        this->parent = parent;
-        transform->moveToParent(parent->transform);
+	bool GameObject::moveToParent(GameObject* parent) {
+		this->parent = parent;
+		transform->moveToParent(parent->transform);
 
-        parent->children.insert(this);
-        return true;
-    }
+		parent->children.insert(this);
+		return true;
+	}
 
-    void GameObject::render() {
-        if (!transform || !texture) return;
-        
-        const Vector3<float> position = transform->getPosition();
-        texture->render(position.x, position.y);
+	void GameObject::render() {
+		if (!transform || !texture) return;
 
-        for (auto iter = children.begin(); iter != children.end(); iter++) {
-            (*iter)->render();
-        }
-    }
+		const Vector3<float> position = transform->getPosition();
+		texture->render(position.x, position.y);
 
-    void GameObject::loadTexture(const char* path) {
-        if (!texture) texture = new Texture();
+		for (auto iter = children.begin(); iter != children.end(); iter++) {
+			(*iter)->render();
+		}
+	}
 
-        texture->loadFromFile(path);
-    }
+	void GameObject::loadTexture(const char* path) {
+		if (!texture) texture = new Texture();
 
-    void GameObject::setPosition(float x, float y, float z){
-        transform->setPosition(x, y, z);
-    }
+		texture->loadFromFile(path);
+	}
 
-    void GameObject::setLocalPosition(float x, float y, float z) {
-        transform->setLocalPosition(x, y, z);
-    }
+	void GameObject::setPosition(float x, float y, float z){
+		transform->setPosition(x, y, z);
+	}
+
+	void GameObject::setLocalPosition(float x, float y, float z) {
+		transform->setLocalPosition(x, y, z);
+	}
 }

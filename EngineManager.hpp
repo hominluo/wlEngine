@@ -9,10 +9,9 @@ namespace wlEngine {
         public:
             static EngineManager* getwlEngine();
 
-            /* update the whole game*/
-            void update();
 
             void setScene(Scene*);
+            void loop();
             
             SDL_Renderer* getRenderer();
             ~EngineManager();
@@ -24,6 +23,10 @@ namespace wlEngine {
             GraphicsManager* graphicsManager;
 
             Scene* currentScene; 
+
+            /* update and render the whole current scene*/
+            void update();
+            void render();
 
             void initializeManagers();
     };

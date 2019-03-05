@@ -12,7 +12,6 @@ namespace wlEngine {
 
         bool moveToParent(GameObject*);
 
-        void update();
         void loadTexture(const char* path);
         void setPosition(float x, float y, float z);
         void setLocalPosition(float x, float y, float z);
@@ -25,7 +24,10 @@ namespace wlEngine {
         GameObject* parent;
         std::set<GameObject*> children;
 
+        void update();
         void render();
+
+        friend class Scene;
     };
 }
 #endif

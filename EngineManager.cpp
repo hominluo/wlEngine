@@ -26,10 +26,18 @@ namespace wlEngine {
     }
 
     void EngineManager::update() {
-        SDL_RenderClear(currentScene->sceneRenderer);
-        GameObject();
         currentScene->update();
+    }
+
+    void EngineManager::render() {
+        SDL_RenderClear(currentScene->sceneRenderer);
+        currentScene->render();
         SDL_RenderPresent(currentScene->sceneRenderer);
+    }
+
+    void EngineManager::loop() {
+        update();
+        render();
     }
 
     SDL_Renderer* EngineManager::getRenderer() {

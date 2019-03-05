@@ -4,11 +4,11 @@
 
 namespace wlEngine {
     void Scene::update() {
-        render();
 
         for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++) {
             (*iter)->update();
         }
+
     }
 
     void Scene::addGameObject(GameObject* gameObject){
@@ -17,6 +17,10 @@ namespace wlEngine {
 
     void Scene::render() {
         texture->render(0, 0);
+
+        for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++) {
+            (*iter)->render();
+        }
     }
 
     void Scene::setRendererColor(const Uint8& r, const Uint8& g, const Uint8& b, const Uint8& a) {

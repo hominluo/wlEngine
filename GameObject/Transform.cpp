@@ -3,6 +3,7 @@
 namespace wlEngine {
     Transform::Transform(float x, float y, float z) {
         position = Vector3<float>{x,y,z};
+        localPosition = Vector3<float>{0, 0, 0};
     }
 
     Vector3<float> Transform::getPosition() {
