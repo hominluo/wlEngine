@@ -4,14 +4,18 @@ namespace wlEngine {
     EngineManager* EngineManager::engine = nullptr;
 
     EngineManager::EngineManager(){
+        quit = false;
         initializeManagers();
+
+        eventManager->registerEvent(Create_Event(this, &EngineManager::setQuit));
     };
 
     EngineManager::~EngineManager(){};
 
     void EngineManager::initializeManagers() {
-        GraphicsManager::initialize("Under Sky", 800, 600);
-        graphicsManager = GraphicsManager::getGraphicsManager();
+        graphicsManager = GraphicsManager::initialize("Under Sky", 800, 600);
+
+        eventManager = EventManager::initialize();
     }
 
     EngineManager* EngineManager::getwlEngine() {
@@ -25,6 +29,9 @@ namespace wlEngine {
         currentScene = scene;
     }
 
+    void EngineManager::pollEvent() {
+        eventManager->pollEvent();
+    }
     void EngineManager::update() {
         currentScene->update();
     }
@@ -36,12 +43,33 @@ namespace wlEngine {
     }
 
     void EngineManager::loop() {
-        update();
-        render();
+/*this design looks wrong, I am not sure. 
+ * Think about character controling. 
+ * the movement is updated before the call of update */
+        while(!quit) {
+            pollEvent();
+            update();
+            render();
+        }
     }
 
     SDL_Renderer* EngineManager::getRenderer() {
         return currentScene->sceneRenderer;
+    }
+
+    void EngineManager::registerEvent(const Event& e) {
+        eventManager->registerEvent(e);
+    }
+
+    void EngineManager::unregisterEvent(const Event& e) {
+        eventManager->unregisterEvent(e);
+    }
+
+
+    void EngineManager::setQuit(const EngineEvent& e) {
+        if (e.type == SDL_QUIT) {
+            quit = true;
+        }
     }
 }
 

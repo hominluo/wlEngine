@@ -1,5 +1,10 @@
 2019.03.01
-TO_DO: 
 stack allocator 
 Each scene can have one render [D]
 More on GameObject
+
+2019.03.05
+1. sure if color keying should be added or not
+2. seems like if the texture isn't updated, then we don't have to call texture.render(warning: think more about the rendering sequence)
+3. designing the spritesheet and animation system
+4. event function has to be binded

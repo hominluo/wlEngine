@@ -11,7 +11,7 @@ namespace wlEngine {
 
     GraphicsManager::~GraphicsManager() {}
 
-    void GraphicsManager::initialize(const std::string& winTitle, int w, int h) {
+    GraphicsManager* GraphicsManager::initialize(const std::string& winTitle, int w, int h) {
 #ifdef DEBUG
         assert(graphicsManager == nullptr);
 #endif
@@ -38,6 +38,8 @@ namespace wlEngine {
             std::cerr << "SDL_image could not initialize: " << SDL_GetError() << std::endl;
             exit(-1);
         }
+
+        return graphicsManager;
     }
 
     GraphicsManager* GraphicsManager::getGraphicsManager() {
@@ -60,4 +62,7 @@ namespace wlEngine {
     }
 
 
+        void GraphicsManager::destroyRenderer(SDL_Renderer* r) {
+            SDL_DestroyRenderer(r);
+        }
 }

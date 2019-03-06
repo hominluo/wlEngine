@@ -15,7 +15,7 @@ namespace wlEngine {
         void loadTexture(const char* path);
         void setPosition(float x, float y, float z);
         void setLocalPosition(float x, float y, float z);
-    private:
+    protected:
         uint tag; 
 
         Texture* texture;

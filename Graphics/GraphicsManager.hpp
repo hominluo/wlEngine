@@ -17,10 +17,11 @@ namespace wlEngine {
 
         /* w: window width
          * h: window height*/
-        static void initialize(const std::string& winTitle, int w, int h);
+        static GraphicsManager* initialize(const std::string& winTitle, int w, int h);
         static GraphicsManager* getGraphicsManager();
         
         SDL_Renderer* createRenderer();
+        void destroyRenderer(SDL_Renderer*);
 
     private:
         GraphicsManager();

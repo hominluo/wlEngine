@@ -17,7 +17,7 @@ namespace wlEngine {
 
             void setRendererColor(const Uint8&, const Uint8&, const Uint8&, const Uint8&);
         private:
-            Texture* texture;
+            Texture texture;
             SDL_Renderer* sceneRenderer;
             std::set<GameObject*> gameObjects;
 

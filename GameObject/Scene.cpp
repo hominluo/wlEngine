@@ -16,7 +16,7 @@ namespace wlEngine {
     }
 
     void Scene::render() {
-        texture->render(0, 0);
+        texture.render(0, 0);
 
         for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++) {
             (*iter)->render();
@@ -28,7 +28,7 @@ namespace wlEngine {
     }
 
     void Scene::loadTexture(const char* path) {
-        texture->loadFromFile(path);
+        texture.loadFromFile(path);
     }
 
     Scene::Scene() {
@@ -37,6 +37,6 @@ namespace wlEngine {
     }
 
     Scene::~Scene() {
-
+        GraphicsManager::getGraphicsManager()->destroyRenderer(sceneRenderer);
     }
 }
