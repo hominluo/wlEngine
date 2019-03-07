@@ -57,6 +57,11 @@ namespace wlEngine {
         return currentScene->sceneRenderer;
     }
 
+    /*Event*/
+    bool EngineManager::isKeyPressed(const uint& key) {
+        return eventManager->isKeyPressed(key);
+    }
+    
     void EngineManager::registerEvent(const Event& e) {
         eventManager->registerEvent(e);
     }

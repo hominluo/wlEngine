@@ -12,8 +12,12 @@ namespace wlEngine {
 
 
             void setScene(Scene*);
+
+            /*Event*/
             void registerEvent(const Event&);
             void unregisterEvent(const Event&);
+            bool isKeyPressed(const uint& key);
+            
             void loop();
             
             SDL_Renderer* getRenderer();

@@ -22,6 +22,11 @@ namespace wlEngine {
         handlers.erase(e);
     }
 
+
+    bool EventManager::isKeyPressed(uint key) {
+        return SDL_GetKeyboardState(NULL)[key];
+    }
+
     EventManager* EventManager::initialize() {
         eventManager = new EventManager();
 

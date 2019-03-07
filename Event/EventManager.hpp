@@ -7,7 +7,10 @@
 
 //check this for key press event
 /*https://stackoverflow.com/questions/1252976/how-to-handle-multiple-keypresses-at-once-with-sdl*/
+/*and the bottom of this
+ * https://www.libsdl.org/release/SDL-1.2.15/docs/html/guideinputkeyboard.html*/
 namespace wlEngine {
+
     class EventManager {
     public:
         static EventManager* getEventManager();
@@ -16,6 +19,7 @@ namespace wlEngine {
         void registerEvent(Event e);
         void unregisterEvent(Event e);
 
+        bool isKeyPressed(uint);
         ~EventManager();
         void pollEvent();
     private:

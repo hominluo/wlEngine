@@ -24,8 +24,8 @@ namespace wlEngine {
         GameObject* parent;
         std::set<GameObject*> children;
 
-        void update();
-        void render();
+        virtual void update();
+        virtual void render();
 
         friend class Scene;
     };
