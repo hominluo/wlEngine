@@ -13,8 +13,9 @@ namespace wlEngine {
         bool moveToParent(GameObject*);
 
         void loadTexture(const char* path);
-        void setPosition(float x, float y, float z);
-        void setLocalPosition(float x, float y, float z);
+        void setPosition(const float& x,const float& y,const float& z);
+        void moveBy(const float& x, const float& y, const float& z);
+        void setLocalPosition(const float& x, const float& y, const float& z);
     protected:
         uint tag; 
 

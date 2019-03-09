@@ -36,11 +36,33 @@ namespace wlEngine {
 		texture->loadFromFile(path);
 	}
 
-	void GameObject::setPosition(float x, float y, float z){
+	void GameObject::setPosition(const float& x, const float& y,const float& z){
+        Vector3<float> moveVector{x,y,z};
+        moveVector = moveVector - transform->position;
+
 		transform->setPosition(x, y, z);
+
+        for (auto iter = children.begin(); iter != children.end(); iter++) {
+            (*iter)->moveBy(moveVector.x, moveVector.y, moveVector.z);
+        }
 	}
 
-	void GameObject::setLocalPosition(float x, float y, float z) {
+	void GameObject::setLocalPosition(const float& x, const float& y, const float& z) {
+        Vector3<float> moveVector{x,y,z};
+        moveVector = moveVector - transform->position;
+
 		transform->setLocalPosition(x, y, z);
-	}
+
+        for (auto iter = children.begin(); iter != children.end(); iter++) {
+            (*iter)->moveBy(moveVector.x, moveVector.y, moveVector.z);
+        }
+    }
+
+    void GameObject::moveBy(const float& x, const float& y, const float& z) {
+        transform->moveBy(x, y, z);
+
+        for (auto iter = children.begin(); iter != children.end(); iter++) {
+            (*iter)->moveBy(x, y, z);
+        }
+    }
 }

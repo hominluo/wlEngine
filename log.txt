@@ -1,3 +1,5 @@
+[BUG] = BUG, [Del] = Delete, [D] = Done
+
 2019.03.01
 stack allocator 
 Each scene can have one render [D]
@@ -5,6 +7,9 @@ More on GameObject
 
 2019.03.05
 1. sure if color keying should be added or not
-2. seems like if the texture isn't updated, then we don't have to call texture.render(warning: think more about the rendering sequence)
+2. [Del]seems like if the texture isn't updated, then we don't have to call texture.render(warning: think more about the rendering sequence)
 3. designing the spritesheet and animation system
-4. event function has to be binded
+4. [D] event function has to be binded
+
+2019.03.07
+1. [BUG] when moving a parent, its child is not moved

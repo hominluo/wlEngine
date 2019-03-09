@@ -18,16 +18,25 @@ namespace wlEngine {
         localPosition = position - parentTransform->position;
     }
 
-    void Transform::setPosition(float x, float y, float z) {
+    void Transform::setPosition(const float& x, const float& y, const float& z) {
         Vector3<float> temp{x,y,z};
         localPosition = localPosition + temp - position;
         position = temp;
     }
 
-    void Transform::setLocalPosition(float x, float y, float z) {
+    void Transform::setLocalPosition(const float& x, const float& y, const float& z) {
         Vector3<float> temp{x,y,z};
         position = position + temp - localPosition;
         localPosition = temp;
     }
-        
+    
+    void Transform::moveBy(const float& x, const float& y, const float& z) {
+        position.x += x;
+        position.y += y;
+        position.z += z;
+
+        localPosition.x += x;
+        localPosition.y += y;
+        localPosition.z += z;
+    }
 }
