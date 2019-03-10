@@ -50,6 +50,8 @@ namespace wlEngine {
             pollEvent();
             update();
             render();
+
+            Time::update();
         }
     }
 

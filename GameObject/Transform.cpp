@@ -6,6 +6,11 @@ namespace wlEngine {
         localPosition = Vector3<float>{0, 0, 0};
     }
 
+    Transform::Transform() {
+        position = {0, 0, 0};
+        localPosition = {0,0,0};
+    }
+
     Vector3<float> Transform::getPosition() {
         return position;
     }

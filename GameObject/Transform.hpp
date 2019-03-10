@@ -8,6 +8,7 @@ namespace wlEngine {
     class Transform {
     public:
         Transform(float x, float y, float z);
+        Transform();
         
         Vector3<float> getPosition(); // this function should do some calculation about 2.5 D when z has some value
         Vector3<float> getLocalPosition();

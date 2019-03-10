@@ -6,10 +6,15 @@ Each scene can have one render [D]
 More on GameObject
 
 2019.03.05
-1. sure if color keying should be added or not
-2. [Del]seems like if the texture isn't updated, then we don't have to call texture.render(warning: think more about the rendering sequence)
+1. not sure if color keying should be added or not
+2. [D]seems like if the texture isn't updated, then we don't have to call texture.render(warning: think more about the rendering sequence)
 3. designing the spritesheet and animation system
 4. [D] event function has to be binded
 
 2019.03.07
 1. [BUG] when moving a parent, its child is not moved
+
+2019.03.09
+1. Start to use nlohmann's json library, please include license in the future, https://github.com/nlohmann/json/releases
+2. Integrate Animation to GameObject
+3. Here is a post about physics delta time (https://gafferongames.com/post/fix_your_timestep/), for rendering I will use the delta time. Rather than the semi fixed time mentioned in the articles

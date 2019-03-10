@@ -4,12 +4,12 @@
 #include "Event/EventManager.hpp"
 #include "GameObject/GameObject.hpp"
 #include "GameObject/Scene.hpp"
+#include "Time.hpp"
 
 namespace wlEngine {
     class EngineManager {
         public:
             static EngineManager* getwlEngine();
-
 
             void setScene(Scene*);
 
