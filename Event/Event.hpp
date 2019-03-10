@@ -28,6 +28,6 @@ namespace wlEngine {
     };
 
     #define Create_Event(instance, callback) \
-    wlEngine::Event(std::bind(callback, instance, std::placeholders::_1), instance, "callback")
+    wlEngine::Event(std::bind(callback, instance, std::placeholders::_1), instance, #callback)
 }
 #endif

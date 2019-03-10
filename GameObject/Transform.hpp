@@ -6,6 +6,7 @@
 namespace wlEngine {
 
     class Transform {
+        //no rotaion and flip yet
     public:
         Transform(float x, float y, float z);
         Transform();

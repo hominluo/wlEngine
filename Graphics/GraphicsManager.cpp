@@ -39,6 +39,13 @@ namespace wlEngine {
             exit(-1);
         }
 
+        graphicsManager->mRenderer = SDL_CreateRenderer(graphicsManager->mWindow, -1 , SDL_RENDERER_ACCELERATED);
+        if (!graphicsManager->mRenderer) {
+            std::cerr << "SDL could not initialize window renderer: " << SDL_GetError() << std::endl;
+            exit(-1);
+        }
+
+        SDL_SetRenderDrawColor(graphicsManager->mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
         return graphicsManager;
     }
 
@@ -49,20 +56,11 @@ namespace wlEngine {
         return graphicsManager;
     }
 
-    SDL_Renderer* GraphicsManager::createRenderer() {
-        auto renderer = SDL_CreateRenderer(mWindow, -1 , SDL_RENDERER_ACCELERATED);
-
-        if (!renderer) {
-            std::cerr << "SDL could not initialize window renderer: " << SDL_GetError() << std::endl;
-            exit(-1);
-        }
-
-        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-        return renderer;
+    void GraphicsManager::destroyRenderer() {
+        SDL_DestroyRenderer(mRenderer);
     }
 
-
-        void GraphicsManager::destroyRenderer(SDL_Renderer* r) {
-            SDL_DestroyRenderer(r);
-        }
+    SDL_Renderer* GraphicsManager::getRenderer() {
+        return mRenderer;
+    }
 }

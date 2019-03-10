@@ -37,9 +37,9 @@ namespace wlEngine {
     }
 
     void EngineManager::render() {
-        SDL_RenderClear(currentScene->sceneRenderer);
+        SDL_RenderClear(graphicsManager->getRenderer());
         currentScene->render();
-        SDL_RenderPresent(currentScene->sceneRenderer);
+        SDL_RenderPresent(graphicsManager->getRenderer());
     }
 
     void EngineManager::loop() {
@@ -56,7 +56,7 @@ namespace wlEngine {
     }
 
     SDL_Renderer* EngineManager::getRenderer() {
-        return currentScene->sceneRenderer;
+        return graphicsManager->getRenderer();
     }
 
     /*Event*/

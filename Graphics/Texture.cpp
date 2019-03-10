@@ -12,7 +12,7 @@ namespace wlEngine {
         free();
     }
 
-    void Texture::render(int x, int y, SDL_Rect* clip) {
+    void Texture::render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip) {
           //Set rendering space and render to screen
         SDL_Rect renderQuad = { x, y, mWidth, mHeight };
 
@@ -25,7 +25,7 @@ namespace wlEngine {
 
         //Render to screen
         auto engine = EngineManager::getwlEngine();
-        SDL_RenderCopy( engine->getRenderer(), mTexture, clip, &renderQuad );
+        SDL_RenderCopyEx( engine->getRenderer(), mTexture, clip, &renderQuad, angle, center, flip);
     }
 
     bool Texture::loadFromFile(std::string path) {

@@ -21,13 +21,14 @@ namespace wlEngine {
         static GraphicsManager* getGraphicsManager();
         
         SDL_Renderer* createRenderer();
-        void destroyRenderer(SDL_Renderer*);
-
+        void destroyRenderer();
+        SDL_Renderer* getRenderer();
     private:
         GraphicsManager();
 
         static GraphicsManager* graphicsManager;
 
+        SDL_Renderer* mRenderer;
         SDL_Window* mWindow;
     };
 }
