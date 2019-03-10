@@ -8,8 +8,11 @@
 
 namespace wlEngine {
     /* Animation stores information that a gamobject will use to clip the sprint sheet*/
-
-    using Clips = std::vector<SDL_Rect>;
+    struct Clip {
+        const float duration;
+        SDL_Rect clip;
+    };
+    using Clips = std::vector<Clip>;
     using ClipsMap = std::map<std::string , Clips>;
     class Animation {
     public:
@@ -22,8 +25,7 @@ namespace wlEngine {
     private:
         Clips* currentAnimation;
         int currentFrame;
-        float speed;
-        double timeStamp;
+        float timeStamp;
         ClipsMap clips;
 
     };

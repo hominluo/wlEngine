@@ -8,6 +8,7 @@ namespace wlEngine {
     using json = nlohmann::json;
     Animation::Animation() {
         currentAnimation = nullptr;
+        timeStamp = 0;
     }
 
     void Animation::loadClips(const char* path) {
@@ -20,9 +21,16 @@ namespace wlEngine {
 
             auto clipsJson = json::parse(jsonStr)["clips"]; // key is the name of the animation
             for (json::iterator iter = clipsJson.begin(); iter != clipsJson.end(); iter++) {
-                std::vector<std::vector<int>> clipsData = iter.value();
-                for (auto dataIter = clipsData.begin(); dataIter != clipsData.end(); dataIter++) {
-                    clips[iter.key()].push_back(SDL_Rect{dataIter->at(0), dataIter->at(1), dataIter->at(2), dataIter->at(3)});
+                auto clipsData = iter.value();
+                std::vector<std::vector<int>> clipArr = clipsData["clip"];
+                std::vector<float> duration = clipsData["duration"];
+
+                for (size_t i = 0 ; i < clipArr.size(); i++) {
+                    clips[iter.key()].push_back(Clip{duration[i] , SDL_Rect{
+                            clipArr[i][0], 
+                            clipArr[i][1], 
+                            clipArr[i][2], 
+                            clipArr[i][3]}});
                 }
             }
         }
@@ -42,9 +50,13 @@ namespace wlEngine {
 
     SDL_Rect* Animation::getCurrentClip() {
         if (currentAnimation == nullptr) return nullptr;
-
-        currentFrame++;
-        currentFrame %= currentAnimation->size();
-        return &currentAnimation->at(currentFrame);// NEED TO CHANGE
+        
+        timeStamp += Time::deltaTime;
+        if (timeStamp >= currentAnimation->at(currentFrame).duration) { // 1 is the duration of this frame
+            timeStamp = 0;
+            currentFrame++;
+            currentFrame %= currentAnimation->size();
+        }
+        return &currentAnimation->at(currentFrame).clip;// NEED TO CHANGE
     }
 }
