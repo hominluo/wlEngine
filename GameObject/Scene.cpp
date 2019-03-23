@@ -20,19 +20,13 @@ namespace wlEngine {
     }
 
     void Scene::render() {
-
-        glm::vec3 cameraPos = camera->transform.getPosition();
-        auto sceneTextureClip = camera->getRenderingRect();
-        texture.render(0, 0, &sceneTextureClip);
+        glm::vec3 cameraPos = camera->getPosition();
 
         for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++) {
             (*iter)->render(cameraPos.x, cameraPos.y, cameraPos.z);
         }
     }
 
-    void Scene::loadTexture(const char* path) {
-        texture.loadFromFile(path);
-    }
 
     Scene::Scene() {
     }
@@ -42,7 +36,6 @@ namespace wlEngine {
 
 
     void Scene::setCamera(Camera* newCamera) {
-        newCamera->setBkgSize(texture.getWidth(), texture.getHeight());
         this->camera = newCamera;
     }
 }

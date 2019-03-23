@@ -23,7 +23,9 @@ namespace wlEngine {
         SDL_Renderer* createRenderer();
         void destroyRenderer();
         SDL_Renderer* getRenderer();
-        void getWindowSize(int& w, int& h);
+        int getWindowWidth();
+        int getWindowHeight();
+        
 
     private:
         GraphicsManager();

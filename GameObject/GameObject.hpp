@@ -19,6 +19,8 @@ namespace wlEngine {
         void setPosition(const float& x,const float& y,const float& z);
         void moveBy(const float& x, const float& y, const float& z);
         void setLocalPosition(const float& x, const float& y, const float& z);
+        glm::vec3 getPosition();
+        glm::vec3 getLocalPotion();
 
         //Animation
         void loadClips(const char* path);

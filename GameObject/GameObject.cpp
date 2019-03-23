@@ -78,8 +78,18 @@ namespace wlEngine {
 
     glm::vec3 GameObject::calculateRenderPosition(const glm::vec3& cameraPos) {
         glm::vec3 position = transform.getPosition();
+
+        position.y = -position.y;
+        position.y -= texture->getHeight();
         
         return position - cameraPos;
     }
+
+        glm::vec3 GameObject::getPosition() {
+            return transform.getPosition();
+        }
+        glm::vec3 GameObject::getLocalPotion() {
+            return transform.getLocalPosition();
+        }
 }
 

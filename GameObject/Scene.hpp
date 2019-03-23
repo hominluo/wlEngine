@@ -15,11 +15,9 @@ namespace wlEngine {
             ~Scene();
             void update();
             void addGameObject(GameObject*);
-            void loadTexture(const char*);
             void setCamera(Camera* camera);
 
         private:
-            Texture texture; // this texture should(can) be tiled based
             std::set<GameObject*> gameObjects;
             Camera* camera;
 

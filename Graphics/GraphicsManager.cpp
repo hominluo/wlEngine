@@ -64,7 +64,16 @@ namespace wlEngine {
         return mRenderer;
     }
 
-    void GraphicsManager::getWindowSize(int& w, int& h) {
+    int GraphicsManager::getWindowWidth() {
+        int w,h;
         SDL_GetWindowSize(mWindow, &w, &h);
+        return w;
     }
+
+    int GraphicsManager::getWindowHeight() {
+        int w,h;
+        SDL_GetWindowSize(mWindow, &w, &h);
+        return h;
+    }
+
 }
