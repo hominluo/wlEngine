@@ -2,8 +2,8 @@
 
 namespace wlEngine {
     Transform::Transform(float x, float y, float z) {
-        position = Vector3<float>{x,y,z};
-        localPosition = Vector3<float>{0, 0, 0};
+        position = glm::vec3{x,y,z};
+        localPosition = glm::vec3{0, 0, 0};
     }
 
     Transform::Transform() {
@@ -11,11 +11,11 @@ namespace wlEngine {
         localPosition = {0,0,0};
     }
 
-    Vector3<float> Transform::getPosition() {
+    glm::vec3 Transform::getPosition() {
         return position;
     }
     
-    Vector3<float> Transform::getLocalPosition() {
+    glm::vec3 Transform::getLocalPosition() {
         return localPosition;
     }
 
@@ -24,13 +24,13 @@ namespace wlEngine {
     }
 
     void Transform::setPosition(const float& x, const float& y, const float& z) {
-        Vector3<float> temp{x,y,z};
+        glm::vec3 temp{x,y,z};
         localPosition = localPosition + temp - position;
         position = temp;
     }
 
     void Transform::setLocalPosition(const float& x, const float& y, const float& z) {
-        Vector3<float> temp{x,y,z};
+        glm::vec3 temp{x,y,z};
         position = position + temp - localPosition;
         localPosition = temp;
     }

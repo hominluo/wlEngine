@@ -1,7 +1,7 @@
 #include "GameObject.hpp"
 
 namespace wlEngine {
-    GameObject::GameObject(): texture(nullptr) {
+    GameObject::GameObject(): texture(nullptr), animation(nullptr) {
 
     }
 
@@ -19,14 +19,16 @@ namespace wlEngine {
 		return true;
 	}
 
-	void GameObject::render() {
+	void GameObject::render(const int& x, const int& y, const int& z) {
 		if (!texture) return;
 
-		const Vector3<float> position = transform.getPosition();
-		texture->render(position.x, position.y, animation.getCurrentClip());
+        glm::vec3 position = calculateRenderPosition(glm::vec3{x, y, z});
+
+        auto currentClip = animation ? animation->getCurrentClip() : nullptr;
+		texture->render(position.x, position.y, currentClip);
 
 		for (auto iter = children.begin(); iter != children.end(); iter++) {
-			(*iter)->render();
+			(*iter)->render(x, y, z);
 		}
 	}
 
@@ -37,7 +39,7 @@ namespace wlEngine {
 	}
 
 	void GameObject::setPosition(const float& x, const float& y,const float& z){
-        Vector3<float> moveVector{x,y,z};
+        glm::vec3 moveVector{x,y,z};
         moveVector = moveVector - transform.position;
 
 		transform.setPosition(x, y, z);
@@ -48,7 +50,7 @@ namespace wlEngine {
 	}
 
 	void GameObject::setLocalPosition(const float& x, const float& y, const float& z) {
-        Vector3<float> moveVector{x,y,z};
+        glm::vec3 moveVector{x,y,z};
         moveVector = moveVector - transform.position;
 
 		transform.setLocalPosition(x, y, z);
@@ -66,10 +68,18 @@ namespace wlEngine {
         }
     }
     void GameObject::loadClips(const char* path) {
-        animation.loadClips(path);
+        if (!animation) animation = new Animation;
+        animation->loadClips(path);
     }
 
     void GameObject::playAnimation(const char* name) {
-        animation.playAnimation(name);
+        animation->playAnimation(name);
+    }
+
+    glm::vec3 GameObject::calculateRenderPosition(const glm::vec3& cameraPos) {
+        glm::vec3 position = transform.getPosition();
+        
+        return position - cameraPos;
     }
 }
+

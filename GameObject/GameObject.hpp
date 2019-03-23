@@ -1,11 +1,13 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 #include <set>
+#include <glm/vec3.hpp>
 
 #include "Transform.hpp"
 
 #include "../Graphics/Texture.hpp"
 #include "Animation.hpp"
+
 namespace wlEngine {
     class GameObject {
     public:
@@ -23,16 +25,18 @@ namespace wlEngine {
         void playAnimation(const char* name);
     protected:
         uint tag; 
+        Transform transform;
 
         Texture* texture;
-        Transform transform;
-        Animation animation;
+        Animation* animation;
 
         GameObject* parent;
         std::set<GameObject*> children;
 
         virtual void update();
-        virtual void render();
+        virtual void render(const int& x, const int& y, const int& z);
+        glm::vec3 calculateRenderPosition(const glm::vec3& cameraPos);
+
 
         friend class Scene;
     };

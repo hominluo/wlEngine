@@ -18,3 +18,7 @@ More on GameObject
 1. Start to use nlohmann's json library, please include license in the future, https://github.com/nlohmann/json/releases
 2. Integrate Animation to GameObject
 3. Here is a post about physics delta time (https://gafferongames.com/post/fix_your_timestep/), for rendering I will use the delta time. Rather than the semi fixed time mentioned in the articles
+
+2019.03.17
+1. please test camera
+2. [BUG] camera bug

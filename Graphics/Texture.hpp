@@ -22,7 +22,10 @@ namespace wlEngine {
 
         /* render the texture to screen
          * x, y is the position in the windows space
-         * clip is used for cliping from the texture image */
+         * clip is used for cliping from the texture image
+         * 
+         * NOTE: x, y should be in game world space, the functio should
+         * be in charge of changing the coordinate system */
         void render(int x, int y, SDL_Rect* clip = nullptr, double angle = 0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
         int getWidth();

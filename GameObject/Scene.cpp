@@ -4,7 +4,11 @@
 
 namespace wlEngine {
     void Scene::update() {
-
+        if (camera) { 
+            camera->update();
+        }
+        else assert( 0 && "No Camera Provided for Scene");
+        
         for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++) {
             (*iter)->update();
         }
@@ -16,10 +20,13 @@ namespace wlEngine {
     }
 
     void Scene::render() {
-        texture.render(0, 0);
+
+        glm::vec3 cameraPos = camera->transform.getPosition();
+        auto sceneTextureClip = camera->getRenderingRect();
+        texture.render(0, 0, &sceneTextureClip);
 
         for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++) {
-            (*iter)->render();
+            (*iter)->render(cameraPos.x, cameraPos.y, cameraPos.z);
         }
     }
 
@@ -31,5 +38,11 @@ namespace wlEngine {
     }
 
     Scene::~Scene() {
+    }
+
+
+    void Scene::setCamera(Camera* newCamera) {
+        newCamera->setBkgSize(texture.getWidth(), texture.getHeight());
+        this->camera = newCamera;
     }
 }
