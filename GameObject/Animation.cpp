@@ -1,5 +1,6 @@
+#include <json.hpp>
+
 #include "Animation.hpp"
-#include "../third_party/json.hpp"
 #include "../Time.hpp"
 
 #include <fstream>
