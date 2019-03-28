@@ -13,17 +13,12 @@ namespace wlEngine {
         Transform();
         
         glm::vec3 getPosition(); // TO_DO:this function should do some calculation about 2.5 D when z has some value
-        glm::vec3 getLocalPosition();
-
-        void setLocalPosition(const float& x, const float& y, const float& z);
 
         void setPosition(const float& x, const float& y, const float& z);
         void moveBy(const float& x, const float& y, const float& z);
     private:
 
-        void moveToParent(Transform*);
         glm::vec3 position;
-        glm::vec3 localPosition;
 
     friend class GameObject;
     };

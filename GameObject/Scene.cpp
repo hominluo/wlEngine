@@ -4,31 +4,33 @@
 
 namespace wlEngine {
     void Scene::update() {
+        mWorld->Step(FIXED_DELTA_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+
         if (camera) { 
             camera->update();
         }
         else assert( 0 && "No Camera Provided for Scene");
         
-        for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++) {
+        for (auto iter = mGameObjects.begin(); iter != mGameObjects.end(); iter++) {
             (*iter)->update();
         }
 
     }
 
     void Scene::addGameObject(GameObject* gameObject){
-        gameObjects.insert(gameObject);
+        mGameObjects.insert(gameObject);
     }
 
     void Scene::render() {
         glm::vec3 cameraPos = camera->getPosition();
 
-        for (auto iter = gameObjects.begin(); iter != gameObjects.end(); iter++) {
+        for (auto iter = mGameObjects.begin(); iter != mGameObjects.end(); iter++) {
             (*iter)->render(cameraPos.x, cameraPos.y, cameraPos.z);
         }
     }
 
 
-    Scene::Scene() {
+    Scene::Scene() : mWorld(new b2World(b2Vec2(0, 0))) {
     }
 
     Scene::~Scene() {
@@ -37,5 +39,9 @@ namespace wlEngine {
 
     void Scene::setCamera(Camera* newCamera) {
         this->camera = newCamera;
+    }
+
+    b2Body* Scene::createBody(b2BodyDef& def) {
+        return mWorld->CreateBody(&def);
     }
 }

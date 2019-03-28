@@ -2,11 +2,23 @@
 
 #include "../Time.hpp"
 namespace wlEngine {
-    GameObject::GameObject(): texture(nullptr), animation(nullptr) {
+    GameObject::GameObject(): texture(nullptr), animation(nullptr), parent(nullptr) {
 
     }
 
     void GameObject::update() {
+        //update transformation according to the object's b2Body and zMovement
+        auto position = transform.getPosition();
+        auto zMovement = mRigidBody.getZMovement();
+        position.z += zMovement;
+        if (mRigidBody.hasBody()) {
+            auto bodyPosition = mRigidBody.getPosition();
+            position.x = bodyPosition.x;
+            position.y = bodyPosition.y;
+        }
+        setPosition(position.x, position.y, position.z);
+        mRigidBody.update(getLocalPosition().z);
+
 		for (auto iter = children.begin(); iter != children.end(); iter++) {
 			(*iter)->update();
 		}
@@ -14,7 +26,6 @@ namespace wlEngine {
 
     bool GameObject::moveToParent(GameObject* parent) {
         this->parent = parent;
-        transform.moveToParent(&parent->transform);
 
         parent->children.insert(this);
         return true;
@@ -40,8 +51,8 @@ namespace wlEngine {
     }
 
     void GameObject::setPosition(const float& x, const float& y,const float& z){
-        glm::vec3 moveVector{x,y,z};
-        moveVector = moveVector - transform.position;
+        glm::vec3 newPosition{x,y,z};
+        glm::vec3 moveVector = newPosition - getPosition();
 
         transform.setPosition(x, y, z);
 
@@ -51,10 +62,11 @@ namespace wlEngine {
     }
 
     void GameObject::setLocalPosition(const float& x, const float& y, const float& z) {
-        glm::vec3 moveVector{x,y,z};
-        moveVector = moveVector - transform.position;
+        glm::vec3 newLocalPosition{x,y,z};
+        glm::vec3 newPosition = parent->getPosition() + newLocalPosition;
+        glm::vec3 moveVector = newPosition - getPosition();
 
-        transform.setLocalPosition(x, y, z);
+        transform.setPosition(newPosition.x, newPosition.y, newPosition.z);
 
         for (auto iter = children.begin(); iter != children.end(); iter++) {
             (*iter)->moveBy(moveVector.x, moveVector.y, moveVector.z);
@@ -83,6 +95,8 @@ namespace wlEngine {
         position.y = -position.y;
         position.y -= texture->getHeight();
 
+        position.y -= 1 * position.z;
+
         return position - cameraPos;
     }
 
@@ -90,19 +104,24 @@ namespace wlEngine {
         return transform.getPosition();
     }
 
-    glm::vec3 GameObject::getLocalPotion() {
-        return transform.getLocalPosition();
+    glm::vec3 GameObject::getLocalPosition() {
+        if (parent) return getPosition() - parent->getPosition();
+        else return getPosition();
     }
 
     void GameObject::setGravity(bool has) {
-        rigidBody.setGravity(has);
+        mRigidBody.setGravity(has);
     }
     void GameObject::setVelocity(const float& x, const float& y, const float& z) {
-        rigidBody.setVelocity(x,y,z);
+        mRigidBody.setVelocity(x,y,z);
     }
 
-    glm::vec3 GameObject::getVelocity() {
-        return rigidBody.getVelocity();
+    void GameObject::setRigidBody(b2Body* body) {
+        mRigidBody.setBody(body);
+    }
+
+    void GameObject::createFixture(b2FixtureDef& def) {
+        mRigidBody.createFixture(def);
     }
 }
 

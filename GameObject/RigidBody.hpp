@@ -2,6 +2,7 @@
 #define RIGIDBODY_H
 
 #include <glm/vec3.hpp>
+#include <Box2D.h>
 
 namespace wlEngine {
     class RigidBody {
@@ -11,13 +12,26 @@ namespace wlEngine {
 
         void setGravity(bool);
         void setVelocity(const float& x, const float& y, const float& z);
-        glm::vec3 getVelocity();
+        float getZMovement();
 
         bool getGravity();
+        bool hasBody();
+        /**
+         * @brief update the zSpped according to z value
+         *
+         * @param z zSpeed is only effected by gravity if it's greater than 0
+         */
+        void update(const float& z);
+        void setBody(b2Body* body);
+        void createFixture(b2FixtureDef& def);
+        glm::vec3 getPosition();
+
     private:
         bool hasGravity;
 
-        glm::vec3 velocity;
+        float zSpeed;
+
+        b2Body* mBody; //body has to deallocated by world
     };
 }
 

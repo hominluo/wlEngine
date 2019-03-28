@@ -65,4 +65,9 @@ For discussion please visit http://box2d.org/forum
 #include "Box2D/Dynamics/Joints/b2WeldJoint.h"
 #include "Box2D/Dynamics/Joints/b2WheelJoint.h"
 
+const float FIXED_DELTA_TIME = 1.0 / 60.0;
+const float GRAVITY = 10;
+
+const int32 VELOCITY_ITERATIONS = 6;
+const int32 POSITION_ITERATIONS = 2;
 #endif

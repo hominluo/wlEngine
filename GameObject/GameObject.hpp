@@ -15,29 +15,37 @@ namespace wlEngine {
         GameObject();
 
         //Transform
+        /**
+         * @brief move this gameObject to @param GameObject which is the parent
+         *
+         * @param GameObject the parent
+         *
+         * @return true if successfully move to the paretn
+         */
         bool moveToParent(GameObject*);
         void loadTexture(const char* path);
         void setPosition(const float& x,const float& y,const float& z);
         void moveBy(const float& x, const float& y, const float& z);
         void setLocalPosition(const float& x, const float& y, const float& z);
         glm::vec3 getPosition();
-        glm::vec3 getLocalPotion();
+        glm::vec3 getLocalPosition();
 
         //Animation
         void loadClips(const char* path);
         void playAnimation(const char* name);
 
         //RigidBody
+        void setRigidBody(b2Body* body);
         void setGravity(bool);
         void setVelocity(const float& x, const float& y, const float& z);
-        glm::vec3 getVelocity();
+        void createFixture(b2FixtureDef& def);
     protected:
         uint tag; 
         Transform transform;
-        RigidBody rigidBody;
 
         Texture* texture;
         Animation* animation;
+        RigidBody mRigidBody;
 
         GameObject* parent;
         std::set<GameObject*> children;
