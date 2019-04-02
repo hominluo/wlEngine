@@ -4,6 +4,8 @@ namespace wlEngine {
     RigidBody::RigidBody() {
         zSpeed = 0;
         mBody = nullptr;
+        contactBeginCallback = nullptr;
+        contactEndCallback = nullptr;
     };
     RigidBody::~RigidBody() {};
 
@@ -39,7 +41,9 @@ namespace wlEngine {
     }
 
     void RigidBody::createFixture(b2FixtureDef& def) {
-        this->mBody->CreateFixture(&def);
+        auto fixture = this->mBody->CreateFixture(&def);
+        fixture->SetUserData(this);
+        
     }
 
     bool RigidBody::hasBody() {
@@ -49,5 +53,10 @@ namespace wlEngine {
     glm::vec3 RigidBody::getPosition() {
         auto position = mBody->GetPosition();
         return glm::vec3(position.x, position.y, 0);
+    }
+
+    glm::vec3 RigidBody::getLinearVelocity() {
+        auto linearVelocity = mBody->GetLinearVelocity();
+        return glm::vec3(linearVelocity.x, linearVelocity.y, zSpeed);
     }
 }

@@ -1,10 +1,14 @@
 #include "Scene.hpp"
 
 #include "../Graphics/GraphicsManager.hpp"
+#include "../Physics/WorldContactListener.hpp"
+#include "../Physics/PhysicsDebugDraw.hpp"
+#include "../Physics/GLES-Render.hpp"
 
 namespace wlEngine {
     void Scene::update() {
         mWorld->Step(FIXED_DELTA_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+        mWorld->DrawDebugData();
 
         if (camera) { 
             camera->update();
@@ -31,6 +35,14 @@ namespace wlEngine {
 
 
     Scene::Scene() : mWorld(new b2World(b2Vec2(0, 0))) {
+        auto collisionListener = new WorldContactListener();
+        auto physicsDebugDraw = new PhysicsDebugDraw();
+
+        mWorld->SetContactListener(collisionListener);
+        mWorld->SetDebugDraw(physicsDebugDraw);
+
+        physicsDebugDraw->SetFlags(b2Draw::e_shapeBit);
+    
     }
 
     Scene::~Scene() {

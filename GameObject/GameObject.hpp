@@ -13,8 +13,10 @@ namespace wlEngine {
     class GameObject {
     public:
         GameObject();
+        void setTag(int);
+        glm::vec3 getSize();
 
-        //Transform
+        ///Transform
         /**
          * @brief move this gameObject to @param GameObject which is the parent
          *
@@ -39,6 +41,9 @@ namespace wlEngine {
         void setGravity(bool);
         void setVelocity(const float& x, const float& y, const float& z);
         void createFixture(b2FixtureDef& def);
+        void setContactBeginCallback(std::function<void()>&&);
+        void setContactEndCallback(std::function<void()>&&);
+        glm::vec3 getLinearVelocity();
     protected:
         uint tag; 
         Transform transform;
@@ -53,11 +58,15 @@ namespace wlEngine {
         virtual void update();
         virtual void render(const int& x, const int& y, const int& z);
 
-        /* convert to down_left origin, and convert from 3d to 2d space*/
-        glm::vec3 calculateRenderPosition(const glm::vec3& cameraPos);
 
 
         friend class Scene;
+
+    private:
+        void updateWorldPosition(); 
+
+        /* convert to down_left origin, and convert from 3d to 2d space*/
+        glm::vec3 calculateRenderPosition(const glm::vec3& cameraPos);
     };
 }
 #endif

@@ -24,12 +24,20 @@ link_directories(${glm_LIBRAY})
 link_directories(${SDL2_LIBRARY})
 link_directories(${Box2D_LIBRARY})
 
+#set(CMAKE_CXX_FLAGS -Wno-deprecated)
+find_package(OpenGL)
+
+if (APPLE)
+    set(MACOSX_DEPLOYMENT_TARGET 10.8)
+endif (APPLE)
+
 file(GLOB source_file
     "${CMAKE_CURRENT_SOURCE_DIR}/Math/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Memory/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Event/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Physics/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
@@ -37,9 +45,10 @@ add_library(wlEngine SHARED
     ${source_file}
 )
 
-TARGET_LINK_LIBRARIES(wlEngine glm_shared)
-TARGET_LINK_LIBRARIES(wlEngine SDL2)
-TARGET_LINK_LIBRARIES(wlEngine SDL2_image)
-TARGET_LINK_LIBRARIES(wlEngine Box2D)
-
+TARGET_LINK_LIBRARIES(wlEngine 
+    glm_shared
+    SDL2
+    SDL2_image
+    Box2D
+    ${OPENGL_gl_LIBRARY})
 

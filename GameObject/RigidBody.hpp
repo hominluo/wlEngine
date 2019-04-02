@@ -25,6 +25,16 @@ namespace wlEngine {
         void setBody(b2Body* body);
         void createFixture(b2FixtureDef& def);
         glm::vec3 getPosition();
+        glm::vec3 getLinearVelocity();
+
+        /**
+         * @brief called when fixtures contact begins
+         */
+         std::function<void()> contactBeginCallback;
+         /**
+          * @brief called when fixtures contact ends
+          */
+         std::function<void()> contactEndCallback;
 
     private:
         bool hasGravity;

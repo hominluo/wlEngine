@@ -4,7 +4,8 @@
 namespace wlEngine {
     EventManager* EventManager::eventManager = nullptr;
 
-    EventManager::EventManager(){};
+    EventManager::EventManager(){
+    };
 
     void EventManager::pollEvent() {
         while (SDL_PollEvent(&event)) {

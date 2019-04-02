@@ -7,21 +7,11 @@ namespace wlEngine {
     }
 
     void GameObject::update() {
-        //update transformation according to the object's b2Body and zMovement
-        auto position = transform.getPosition();
-        auto zMovement = mRigidBody.getZMovement();
-        position.z += zMovement;
-        if (mRigidBody.hasBody()) {
-            auto bodyPosition = mRigidBody.getPosition();
-            position.x = bodyPosition.x;
-            position.y = bodyPosition.y;
-        }
-        setPosition(position.x, position.y, position.z);
-        mRigidBody.update(getLocalPosition().z);
+        updateWorldPosition();
 
-		for (auto iter = children.begin(); iter != children.end(); iter++) {
-			(*iter)->update();
-		}
+        for (auto iter = children.begin(); iter != children.end(); iter++) {
+            (*iter)->update();
+        }
     }
 
     bool GameObject::moveToParent(GameObject* parent) {
@@ -122,6 +112,41 @@ namespace wlEngine {
 
     void GameObject::createFixture(b2FixtureDef& def) {
         mRigidBody.createFixture(def);
+    }
+
+    void GameObject::setTag(int tag){
+        this->tag = tag;
+    }
+
+    glm::vec3 GameObject::getLinearVelocity() {
+        return mRigidBody.getLinearVelocity();
+    }
+
+    void GameObject::updateWorldPosition() {
+        //update transformation according to the object's b2Body and zMovement
+        auto position = transform.getPosition();
+        auto zMovement = mRigidBody.getZMovement();
+        position.z += zMovement;
+        if (mRigidBody.hasBody()) {
+            auto bodyPosition = mRigidBody.getPosition();
+            position.x = bodyPosition.x;
+            position.y = bodyPosition.y;
+        }
+        setPosition(position.x, position.y, position.z);
+        mRigidBody.update(getLocalPosition().z);
+    }
+
+    void GameObject::setContactBeginCallback(std::function<void()>&& callback) {
+        mRigidBody.contactBeginCallback = callback;
+    }
+
+
+    void GameObject::setContactEndCallback(std::function<void()>&& callback) {
+        mRigidBody.contactEndCallback = callback;
+    }
+
+    glm::vec3 GameObject::getSize() {
+        return glm::vec3(texture->getWidth(), texture->getHeight(), 0);
     }
 }
 
