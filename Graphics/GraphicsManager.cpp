@@ -28,7 +28,7 @@ namespace wlEngine {
             std::cerr << "Warning: Linear texture filtering not enabled!" << std::endl;
 		}
 
-        graphicsManager->mWindow = SDL_CreateWindow(winTitle.c_str(),SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h,SDL_WINDOW_SHOWN);
+        graphicsManager->mWindow = SDL_CreateWindow(winTitle.c_str(),SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h,SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
         if (!graphicsManager->mWindow) {
             std::cerr << "SDL could not initialize window: " << SDL_GetError() << std::endl;
             exit(-1);
