@@ -16,7 +16,7 @@ namespace wlEngine {
             /*Event*/
             void registerEvent(const Event&);
             void unregisterEvent(const Event&);
-            bool isKeyPressed(const uint& key);
+            bool isKeyPressed(const unsigned int& key);
             
             void loop();
             

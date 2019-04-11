@@ -30,7 +30,6 @@
 #define SDL_h_
 
 #include "SDL_main.h"
-#include "SDL_render.h"
 #include "SDL_stdinc.h"
 #include "SDL_assert.h"
 #include "SDL_atomic.h"
@@ -50,6 +49,7 @@
 #include "SDL_messagebox.h"
 #include "SDL_mutex.h"
 #include "SDL_power.h"
+#include "SDL_render.h"
 #include "SDL_rwops.h"
 #include "SDL_sensor.h"
 #include "SDL_shape.h"

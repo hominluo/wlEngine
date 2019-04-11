@@ -24,7 +24,7 @@ namespace wlEngine {
     }
 
 
-    bool EventManager::isKeyPressed(uint key) {
+    bool EventManager::isKeyPressed(unsigned int key) {
         return SDL_GetKeyboardState(NULL)[key];
     }
 

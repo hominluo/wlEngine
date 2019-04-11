@@ -45,7 +45,7 @@ namespace wlEngine {
         void setContactEndCallback(std::function<void()>&&);
         glm::vec3 getLinearVelocity();
     protected:
-        uint tag; 
+        unsigned int tag; 
         Transform transform;
 
         Texture* texture;

@@ -1,19 +1,13 @@
 #include "PhysicsDebugDraw.hpp"
 
 #include <SDL.h>
-#include <OpenGL/gl.h>
 
 namespace wlEngine {
     void PhysicsDebugDraw::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) {
-        printf("%f, %f\n", vertices->x, vertices->y);
         B2_NOT_USED(vertexCount);
         B2_NOT_USED(color);
     }
     void PhysicsDebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) {
-        for (int i = 0; i < vertexCount; i++) {
-            printf("%f %f,", vertices[i].x, vertices[i].y);
-        }
-        printf("\n");
         B2_NOT_USED(vertices);
         B2_NOT_USED(vertexCount);
         B2_NOT_USED(color);

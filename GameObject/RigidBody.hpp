@@ -3,6 +3,7 @@
 
 #include <glm/vec3.hpp>
 #include <Box2D.h>
+#include <functional>
 
 namespace wlEngine {
     class RigidBody {

@@ -19,7 +19,7 @@ namespace wlEngine {
         void registerEvent(Event e);
         void unregisterEvent(Event e);
 
-        bool isKeyPressed(uint);
+        bool isKeyPressed(unsigned int);
         ~EventManager();
         void pollEvent();
     private:

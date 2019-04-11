@@ -60,7 +60,7 @@ namespace wlEngine {
     }
 
     /*Event*/
-    bool EngineManager::isKeyPressed(const uint& key) {
+    bool EngineManager::isKeyPressed(const unsigned int& key) {
         return eventManager->isKeyPressed(key);
     }
     
