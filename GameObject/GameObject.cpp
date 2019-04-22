@@ -2,7 +2,7 @@
 
 #include "../Time.hpp"
 namespace wlEngine {
-    GameObject::GameObject(): texture(nullptr), animation(nullptr), parent(nullptr) {
+    GameObject::GameObject(): texture(nullptr), animation(nullptr), parent(nullptr), tag(0) {
 
     }
 
@@ -21,16 +21,16 @@ namespace wlEngine {
         return true;
     }
 
-    void GameObject::render(const int& x, const int& y, const int& z) {
+    void GameObject::render() {
         if (!texture) return;
 
-        glm::vec3 position = calculateRenderPosition(glm::vec3{x, y, z});
+        auto position = calculateRenderPosition();
 
         auto currentClip = animation ? animation->getCurrentClip() : nullptr;
-        texture->render(position.x, position.y, currentClip);
+        texture->render(position.x, position.y, position.z);
 
         for (auto iter = children.begin(); iter != children.end(); iter++) {
-            (*iter)->render(x, y, z);
+            (*iter)->render();
         }
     }
 
@@ -79,15 +79,10 @@ namespace wlEngine {
         animation->playAnimation(name);
     }
 
-    glm::vec3 GameObject::calculateRenderPosition(const glm::vec3& cameraPos) {
+    glm::vec3 GameObject::calculateRenderPosition() {
         glm::vec3 position = transform.getPosition();
 
-        position.y = -position.y;
-        position.y -= texture->getHeight();
-
-        position.y -= 1 * position.z;
-
-        return position - cameraPos;
+        return position;
     }
 
     glm::vec3 GameObject::getPosition() {

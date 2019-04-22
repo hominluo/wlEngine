@@ -6,6 +6,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#include "Shader.hpp"
+
 namespace wlEngine {
     /* class Texture
      * @description: use initialized GraphicsManager to draw picture on windowRenderer
@@ -21,25 +23,31 @@ namespace wlEngine {
 
         void free();
 
-        /* render the texture to screen
-         * x, y is the position in the windows space
-         * clip is used for cliping from the texture image
-         * 
-         * NOTE: x, y should be in game world space, the functio should
-         * be in charge of changing the coordinate system */
-        void render(int x, int y, SDL_Rect* clip = nullptr, double angle = 0, SDL_Point* center = nullptr, SDL_RendererFlip flip = SDL_FLIP_NONE);
+        void render(int x, int y, int z);
+        void loadShader(const char* vertexShaderPath = nullptr, const char* fragmentShaderPath = nullptr);
 
-        int getWidth();
-        int getHeight();
+        int getWidth() { return mWidth; };
+        int getHeight() { return mHeight; };
+        const Shader* getShader() {return &mShader;};
 
-        //SDL_Texture* getTexture() {return mTexture;}
-        
-        operator SDL_Texture* () const {return mTexture;}
     private:
-        SDL_Texture* mTexture;
+        unsigned int mTexture;
+        Shader mShader;
 
         int mWidth;
         int mHeight;
+
+		//opengl
+		GLuint VAO;
+		GLuint VBO;
+		GLuint EBO;
+		float vertices[20] = {
+			// positions        // texture coords
+			0.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
+			0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
+			0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // bottom left
+			0.0f, 0.0f, 0.0f, 0.0f, 1.0f  // top left
+		};
     };
 }
 #endif

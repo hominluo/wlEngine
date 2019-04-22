@@ -10,11 +10,18 @@ set(SDL2_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/include)
 set(glm_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm/include)
 set(Box2D_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/Box2D/include)
 set(json_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/json/include)
+set(stb_image_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb/include)
+set(glad_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/include)
 
-include_directories(${SDL2_INCLUDE_DIR})
-include_directories(${glm_INCLUDE_DIR})
-include_directories(${Box2D_INCLUDE_DIR})
-include_directories(${json_INCLUDE_DIR})
+include_directories(
+    ${SDL2_INCLUDE_DIR}
+    ${glm_INCLUDE_DIR}
+    ${Box2D_INCLUDE_DIR}
+    ${json_INCLUDE_DIR}
+    ${stb_image_INCLUDE_DIR}
+    ${glad_INCLUDE_DIR}
+)
+
 
 #set(CMAKE_CXX_FLAGS -Wno-deprecated)
 find_package(OpenGL)
@@ -31,13 +38,15 @@ file(GLOB source_file
     "${CMAKE_CURRENT_SOURCE_DIR}/Event/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Physics/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/src/glad.cpp"
 )
 
 add_library(wlEngine STATIC
     ${source_file}
 )
 
-TARGET_LINK_LIBRARIES(wlEngine 
+
+TARGET_LINK_LIBRARIES(wlEngine
     ${glm_LIBRARY}
     ${SDL2_LIBRARY}
     ${Box2D_LIBRARY}

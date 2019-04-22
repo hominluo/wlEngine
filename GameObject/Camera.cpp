@@ -7,12 +7,6 @@ namespace wlEngine {
 
     glm::vec3 Camera::getPosition() {
         auto position = GameObject::getPosition();
-
-        auto graphicsManager = GraphicsManager::getGraphicsManager();
-
-        position.y = -position.y;
-        position.y -= graphicsManager->getWindowHeight();
-
         return position;
     }
 

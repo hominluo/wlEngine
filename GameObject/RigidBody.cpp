@@ -56,7 +56,7 @@ namespace wlEngine {
     }
 
     glm::vec3 RigidBody::getLinearVelocity() {
-        auto linearVelocity = mBody->GetLinearVelocity();
+        b2Vec2 linearVelocity = mBody ? mBody->GetLinearVelocity() : b2Vec2(0,0);
         return glm::vec3(linearVelocity.x, linearVelocity.y, zSpeed);
     }
 }

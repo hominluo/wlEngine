@@ -56,7 +56,7 @@ namespace wlEngine {
         std::set<GameObject*> children;
 
         virtual void update();
-        virtual void render(const int& x, const int& y, const int& z);
+        virtual void render();
 
 
 
@@ -66,7 +66,7 @@ namespace wlEngine {
         void updateWorldPosition(); 
 
         /* convert to down_left origin, and convert from 3d to 2d space*/
-        glm::vec3 calculateRenderPosition(const glm::vec3& cameraPos);
+        glm::vec3 calculateRenderPosition();
     };
 }
 #endif

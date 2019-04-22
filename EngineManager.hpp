@@ -20,10 +20,11 @@ namespace wlEngine {
             
             void loop();
             
-            SDL_Renderer* getRenderer();
             ~EngineManager();
 
             void setQuit(const EngineEvent&);
+
+            Scene* getCurrentScene() {return currentScene;};
         private:
             bool quit;
 

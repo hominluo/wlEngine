@@ -25,10 +25,8 @@ namespace wlEngine {
     }
 
     void Scene::render() {
-        glm::vec3 cameraPos = camera->getPosition();
-
         for (auto iter = mGameObjects.begin(); iter != mGameObjects.end(); iter++) {
-            (*iter)->render(cameraPos.x, cameraPos.y, cameraPos.z);
+            (*iter)->render();
         }
     }
 

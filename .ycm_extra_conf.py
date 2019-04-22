@@ -12,7 +12,7 @@ FLAGS = [
         '-I', workingDirectory + '/third_party/SDL2/include',
         '-I', workingDirectory + '/third_party/glm/include',
         '-I', workingDirectory + '/third_party/Box2D/include',
-        '-I', workingDirectory + '/third_party/json/include'
+        '-I', workingDirectory + '/third_party/json/include',
         ]
 
 def Settings( **kwargs ):

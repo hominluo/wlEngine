@@ -37,15 +37,15 @@ namespace wlEngine {
     }
 
     void EngineManager::render() {
-        SDL_RenderClear(graphicsManager->getRenderer());
+        graphicsManager->beginRenderScene();
         currentScene->render();
-        SDL_RenderPresent(graphicsManager->getRenderer());
+        graphicsManager->endRenderScene();
     }
 
     void EngineManager::loop() {
-/*this design looks wrong, I am not sure. 
- * Think about character controling. 
- * the movement is updated before the call of update */
+        /*this design looks wrong, I am not sure. 
+        * Think about character controling. 
+        * the movement is updated before the call of update */
         while(!quit) {
             pollEvent();
             update();
@@ -53,10 +53,6 @@ namespace wlEngine {
 
             Time::update();
         }
-    }
-
-    SDL_Renderer* EngineManager::getRenderer() {
-        return graphicsManager->getRenderer();
     }
 
     /*Event*/

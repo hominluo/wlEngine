@@ -1,79 +1,60 @@
+
+
 #include <iostream>
 
 #include "GraphicsManager.hpp"
-
 namespace wlEngine {
     GraphicsManager* GraphicsManager::graphicsManager = nullptr;
 
     GraphicsManager::GraphicsManager() {
+        if (SDL_Init( SDL_INIT_VIDEO ) < 0) {
+            std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
+            exit(-1);
+        }
+        
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+        SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+        stbi_set_flip_vertically_on_load(true);
+        window = SDL_CreateWindow("OpenGL Test", 0, 0, winWidth, winHeight, SDL_WINDOW_OPENGL);
+        glContext = SDL_GL_CreateContext(window);
+        gladLoadGLLoader(SDL_GL_GetProcAddress);
+        glEnable(GL_DEPTH_TEST);
 
     }
 
     GraphicsManager::~GraphicsManager() {}
 
     GraphicsManager* GraphicsManager::initialize(const std::string& winTitle, int w, int h) {
-#ifdef DEBUG
-        assert(graphicsManager == nullptr);
-#endif
         GraphicsManager::graphicsManager = new GraphicsManager();
 
-        if (SDL_Init( SDL_INIT_VIDEO ) < 0) {
-            std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
-            exit(-1);
-        }
-
-        //Set texture filtering to linear
-		if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) )
-		{
-            std::cerr << "Warning: Linear texture filtering not enabled!" << std::endl;
-		}
-
-        graphicsManager->mWindow = SDL_CreateWindow(winTitle.c_str(),SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h,SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-        if (!graphicsManager->mWindow) {
-            std::cerr << "SDL could not initialize window: " << SDL_GetError() << std::endl;
-            exit(-1);
-        }
-
-        if (!IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG)) {
-            std::cerr << "SDL_image could not initialize: " << SDL_GetError() << std::endl;
-            exit(-1);
-        }
-
-        graphicsManager->mRenderer = SDL_CreateRenderer(graphicsManager->mWindow, -1 , SDL_RENDERER_ACCELERATED);
-        if (!graphicsManager->mRenderer) {
-            std::cerr << "SDL could not initialize window renderer: " << SDL_GetError() << std::endl;
-            exit(-1);
-        }
-
-        SDL_SetRenderDrawColor(graphicsManager->mRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
         return graphicsManager;
     }
 
     GraphicsManager* GraphicsManager::getGraphicsManager() {
-#ifdef DEBUG
-        assert(graphicsManager != nullptr)
-#endif
         return graphicsManager;
     }
 
-    void GraphicsManager::destroyRenderer() {
-        SDL_DestroyRenderer(mRenderer);
-    }
-
-    SDL_Renderer* GraphicsManager::getRenderer() {
-        return mRenderer;
-    }
-
     int GraphicsManager::getWindowWidth() {
-        int w,h;
-        SDL_GetWindowSize(mWindow, &w, &h);
-        return w;
+        return winWidth;
     }
 
     int GraphicsManager::getWindowHeight() {
-        int w,h;
-        SDL_GetWindowSize(mWindow, &w, &h);
-        return h;
+        return winHeight;
     }
 
+    void GraphicsManager::beginRenderScene(){
+        //glViewport(0, 0, winWidth, winHeight);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		
+    }
+
+    void GraphicsManager::endRenderScene(){
+        SDL_GL_SwapWindow(window);
+    }
 }

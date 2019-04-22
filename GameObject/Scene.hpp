@@ -1,9 +1,10 @@
 #ifndef SCENE_H
 #define SCENE_H
 #include <set>
+
 #include <SDL.h>
 #include <Box2D.h>
-#include <glm/vec3.hpp>
+#include <glm/glm.hpp>
 
 #include "../GameObject/GameObject.hpp"
 #include "../GameObject/Camera.hpp"
@@ -17,6 +18,7 @@ namespace wlEngine {
             void update();
             void addGameObject(GameObject*);
             void setCamera(Camera* camera);
+            Camera* getCamera() {return camera;};
             b2Body* createBody(b2BodyDef& def);
 
         private:
