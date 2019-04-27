@@ -4,10 +4,10 @@
 namespace wlEngine {
     class Time {
         public:
-            static double deltaTime;
+            static float deltaTime;
             static void update();
         private:
-            static std::chrono::time_point<std::chrono::high_resolution_clock> oldTime;
+            static std::chrono::time_point<std::chrono::system_clock> oldTime;
     };
 }
 

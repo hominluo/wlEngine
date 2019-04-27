@@ -3,8 +3,8 @@
 #include <set>
 #include <glm/vec3.hpp>
 
-#include "Transform.hpp"
 #include "RigidBody.hpp"
+#include "Transform.hpp"
 
 #include "../Graphics/Texture.hpp"
 #include "Animation.hpp"
@@ -27,12 +27,6 @@ namespace wlEngine {
 		Transform& getTransform() { return transform; };
         bool moveToParent(GameObject*);
         void loadTexture(const char* path);
-        void setPosition(const float& x,const float& y,const float& z);
-        void setPosition(const glm::vec3& pos) {setPosition(pos.x, pos.y, pos.z);};
-        void moveBy(const float& x, const float& y, const float& z);
-        void setLocalPosition(const float& x, const float& y, const float& z);
-        glm::vec3 getPosition();
-        glm::vec3 getLocalPosition();
 
         //Animation
         void loadClips(const char* path);
@@ -43,6 +37,7 @@ namespace wlEngine {
         void setGravity(bool);
         void setVelocity(const float& x, const float& y, const float& z);
         void createFixture(b2FixtureDef& def);
+
         void setContactBeginCallback(std::function<void()>&&);
         void setContactEndCallback(std::function<void()>&&);
         glm::vec3 getLinearVelocity();
@@ -61,7 +56,7 @@ namespace wlEngine {
         virtual void render();
 
         friend class Scene;
-
+        friend class Transform;
     private:
         void updateWorldPosition(); 
 

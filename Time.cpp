@@ -1,10 +1,11 @@
 #include "Time.hpp"
+#include <iostream>
 namespace wlEngine {
-    double Time::deltaTime = 0;
-    std::chrono::time_point<std::chrono::high_resolution_clock> Time::oldTime = std::chrono::high_resolution_clock::now();
+    float Time::deltaTime = 0;
+    std::chrono::time_point<std::chrono::system_clock> Time::oldTime = std::chrono::system_clock::now();
     void Time::update() {
-        auto newTime = std::chrono::high_resolution_clock::now();
-        deltaTime = std::chrono::duration<double>(newTime - oldTime).count();
+        auto newTime = std::chrono::system_clock::now();
+        deltaTime = std::chrono::duration<float>(newTime - oldTime).count();
         oldTime = newTime;
     }
 }

@@ -1,13 +1,12 @@
 #include "GameObject.hpp"
-
 #include "../Time.hpp"
 namespace wlEngine {
-    GameObject::GameObject(): tag(0), texture(nullptr), animation(nullptr), parent(nullptr) {
+    GameObject::GameObject(): tag(0), transform(this), texture(nullptr), animation(nullptr), parent(nullptr) {
 
     }
 
     void GameObject::update() {
-        updateWorldPosition();
+        //updateWorldPosition(); has some problem when applied to camera
 
         for (auto iter = children.begin(); iter != children.end(); iter++) {
             (*iter)->update();
@@ -38,36 +37,6 @@ namespace wlEngine {
         texture->loadFromFile(path);
     }
 
-    void GameObject::setPosition(const float& x, const float& y,const float& z){
-        glm::vec3 newPosition{x,y,z};
-        glm::vec3 moveVector = newPosition - getPosition();
-
-        transform.position = glm::vec3(x, y, z);
-
-        for (auto iter = children.begin(); iter != children.end(); iter++) {
-            (*iter)->moveBy(moveVector.x, moveVector.y, moveVector.z);
-        }
-    }
-
-    void GameObject::setLocalPosition(const float& x, const float& y, const float& z) {
-        glm::vec3 newLocalPosition{x,y,z};
-        glm::vec3 newPosition = parent->getPosition() + newLocalPosition;
-        glm::vec3 moveVector = newPosition - getPosition();
-
-		transform.position = { newPosition.x, newPosition.y, newPosition.z };
-
-        for (auto iter = children.begin(); iter != children.end(); iter++) {
-            (*iter)->moveBy(moveVector.x, moveVector.y, moveVector.z);
-        }
-    }
-
-    void GameObject::moveBy(const float& x, const float& y, const float& z) {
-        transform.moveBy(x, y, z);
-
-        for (auto iter = children.begin(); iter != children.end(); iter++) {
-            (*iter)->moveBy(x, y, z);
-        }
-    }
     void GameObject::loadClips(const char* path) {
         if (!animation) animation = new Animation;
         animation->loadClips(path);
@@ -81,15 +50,6 @@ namespace wlEngine {
         glm::vec3 position = transform.position;
 
         return position;
-    }
-
-    glm::vec3 GameObject::getPosition() {
-        return transform.position;
-    }
-
-    glm::vec3 GameObject::getLocalPosition() {
-        if (parent) return transform.position - parent->transform.position;
-        else return transform.position;
     }
 
     void GameObject::setGravity(bool has) {
@@ -125,8 +85,8 @@ namespace wlEngine {
             position.x = bodyPosition.x;
             position.y = bodyPosition.y;
         }
-        setPosition(position.x, position.y, position.z);
-        mRigidBody.update(getLocalPosition().z);
+        transform.setPosition({position.x, position.y, position.z});
+        mRigidBody.update(transform.getLocalPosition().z);
     }
 
     void GameObject::setContactBeginCallback(std::function<void()>&& callback) {

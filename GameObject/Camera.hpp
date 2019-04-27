@@ -10,12 +10,29 @@ namespace wlEngine {
         ~Camera();
 
 		glm::mat4 getViewMatrix();
+        void update() override;
         bool perspective;
-	private:
-		glm::vec3 up;
-		glm::vec3 target;
 
+    protected:
+        glm::vec3 front;
+        glm::vec3 right;
+        const glm::vec3 WORLD_UP = glm::vec3(0,1,0);
+
+        //mouse
+        int relX;
+        int relY;
+        float sensitivity = 0.3;
+
+        float pitch = 0;
+        float yaw = -90;
+
+        float speed = 30;
+    private:
+        void updateEyeDirection();
+        void updatePosition();
     };
+
+    
 }
 
 #endif
