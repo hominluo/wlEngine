@@ -43,9 +43,6 @@ namespace wlEngine {
     }
 
     void EngineManager::loop() {
-        /*this design looks wrong, I am not sure. 
-        * Think about character controling. 
-        * the movement is updated before the call of update */
         while(!quit) {
             pollEvent();
             update();

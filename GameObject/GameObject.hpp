@@ -24,9 +24,11 @@ namespace wlEngine {
          *
          * @return true if successfully move to the paretn
          */
+		Transform& getTransform() { return transform; };
         bool moveToParent(GameObject*);
         void loadTexture(const char* path);
         void setPosition(const float& x,const float& y,const float& z);
+        void setPosition(const glm::vec3& pos) {setPosition(pos.x, pos.y, pos.z);};
         void moveBy(const float& x, const float& y, const float& z);
         void setLocalPosition(const float& x, const float& y, const float& z);
         glm::vec3 getPosition();
@@ -47,7 +49,7 @@ namespace wlEngine {
     protected:
         unsigned int tag; 
         Transform transform;
-
+		
         Texture* texture;
         Animation* animation;
         RigidBody mRigidBody;
@@ -57,8 +59,6 @@ namespace wlEngine {
 
         virtual void update();
         virtual void render();
-
-
 
         friend class Scene;
 

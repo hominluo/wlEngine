@@ -3,8 +3,8 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <stb_image.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
+#include "../GameObject/Camera.hpp"
 #include "Texture.hpp"
 #include "../EngineManager.hpp"
 #include "../Graphics/GraphicsManager.hpp"
@@ -18,29 +18,32 @@ namespace wlEngine {
         free();
     }
 
-    void Texture::render(int x, int y, int z) {
+    void Texture::render(const glm::mat4& model) {
 		int windowHeight = GraphicsManager::getGraphicsManager()->getWindowHeight();
 		int windowWidht = GraphicsManager::getGraphicsManager()->getWindowWidth();
 		auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
-		auto cameraPos = camera->getPosition();
+
+		auto cameraView = camera->getViewMatrix();
 		mShader.use();
 		
 		glBindTexture(GL_TEXTURE_2D, mTexture);
-		
-		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-		glm::mat4 view = glm::mat4(1.0f);
+
 		glm::mat4 proj = glm::mat4(1.0f);
-		
-		model = glm::translate(model, { x,y,z });
-		view = glm::lookAt(glm::vec3(cameraPos.x, cameraPos.y, 4000.0f), glm::vec3(cameraPos.x, cameraPos.y, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		proj =  glm::ortho(0.0f, (float)windowWidht, 0.0f, (float)windowHeight, -0.1f, 10000.0f);
-		//proj = glm::perspective(glm::radians(45.0f), (float)windowWidht / windowHeight, 0.1f, 100000.0f);
+
+        if (camera->perspective) {
+            proj = glm::perspective(glm::radians(45.0f), (float)windowWidht / windowHeight, 0.1f, 100000.0f);
+        }
+        else {
+            proj =  glm::ortho(0.0f, (float)windowWidht, 0.0f, (float)windowHeight, -0.1f, 10000.0f);
+        }
 		mShader.setMat4("model", model);
-		mShader.setMat4("view", view);
+		mShader.setMat4("view", cameraView);
 		mShader.setMat4("projection", proj);
 
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
     }
 
     bool Texture::loadFromFile(std::string path) {
@@ -49,10 +52,11 @@ namespace wlEngine {
 		int nrChannel;
         unsigned char* imageData = stbi_load(path.c_str(), &mWidth, &mHeight, &nrChannel, 0);
 		if (!imageData) return false;
-		vertices[0] = mWidth;
-		vertices[1] = mHeight;
-		vertices[5] = mWidth;
-		vertices[16] = mHeight;
+        //float mNormalizationPara = mWidth > mHeight ? mWidth : mHeight;
+		//vertices[0] = mWidth / mNormalizationPara;
+		//vertices[1] = mHeight / mNormalizationPara;
+		//vertices[5] = mWidth / mNormalizationPara;
+		//vertices[16] = mHeight / mNormalizationPara;
 		unsigned int glColorChannel = nrChannel == 4 ? GL_RGBA : GL_RGB;
 
 		unsigned int indices[] = {

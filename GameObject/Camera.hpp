@@ -5,11 +5,16 @@
 
 namespace wlEngine {
     class Camera : public GameObject {
-        public:
-            Camera();
-            ~Camera();
+    public:
+        Camera();
+        ~Camera();
 
-            glm::vec3 getPosition();
+		glm::mat4 getViewMatrix();
+        bool perspective;
+	private:
+		glm::vec3 up;
+		glm::vec3 target;
+
     };
 }
 

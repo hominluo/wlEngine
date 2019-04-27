@@ -2,12 +2,11 @@
 #include "../Graphics/GraphicsManager.hpp"
 
 namespace wlEngine {
-    Camera::Camera() : GameObject() {};
+    Camera::Camera() : GameObject(), perspective(true), up(0,1,0), target(0,0,0) {};
     Camera::~Camera() {};
 
-    glm::vec3 Camera::getPosition() {
-        auto position = GameObject::getPosition();
-        return position;
-    }
-
+	glm::mat4 Camera::getViewMatrix() {
+		return glm::lookAt(transform.position, transform.position + glm::vec3(0,0,-1), up);
+	}
+	
 }

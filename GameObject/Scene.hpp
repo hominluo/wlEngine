@@ -1,14 +1,14 @@
 #ifndef SCENE_H
 #define SCENE_H
 #include <set>
-
-#include <SDL.h>
 #include <Box2D.h>
 #include <glm/glm.hpp>
 
-#include "../GameObject/GameObject.hpp"
-#include "../GameObject/Camera.hpp"
+#include <SDL.h>
+
 #include "../Graphics/Texture.hpp"
+#include "GameObject.hpp"
+#include "Camera.hpp"
 
 namespace wlEngine {
     class Scene {

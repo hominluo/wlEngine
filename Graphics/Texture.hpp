@@ -4,7 +4,7 @@
 #include <string>
 
 #include <SDL.h>
-#include <SDL_image.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Shader.hpp"
 
@@ -23,7 +23,7 @@ namespace wlEngine {
 
         void free();
 
-        void render(int x, int y, int z);
+        void render(const glm::mat4& model);
         void loadShader(const char* vertexShaderPath = nullptr, const char* fragmentShaderPath = nullptr);
 
         int getWidth() { return mWidth; };
@@ -36,18 +36,57 @@ namespace wlEngine {
 
         int mWidth;
         int mHeight;
+        float mNormalizationPara;
 
 		//opengl
 		GLuint VAO;
 		GLuint VBO;
 		GLuint EBO;
-		float vertices[20] = {
-			// positions        // texture coords
-			0.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
-			0.0f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
-			0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // bottom left
-			0.0f, 0.0f, 0.0f, 0.0f, 1.0f  // top left
-		};
+
+        //currently used for opengl learning
+        float vertices[36 * 5] = {
+            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+            0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        };
     };
 }
 #endif

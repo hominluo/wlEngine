@@ -2,7 +2,7 @@
 
 #include "../Time.hpp"
 namespace wlEngine {
-    GameObject::GameObject(): texture(nullptr), animation(nullptr), parent(nullptr), tag(0) {
+    GameObject::GameObject(): tag(0), texture(nullptr), animation(nullptr), parent(nullptr) {
 
     }
 
@@ -24,10 +24,8 @@ namespace wlEngine {
     void GameObject::render() {
         if (!texture) return;
 
-        auto position = calculateRenderPosition();
-
         auto currentClip = animation ? animation->getCurrentClip() : nullptr;
-        texture->render(position.x, position.y, position.z);
+        texture->render(transform.getModel());
 
         for (auto iter = children.begin(); iter != children.end(); iter++) {
             (*iter)->render();
@@ -44,7 +42,7 @@ namespace wlEngine {
         glm::vec3 newPosition{x,y,z};
         glm::vec3 moveVector = newPosition - getPosition();
 
-        transform.setPosition(x, y, z);
+        transform.position = glm::vec3(x, y, z);
 
         for (auto iter = children.begin(); iter != children.end(); iter++) {
             (*iter)->moveBy(moveVector.x, moveVector.y, moveVector.z);
@@ -56,7 +54,7 @@ namespace wlEngine {
         glm::vec3 newPosition = parent->getPosition() + newLocalPosition;
         glm::vec3 moveVector = newPosition - getPosition();
 
-        transform.setPosition(newPosition.x, newPosition.y, newPosition.z);
+		transform.position = { newPosition.x, newPosition.y, newPosition.z };
 
         for (auto iter = children.begin(); iter != children.end(); iter++) {
             (*iter)->moveBy(moveVector.x, moveVector.y, moveVector.z);
@@ -80,18 +78,18 @@ namespace wlEngine {
     }
 
     glm::vec3 GameObject::calculateRenderPosition() {
-        glm::vec3 position = transform.getPosition();
+        glm::vec3 position = transform.position;
 
         return position;
     }
 
     glm::vec3 GameObject::getPosition() {
-        return transform.getPosition();
+        return transform.position;
     }
 
     glm::vec3 GameObject::getLocalPosition() {
-        if (parent) return getPosition() - parent->getPosition();
-        else return getPosition();
+        if (parent) return transform.position - parent->transform.position;
+        else return transform.position;
     }
 
     void GameObject::setGravity(bool has) {
@@ -119,7 +117,7 @@ namespace wlEngine {
 
     void GameObject::updateWorldPosition() {
         //update transformation according to the object's b2Body and zMovement
-        auto position = transform.getPosition();
+        auto position = transform.position;
         auto zMovement = mRigidBody.getZMovement();
         position.z += zMovement;
         if (mRigidBody.hasBody()) {

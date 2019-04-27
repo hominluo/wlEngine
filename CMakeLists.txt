@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.11.3)
 project(wlEngine VERSION 0.1)
 
 set(CMAKE_CXX_STANDARD 14)
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SDL2_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/include)
