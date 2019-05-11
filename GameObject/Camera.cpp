@@ -1,6 +1,7 @@
 #include "Camera.hpp"
 #include "../Graphics/GraphicsManager.hpp"
 #include "../Time.hpp"
+#include "Component/Transform.hpp"
 namespace wlEngine {
     Camera::Camera() : GameObject(), perspective(true), front(0,0, -1),right(1,0,0) {
 		SDL_GetMouseState(&relX, &relY);
@@ -9,7 +10,8 @@ namespace wlEngine {
     Camera::~Camera() {};
 
 	glm::mat4 Camera::getViewMatrix() {
-		return glm::lookAt(transform.position, transform.position + front, glm::cross(right, front));
+		auto transform = getComponent<Transform>();
+		return glm::lookAt(transform->position, transform->position + front, glm::cross(right, front));
 	}
 	
     void Camera::update() {
@@ -48,17 +50,18 @@ namespace wlEngine {
         right = glm::normalize(glm::cross(WORLD_UP, front));
 
         float speedDelta = speed * Time::deltaTime;
+        auto transform = getComponent<Transform>();
         if (keyboard[SDL_SCANCODE_LEFT]) {
-            transform.position -= right * speedDelta; 
+            transform->position -= right * speedDelta; 
         }
         if (keyboard[SDL_SCANCODE_RIGHT]) {
-            transform.position += right * speedDelta;
+            transform->position += right * speedDelta;
         }
         if (keyboard[SDL_SCANCODE_UP]) {
-            transform.position += front * speedDelta;
+            transform->position += front * speedDelta;
         }
         if (keyboard[SDL_SCANCODE_DOWN]) {
-            transform.position -= front * speedDelta;
+            transform->position -= front * speedDelta;
         }
     }
 }

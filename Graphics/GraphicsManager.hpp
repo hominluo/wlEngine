@@ -36,8 +36,8 @@ namespace wlEngine {
         SDL_GLContext glContext;
         SDL_Window* window;
 
-        const int winWidth = 800;
-        const int winHeight = 600;
+        const int winWidth = 1280;
+        const int winHeight = 720;
     };
 }
 

@@ -6,16 +6,18 @@
 #include <SDL.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Shader.hpp"
+#include "Component.hpp"
+#include "../../Graphics/Shader.hpp"
 
 namespace wlEngine {
     /* class Texture
      * @description: use initialized GraphicsManager to draw picture on windowRenderer
      */
-    class Texture {
-    public:
-        Texture();
-
+	class GameObject;
+    struct Texture : Component {
+	public:
+        COMPONENT_DECLARATION(Component, Texture, 1000);
+        Texture(GameObject*);
         ~Texture();
 
         /* load image from path */

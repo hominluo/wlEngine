@@ -6,7 +6,6 @@
 
 #include <SDL.h>
 
-#include "../Graphics/Texture.hpp"
 #include "GameObject.hpp"
 #include "Camera.hpp"
 

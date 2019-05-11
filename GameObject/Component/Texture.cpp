@@ -4,13 +4,15 @@
 #include <glad/glad.h>
 #include <stb_image.hpp>
 
-#include "../GameObject/Camera.hpp"
 #include "Texture.hpp"
-#include "../EngineManager.hpp"
-#include "../Graphics/GraphicsManager.hpp"
+#include "../Camera.hpp"
+#include "../../EngineManager.hpp"
+#include "../../Graphics/GraphicsManager.hpp"
 
 namespace wlEngine {
-    Texture::Texture(): mTexture(0), mWidth(0), mHeight(0), VBO(0), VAO(0), EBO(0), mShader() {
+	COMPONENT_DEFINATION(Component, Texture, 1000);
+
+    Texture::Texture(GameObject* go): Component(go), mTexture(0), mShader(), mWidth(0), mHeight(0), VAO(0), VBO(0), EBO(0) {
 
     }
 

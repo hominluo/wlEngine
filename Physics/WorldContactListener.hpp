@@ -3,7 +3,7 @@
 
 #include <Box2D.h>
 
-#include "../GameObject/RigidBody.hpp"
+#include "../GameObject/Component/RigidBody.hpp"
 
 namespace wlEngine {
     class WorldContactListener : public b2ContactListener {

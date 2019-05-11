@@ -1,8 +1,10 @@
 #include "Transform.hpp"
-#include "GameObject.hpp"
+#include "../GameObject.hpp"
 
 namespace wlEngine {
-    Transform::Transform(GameObject* gm) : position(0.0, 0.0, 0.0), rotation(1.0f), gameObject(gm) {
+    COMPONENT_DEFINATION(Component, Transform, COMPONENT_ALLOCATION_SIZE);
+    
+    Transform::Transform(GameObject* gm) : Component(gm), position(0.0, 0.0, 0.0), rotation(1.0f) {
     }
     
     void Transform::moveBy(const float& x, const float& y, const float& z) {
@@ -11,7 +13,7 @@ namespace wlEngine {
         position.z += z;
 
         for (auto iter = gameObject->children.begin(); iter != gameObject->children.end(); iter++) {
-            (*iter)->transform.moveBy(x, y, z);
+            (*iter)->getComponent<Transform>()->moveBy(x, y, z);
         }
     }
 
@@ -32,24 +34,23 @@ namespace wlEngine {
         position = pos;
 
         for (auto iter = gameObject->children.begin(); iter != gameObject->children.end(); iter++) {
-            (*iter)->transform.moveBy(moveVector.x, moveVector.y, moveVector.z);
+            (*iter)->getComponent<Transform>()->moveBy(moveVector.x, moveVector.y, moveVector.z);
         }
     }
 
     void Transform::setLocalPosition(const glm::vec3& pos) {
-        glm::vec3 newPosition = gameObject->parent->transform.position + pos;
+        glm::vec3 newPosition = gameObject->parent->getComponent<Transform>()->position + pos;
         glm::vec3 moveVector = newPosition - position;
 
 		position = pos;
 
         for (auto iter = gameObject->children.begin(); iter != gameObject->children.end(); iter++) {
-            (*iter)->transform.moveBy(moveVector.x, moveVector.y, moveVector.z);
+            (*iter)->getComponent<Transform>()->moveBy(moveVector.x, moveVector.y, moveVector.z);
         }
     }
 
     glm::vec3 Transform::getLocalPosition() {
-        if (gameObject->parent) return position - gameObject->parent->transform.position;
+        if (gameObject->parent) return position - gameObject->parent->getComponent<Transform>()->position;
         else return position;
     }
-
 }

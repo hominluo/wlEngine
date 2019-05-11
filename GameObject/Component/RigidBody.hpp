@@ -5,10 +5,13 @@
 #include <Box2D.h>
 #include <functional>
 
+#include "Component.hpp"
+
 namespace wlEngine {
-    class RigidBody {
+    class RigidBody : public Component {
     public:
-        RigidBody();
+        COMPONENT_DECLARATION(Component, RigidBody, 100);
+        RigidBody(GameObject*);
         ~RigidBody();
 
         void setGravity(bool);

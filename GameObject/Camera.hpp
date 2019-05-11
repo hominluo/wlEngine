@@ -2,6 +2,8 @@
 #define CAMERA_H
 
 #include "GameObject.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace wlEngine {
     class Camera : public GameObject {

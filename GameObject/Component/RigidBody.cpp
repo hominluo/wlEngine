@@ -1,7 +1,9 @@
 #include "RigidBody.hpp"
 
 namespace wlEngine {
-    RigidBody::RigidBody() {
+    COMPONENT_DEFINATION(Component, RigidBody, 100);
+
+    RigidBody::RigidBody(GameObject* go) : Component(go) {
         zSpeed = 0;
         mBody = nullptr;
         contactBeginCallback = nullptr;
