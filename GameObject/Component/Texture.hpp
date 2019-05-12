@@ -25,14 +25,13 @@ namespace wlEngine {
 
         void free();
 
-        void render(const glm::mat4& model);
         void loadShader(const char* vertexShaderPath = nullptr, const char* fragmentShaderPath = nullptr);
 
         int getWidth() { return mWidth; };
         int getHeight() { return mHeight; };
         const Shader* getShader() {return &mShader;};
 
-    private:
+    public:
         unsigned int mTexture;
         Shader mShader;
 

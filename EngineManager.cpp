@@ -1,4 +1,5 @@
 #include "EngineManager.hpp"
+#include "GameObject/System/RenderSystem.hpp"
 
 namespace wlEngine {
     EngineManager* EngineManager::engine = nullptr;
@@ -6,6 +7,7 @@ namespace wlEngine {
     EngineManager::EngineManager(){
         quit = false;
         initializeManagers();
+		initializeSystems();
 
         eventManager->registerEvent(Create_Event(this, &EngineManager::setQuit));
     };
@@ -13,8 +15,6 @@ namespace wlEngine {
     EngineManager::~EngineManager(){};
 
     void EngineManager::initializeManagers() {
-        graphicsManager = GraphicsManager::initialize("Under Sky", 800, 600);
-
         eventManager = EventManager::initialize();
     }
 
@@ -36,17 +36,10 @@ namespace wlEngine {
         currentScene->update();
     }
 
-    void EngineManager::render() {
-        graphicsManager->beginRenderScene();
-        currentScene->render();
-        graphicsManager->endRenderScene();
-    }
-
     void EngineManager::loop() {
         while(!quit) {
             pollEvent();
             update();
-            render();
 
             Time::update();
         }
@@ -70,6 +63,10 @@ namespace wlEngine {
         if (e.type == SDL_QUIT) {
             quit = true;
         }
+    }
+
+    void EngineManager::initializeSystems() {
+        RenderSystem::init();
     }
 }
 

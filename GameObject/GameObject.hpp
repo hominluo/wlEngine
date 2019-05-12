@@ -1,7 +1,5 @@
 #pragma once
 #include "Component/Component.hpp"
-#include "Component/Texture.hpp"
-#include "Component/Transform.hpp"
 #include <set>
 #include <memory>
 
@@ -31,17 +29,6 @@ namespace wlEngine {
 
             for (auto iter = children.begin(); iter != children.end(); iter++) {
                 (*iter)->update();
-            }
-        }
-        virtual void render(){
-            auto texture = getComponent<Texture>();
-            if (!texture) return;
-
-            //auto currentClip = animation ? animation->getCurrentClip() : nullptr;
-            texture->render(getComponent<Transform>()->getModel());
-
-            for (auto iter = children.begin(); iter != children.end(); iter++) {
-                (*iter)->render();
             }
         }
     };

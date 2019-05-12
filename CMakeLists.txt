@@ -34,6 +34,7 @@ file(GLOB source_file
     "${CMAKE_CURRENT_SOURCE_DIR}/Math/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Math/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/Component/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/Component/*.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/System/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/System/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Memory/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Memory/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Event/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Event/*.hpp"

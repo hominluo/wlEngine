@@ -1,8 +1,8 @@
 #include "Scene.hpp"
 
-#include "../Graphics/GraphicsManager.hpp"
 #include "../Physics/WorldContactListener.hpp"
 #include "../Physics/PhysicsDebugDraw.hpp"
+#include "System/System.hpp"
 
 namespace wlEngine {
     void Scene::update() {
@@ -14,20 +14,17 @@ namespace wlEngine {
         }
         else assert( 0 && "No Camera Provided for Scene");
         
-        for (auto iter = mGameObjects.begin(); iter != mGameObjects.end(); iter++) {
-            (*iter)->update();
-        }
+		for (auto& i : System::collection) {
+			i->update();
+		}
 
+		for (auto iter = mGameObjects.begin(); iter != mGameObjects.end(); iter++) {
+			(*iter)->update();
+		}
     }
 
     void Scene::addGameObject(GameObject* gameObject){
         mGameObjects.insert(gameObject);
-    }
-
-    void Scene::render() {
-        for (auto iter = mGameObjects.begin(); iter != mGameObjects.end(); iter++) {
-            (*iter)->render();
-        }
     }
 
 

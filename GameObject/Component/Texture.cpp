@@ -7,7 +7,6 @@
 #include "Texture.hpp"
 #include "../Camera.hpp"
 #include "../../EngineManager.hpp"
-#include "../../Graphics/GraphicsManager.hpp"
 
 namespace wlEngine {
 	COMPONENT_DEFINATION(Component, Texture, 1000);
@@ -18,34 +17,6 @@ namespace wlEngine {
 
     Texture::~Texture() {
         free();
-    }
-
-    void Texture::render(const glm::mat4& model) {
-		int windowHeight = GraphicsManager::getGraphicsManager()->getWindowHeight();
-		int windowWidht = GraphicsManager::getGraphicsManager()->getWindowWidth();
-		auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
-
-		auto cameraView = camera->getViewMatrix();
-		mShader.use();
-		
-		glBindTexture(GL_TEXTURE_2D, mTexture);
-
-		glm::mat4 proj = glm::mat4(1.0f);
-
-        if (camera->perspective) {
-            proj = glm::perspective(glm::radians(45.0f), (float)windowWidht / windowHeight, 0.1f, 100000.0f);
-        }
-        else {
-            proj =  glm::ortho(0.0f, (float)windowWidht, 0.0f, (float)windowHeight, -0.1f, 10000.0f);
-        }
-		mShader.setMat4("model", model);
-		mShader.setMat4("view", cameraView);
-		mShader.setMat4("projection", proj);
-
-		glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
     }
 
     bool Texture::loadFromFile(std::string path) {
