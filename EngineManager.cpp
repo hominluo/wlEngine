@@ -1,5 +1,6 @@
 #include "EngineManager.hpp"
 #include "GameObject/System/RenderSystem.hpp"
+#include "GameObject/System/ScriptSystem.hpp"
 
 namespace wlEngine {
     EngineManager* EngineManager::engine = nullptr;
@@ -42,6 +43,7 @@ namespace wlEngine {
             update();
 
             Time::update();
+            
         }
     }
 
@@ -67,6 +69,7 @@ namespace wlEngine {
 
     void EngineManager::initializeSystems() {
         RenderSystem::init();
+		ScriptSystem::init();
     }
 }
 

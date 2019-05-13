@@ -18,7 +18,7 @@ namespace wlEngine {
     }
 
     glm::mat4 Transform::getModel() const {
-        return glm::translate(glm::mat4(1.0f), position) * rotation;
+		return glm::translate(glm::mat4(1.0f), position) * rotation;
     }
 
     void Transform::rotate(const glm::vec3 axis, const float& radius) {

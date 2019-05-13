@@ -13,6 +13,13 @@ set(json_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/json/include)
 set(stb_image_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb/include)
 set(glad_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/include)
 
+#set(CMAKE_CXX_FLAGS -Wno-deprecated)
+find_package(OpenGL REQUIRED)
+find_library(glm_LIBRARY glm HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm/lib/windows)
+find_library(SDL2_LIBRARY SDL2 HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/lib/windows)
+find_library(Box2D_LIBRARY Box2D HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/Box2D/lib/windows)
+find_library(SDL2_image_LIBRARY SDL2_image HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/lib/windows)
+
 include_directories(
     ${SDL2_INCLUDE_DIR}
     ${glm_INCLUDE_DIR}
@@ -21,14 +28,6 @@ include_directories(
     ${stb_image_INCLUDE_DIR}
     ${glad_INCLUDE_DIR}
 )
-
-
-#set(CMAKE_CXX_FLAGS -Wno-deprecated)
-find_package(OpenGL)
-find_library(glm_LIBRARY glm HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm/lib/windows)
-find_library(SDL2_LIBRARY SDL2 HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/lib/windows)
-find_library(Box2D_LIBRARY Box2D HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/Box2D/lib/windows)
-find_library(SDL2_image_LIBRARY SDL2_image HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/lib/windows)
 
 file(GLOB source_file
     "${CMAKE_CURRENT_SOURCE_DIR}/Math/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Math/*.hpp"
@@ -47,11 +46,10 @@ add_library(wlEngine STATIC
     ${source_file}
 )
 
-
 TARGET_LINK_LIBRARIES(wlEngine
     ${glm_LIBRARY}
     ${SDL2_LIBRARY}
     ${Box2D_LIBRARY}
     ${SDL2_image_LIBRARY}
-    ${OPENGL_gl_LIBRARY}
+    ${OPENGL_LIBRARIES}
 )

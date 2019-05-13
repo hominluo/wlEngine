@@ -37,7 +37,7 @@ namespace wlEngine {
         };
     public:
         ComponentAllocator() {
-            beacon = allocateNewChunk();
+			beacon = allocateNewChunk();
         }
         
         ~ComponentAllocator() = default;

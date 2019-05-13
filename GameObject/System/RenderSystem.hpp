@@ -6,6 +6,8 @@
 #include <stb_image.hpp>
 
 #include "System.hpp"
+
+class b2World;
 namespace wlEngine {
     struct Texture;
     class RenderSystem : public System {
@@ -21,6 +23,7 @@ namespace wlEngine {
         static RenderSystem* renderSystem;
         int windowHeight = 720;
         int windowWidth = 1280;
+
         RenderSystem();
 
         void beginRenderScene();

@@ -1,5 +1,5 @@
 #include "Script.hpp"
 
 namespace wlEngine {
-    COMPONENT_DEFINATION(Component, Script, 100);
+    VIRTUAL_COMPONENT_DEFINATION(Component, Script);
 }

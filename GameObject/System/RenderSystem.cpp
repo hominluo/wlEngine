@@ -21,6 +21,7 @@ namespace wlEngine {
         glContext = SDL_GL_CreateContext(window);
         gladLoadGLLoader(SDL_GL_GetProcAddress);
         glEnable(GL_DEPTH_TEST);
+
         registerSystem(this);
     }
     RenderSystem* RenderSystem::get() {
@@ -32,9 +33,12 @@ namespace wlEngine {
     }
 
     void RenderSystem::render() {
+        beginRenderScene();
         for (auto c : Texture::collection) {
             render(c);
         }
+		EngineManager::getwlEngine()->getCurrentScene()->getWorld()->DrawDebugData();
+        endRenderScene();
     }
 
     void RenderSystem::render(Texture* t) {
@@ -51,7 +55,7 @@ namespace wlEngine {
             proj = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
         }
         else {
-            proj =  glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -0.1f, 10000.0f);
+			proj = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -1.0f, 1000.0f);
         }
         t->mShader.setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
         t->mShader.setMat4("view", cameraView);
@@ -59,8 +63,8 @@ namespace wlEngine {
 
         glBindVertexArray(t->VAO);
 
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
 
     void RenderSystem::endRenderScene(){
@@ -75,8 +79,6 @@ namespace wlEngine {
     }
 
     void RenderSystem::update() {
-        beginRenderScene();
         render();
-        endRenderScene();
     }
 }

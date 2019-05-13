@@ -19,11 +19,13 @@ namespace wlEngine {
             void setCamera(Camera* camera);
             Camera* getCamera() {return camera;};
             b2Body* createBody(b2BodyDef& def);
-
+			b2World* getWorld() {
+				return mWorld;
+			}
         private:
             std::set<GameObject*> mGameObjects;
             Camera* camera;
-            b2World* mWorld;
+			b2World* mWorld;
 
             //resonsible for converting z position to x and y
             void render();

@@ -7,7 +7,6 @@
 namespace wlEngine {
     void Scene::update() {
         mWorld->Step(FIXED_DELTA_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-        mWorld->DrawDebugData();
 
         if (camera) { 
             camera->update();

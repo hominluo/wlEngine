@@ -9,10 +9,10 @@
 #include "../../EngineManager.hpp"
 
 namespace wlEngine {
-	COMPONENT_DEFINATION(Component, Texture, 1000);
+	COMPONENT_DEFINATION(Component, Texture, 100);
 
     Texture::Texture(GameObject* go): Component(go), mTexture(0), mShader(), mWidth(0), mHeight(0), VAO(0), VBO(0), EBO(0) {
-
+        
     }
 
     Texture::~Texture() {
@@ -25,11 +25,11 @@ namespace wlEngine {
 		int nrChannel;
         unsigned char* imageData = stbi_load(path.c_str(), &mWidth, &mHeight, &nrChannel, 0);
 		if (!imageData) return false;
-        //float mNormalizationPara = mWidth > mHeight ? mWidth : mHeight;
-		//vertices[0] = mWidth / mNormalizationPara;
-		//vertices[1] = mHeight / mNormalizationPara;
-		//vertices[5] = mWidth / mNormalizationPara;
-		//vertices[16] = mHeight / mNormalizationPara;
+        //float mNormalizationPara = mWidth > mHeight ? mWidth : mHeight; // vertex data has to aligned with opengl standard!
+		vertices[0] = mWidth;
+		vertices[1] = mHeight;
+		vertices[5] = mWidth;
+		vertices[16] = mHeight;
 		unsigned int glColorChannel = nrChannel == 4 ? GL_RGBA : GL_RGB;
 
 		unsigned int indices[] = {
@@ -73,6 +73,4 @@ namespace wlEngine {
 		glDeleteBuffers(1, &EBO);
 		glDeleteBuffers(1, &VAO);
     }
-
-
 }

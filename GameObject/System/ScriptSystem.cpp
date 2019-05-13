@@ -2,6 +2,8 @@
 #include "../Component/Script.hpp"
 
 namespace wlEngine {
+	ScriptSystem* ScriptSystem::system = nullptr;
+
     ScriptSystem::ScriptSystem() {
         registerSystem(this);
     }
@@ -11,4 +13,8 @@ namespace wlEngine {
             s->update();
         }
     }
+
+	void ScriptSystem::init() {
+		system = new ScriptSystem();
+	}
 }

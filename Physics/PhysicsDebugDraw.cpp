@@ -1,16 +1,12 @@
 #include "PhysicsDebugDraw.hpp"
-
 #include <SDL.h>
-
+#include <SDL_opengl.h>
 namespace wlEngine {
     void PhysicsDebugDraw::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) {
-        B2_NOT_USED(vertexCount);
-        B2_NOT_USED(color);
+
     }
     void PhysicsDebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) {
-        B2_NOT_USED(vertices);
-        B2_NOT_USED(vertexCount);
-        B2_NOT_USED(color);
+		
     }
     void PhysicsDebugDraw::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color) {
         B2_NOT_USED(center);
