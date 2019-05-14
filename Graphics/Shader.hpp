@@ -14,6 +14,7 @@ namespace wlEngine {
     public:
         unsigned int ID;
         Shader(const char* vertexPath, const char* fragmentPath);
+        Shader(const std::string& vertex, const std::string& fragment);
 		Shader();
 		~Shader();
 

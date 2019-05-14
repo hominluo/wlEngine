@@ -31,6 +31,8 @@ namespace wlEngine {
 
         SDL_GLContext glContext;
         SDL_Window* window;
+
+        friend class PhysicsDebugDraw;
     };
 
 }

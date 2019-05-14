@@ -1,10 +1,19 @@
+#pragma once
 #ifndef PHYSICS_DEBUG_DRAW_H
 #define PHYSICS_DEBUG_DRAW_H
 
 #include <Box2D.h>
+#include "../Graphics/Shader.hpp"
 namespace wlEngine {
     class PhysicsDebugDraw : public b2Draw {
 	public:
+		GLuint VAO;
+		GLuint VBO;
+
+        PhysicsDebugDraw();
+        Shader shader;
+        int windowWidth;
+        int windowHeight;
 		void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override;
 		void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) override;
 		void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color) override;

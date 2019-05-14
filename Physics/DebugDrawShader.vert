@@ -1,0 +1,10 @@
+std::string vertexCode = ""
+"#version 450 core\n"
+"layout (location = 0) in vec2 inPos;\n"
+"out vec2 outPos;\n"
+"uniform mat4 projection;\n"
+"uniform mat4 view;\n"
+"void main()\n"
+"{\n"
+    "gl_Position = projection * view * vec4(inPos, 5.0, 1.0f);\n"
+"}\n";
