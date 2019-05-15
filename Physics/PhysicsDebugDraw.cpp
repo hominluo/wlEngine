@@ -55,7 +55,7 @@ namespace wlEngine {
         }
         shader.setMat4("view", cameraView);
         shader.setMat4("projection", proj);
-        shader.setVec3("color", glm::vec3(0.0f, 1.0f, 0.0f));
+        shader.setVec3("color", glm::vec3(color.r, color.g, color.b));
 
         glDrawArrays(GL_LINE_LOOP, 0, vertexCount);
     }

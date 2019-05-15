@@ -26,10 +26,16 @@ namespace wlEngine {
         unsigned char* imageData = stbi_load(path.c_str(), &mWidth, &mHeight, &nrChannel, 0);
 		if (!imageData) return false;
         //float mNormalizationPara = mWidth > mHeight ? mWidth : mHeight; // vertex data has to aligned with opengl standard!
-		vertices[0] = mWidth;
-		vertices[1] = mHeight;
-		vertices[5] = mWidth;
-		vertices[16] = mHeight;
+		int widthHalf = mWidth >> 1;
+		int heightHalf = mHeight >> 1;
+		vertices[0] = widthHalf;
+		vertices[1] = heightHalf;
+		vertices[5] = widthHalf;
+		vertices[6] = -heightHalf;
+		vertices[10] = -widthHalf;
+		vertices[11] = -heightHalf;
+		vertices[15] = -widthHalf;
+		vertices[16] = heightHalf;
 		unsigned int glColorChannel = nrChannel == 4 ? GL_RGBA : GL_RGB;
 
 		unsigned int indices[] = {
