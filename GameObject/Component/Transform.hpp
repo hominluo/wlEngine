@@ -13,15 +13,18 @@ namespace wlEngine {
         Transform(GameObject*);
 
 		glm::vec3 position;
+        glm::mat4 positionMat4;
 		glm::mat4 rotation;
+        glm::mat4 rotateArou;
 
         void moveBy(const float& x, const float& y, const float& z);
         void setPosition(const glm::vec3& pos);
         void setLocalPosition(const glm::vec3& pos);
         glm::vec3 getLocalPosition();
 
-		void rotate(const glm::vec3 axis, const float& radius);
+		void rotate(const glm::vec3& axis, const float& radius);
 		void setRotation(const glm::mat4& ro);
+        void rotateAround(const glm::vec3& axis, const float& radius);
 		glm::mat4 getModel() const ;
     };
 }

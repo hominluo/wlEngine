@@ -33,8 +33,8 @@ namespace wlEngine {
     }
     void Camera3D::updateEyeDirection() {
         SDL_GetRelativeMouseState(&relX, &relY);
-        yaw -= relX * sensitivity;
-        pitch += relY * sensitivity;
+        yaw += relX * sensitivity;
+        pitch -= relY * sensitivity;
 
         if (pitch > 89.0f)
             pitch = 89.0f;
@@ -50,7 +50,7 @@ namespace wlEngine {
     }
     void Camera3D::updatePosition() {
         auto keyboard = SDL_GetKeyboardState(nullptr);
-        right = glm::normalize(glm::cross(WORLD_UP, front));
+        right = glm::normalize(glm::cross(front, WORLD_UP));
 
         float speedDelta = speed * Time::deltaTime;
         auto transform = getComponent<Transform>();

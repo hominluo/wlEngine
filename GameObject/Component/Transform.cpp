@@ -4,7 +4,7 @@
 namespace wlEngine {
     COMPONENT_DEFINATION(Component, Transform, COMPONENT_ALLOCATION_SIZE);
     
-    Transform::Transform(GameObject* gm) : Component(gm), position(0.0, 0.0, 0.0), rotation(1.0f) {
+    Transform::Transform(GameObject* gm) : Component(gm), position(0.0, 0.0, 0.0), rotation(1.0f), positionMat4(1.0), rotateArou(1.0) {
     }
     
     void Transform::moveBy(const float& x, const float& y, const float& z) {
@@ -12,16 +12,18 @@ namespace wlEngine {
         position.y += y;
         position.z += z;
 
+        positionMat4 = glm::translate(glm::mat4(1.0), position);
+
         for (auto iter = gameObject->children.begin(); iter != gameObject->children.end(); iter++) {
             (*iter)->getComponent<Transform>()->moveBy(x, y, z);
         }
     }
 
     glm::mat4 Transform::getModel() const {
-		return glm::translate(glm::mat4(1.0f), position) * rotation;
+		return rotateArou * positionMat4 * rotation;
     }
 
-    void Transform::rotate(const glm::vec3 axis, const float& radius) {
+    void Transform::rotate(const glm::vec3& axis, const float& radius) {
         rotation = glm::rotate(rotation, glm::radians(radius), axis);
     }
 
@@ -29,9 +31,15 @@ namespace wlEngine {
         rotation = ro;
     }
 
+    void Transform::rotateAround(const glm::vec3& axis, const float& radius) {
+        rotateArou = glm::rotate(rotateArou, glm::radians(radius), axis);
+    }
+
     void Transform::setPosition(const glm::vec3& pos) {
         glm::vec3 moveVector = pos - position;
         position = pos;
+        
+        positionMat4 = glm::translate(glm::mat4(1.0), position);
 
         for (auto iter = gameObject->children.begin(); iter != gameObject->children.end(); iter++) {
             (*iter)->getComponent<Transform>()->moveBy(moveVector.x, moveVector.y, moveVector.z);
@@ -42,7 +50,9 @@ namespace wlEngine {
         glm::vec3 newPosition = gameObject->parent->getComponent<Transform>()->position + pos;
         glm::vec3 moveVector = newPosition - position;
 
-		position = pos;
+        position = pos;
+
+        positionMat4 = glm::translate(glm::mat4(1.0), position);
 
         for (auto iter = gameObject->children.begin(); iter != gameObject->children.end(); iter++) {
             (*iter)->getComponent<Transform>()->moveBy(moveVector.x, moveVector.y, moveVector.z);
