@@ -1,5 +1,6 @@
 #include "../Component/Texture.hpp"
 #include "../Component/Transform.hpp"
+#include "../Component/Animation.hpp"
 #include "../../EngineManager.hpp"
 
 namespace wlEngine {
@@ -55,7 +56,7 @@ namespace wlEngine {
             proj = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
         }
         else {
-			proj = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -1.0f, 1000.0f);
+            proj = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -1.0f, 1000.0f);
         }
         t->mShader.setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
         t->mShader.setMat4("view", cameraView);

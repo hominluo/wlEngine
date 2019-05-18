@@ -26,16 +26,8 @@ namespace wlEngine {
         unsigned char* imageData = stbi_load(path.c_str(), &mWidth, &mHeight, &nrChannel, 0);
 		if (!imageData) return false;
         //float mNormalizationPara = mWidth > mHeight ? mWidth : mHeight; // vertex data has to aligned with opengl standard!
-		int widthHalf = mWidth >> 1;
-		int heightHalf = mHeight >> 1;
-		vertices[0] = widthHalf;
-		vertices[1] = heightHalf;
-		vertices[5] = widthHalf;
-		vertices[6] = -heightHalf;
-		vertices[10] = -widthHalf;
-		vertices[11] = -heightHalf;
-		vertices[15] = -widthHalf;
-		vertices[16] = heightHalf;
+        Rect rect(0, 0, mWidth, mHeight);
+        clip(&rect, false);
 		unsigned int glColorChannel = nrChannel == 4 ? GL_RGBA : GL_RGB;
 
 		unsigned int indices[] = {
@@ -58,7 +50,7 @@ namespace wlEngine {
 
         glGenTextures(1, &mTexture);
         glBindTexture(GL_TEXTURE_2D, mTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mWidth, mHeight, 0, glColorChannel, GL_UNSIGNED_BYTE, imageData);
+		glTexImage2D(GL_TEXTURE_2D, 0, glColorChannel, mWidth, mHeight, 0, glColorChannel, GL_UNSIGNED_BYTE, imageData);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -78,5 +70,42 @@ namespace wlEngine {
 		glDeleteBuffers(1, &VBO);
 		glDeleteBuffers(1, &EBO);
 		glDeleteBuffers(1, &VAO);
+    }
+
+    void Texture::clip(Rect* rect, bool subData) {
+		int widthHalf = rect->width >> 1;
+		int heightHalf = rect->height >> 1;
+		vertices[0] = widthHalf;
+		vertices[1] = heightHalf;
+		vertices[5] = widthHalf;
+		vertices[6] = -heightHalf;
+		vertices[10] = -widthHalf;
+		vertices[11] = -heightHalf;
+		vertices[15] = -widthHalf;
+		vertices[16] = heightHalf;
+
+        //texture coor
+        
+        //top right
+        vertices[3] = (float)(rect->x + rect->width) / mWidth;
+        vertices[4] = (float)(rect->y + rect->height) / mHeight;       
+
+        //bottom right
+        vertices[8] = (float)(rect->x + rect->width) / mWidth;
+        vertices[9] = (float)(rect->y) / mWidth;
+
+        //bottom left
+        vertices[13] = (float)(rect->x) / mWidth;
+        vertices[14] = (float)(rect->y) / mHeight;
+
+        //top left
+        vertices[18] = (float)(rect->x) / mWidth;
+        vertices[19] = (float)(rect->y + rect->height) / mHeight;
+
+        if (subData) {
+            //update to opengl
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+        }
     }
 }

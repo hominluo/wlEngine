@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Component.hpp"
+#include "Struct/Clip.hpp"
 #include "../../Graphics/Shader.hpp"
 
 namespace wlEngine {
@@ -29,27 +30,32 @@ namespace wlEngine {
 
         int getWidth() { return mWidth; };
         int getHeight() { return mHeight; };
+        void clip(Rect*, bool subData=true);
         const Shader* getShader() {return &mShader;};
 
-    public:
+    private:
         unsigned int mTexture;
         Shader mShader;
 
         int mWidth;
         int mHeight;
+
         float mNormalizationPara;
 
 		//opengl
 		GLuint VAO;
 		GLuint VBO;
 		GLuint EBO;
+        
 
         float vertices[20] = {
-             0.0f,  0.0f, 0.0f,  1.0f, 1.0f,   // top right
-             0.0f,  0.0f, 0.0f,  1.0f, 0.0f,   // bottom right
-             0.0f,  0.0f, 0.0f,  0.0f, 0.0f,   // bottom left
-             0.0f,  0.0f, 0.0f,  0.0f, 1.0f    // top left 
+            0.0f,  0.0f, 0.0f,  1.0f, 1.0f,   // top right
+            0.0f,  0.0f, 0.0f,  1.0f, 0.0f,   // bottom right
+            0.0f,  0.0f, 0.0f,  0.0f, 0.0f,   // bottom left
+            0.0f,  0.0f, 0.0f,  0.0f, 1.0f    // top left 
         };
+
+        friend class RenderSystem;
     };
 }
 #endif

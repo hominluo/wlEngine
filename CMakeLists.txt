@@ -12,6 +12,7 @@ set(Box2D_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/Box2D/include)
 set(json_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/json/include)
 set(stb_image_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb/include)
 set(glad_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/include)
+set(assimp_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/assimp/include)
 
 #set(CMAKE_CXX_FLAGS -Wno-deprecated)
 find_package(OpenGL REQUIRED)
@@ -19,6 +20,7 @@ find_library(glm_LIBRARY glm HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm/l
 find_library(SDL2_LIBRARY SDL2 HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/lib/windows)
 find_library(Box2D_LIBRARY Box2D HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/Box2D/lib/windows)
 find_library(SDL2_image_LIBRARY SDL2_image HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/lib/windows)
+find_library(assimp_LIBRARY assimp HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/assimp/lib/windows)
 
 include_directories(
     ${SDL2_INCLUDE_DIR}
@@ -27,6 +29,7 @@ include_directories(
     ${json_INCLUDE_DIR}
     ${stb_image_INCLUDE_DIR}
     ${glad_INCLUDE_DIR}
+    ${assimp_INCLUDE_DIR} 
 )
 
 file(GLOB source_file
@@ -52,4 +55,5 @@ TARGET_LINK_LIBRARIES(wlEngine
     ${Box2D_LIBRARY}
     ${SDL2_image_LIBRARY}
     ${OPENGL_LIBRARIES}
+    ${assimp_LIBRARY}
 )

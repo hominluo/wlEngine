@@ -1,0 +1,34 @@
+#ifndef ANIMATION_H
+#define ANIMATION_H
+
+#include <map>
+#include <string>
+#include <vector>
+
+#include "Component.hpp"
+#include "Struct/Clip.hpp"
+
+namespace wlEngine {
+
+    using Clips = std::vector<Clip>;
+    using ClipsMap = std::map<std::string , Clips>;
+
+    class Animation : public Component{
+    public:
+        COMPONENT_DECLARATION(Component, Animation, 100);
+        Animation(GameObject* go);
+
+        void playAnimation(std::string&&);
+        void loadClips(const char* path);
+        Rect* getCurrentClip();
+        void pause();
+    private:
+        Clips* currentAnimation;
+        int currentFrame = 0;
+        float timeStamp = 0;
+        ClipsMap clips;
+
+        friend class AnimationSystem;
+    };
+}
+#endif
