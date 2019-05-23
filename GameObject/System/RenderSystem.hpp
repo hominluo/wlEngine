@@ -9,14 +9,16 @@
 
 class b2World;
 namespace wlEngine {
-    struct Texture;
+    struct Sprite;
+    struct Model;
     class RenderSystem : public System {
     public:
         static RenderSystem* get();
         static void init();
 
         void render();
-        void render(Texture*);
+        void render(Sprite*);
+        void render(Model*);
         
         void update() override;
     private:

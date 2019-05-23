@@ -28,7 +28,7 @@ namespace wlEngine {
         float pitch = 0;
         float yaw = -90;
 
-        float speed = 30;
+        float speed = 15;
     private:
         void updateEyeDirection();
         void updatePosition();

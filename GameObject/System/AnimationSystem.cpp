@@ -1,6 +1,6 @@
 #include "AnimationSystem.hpp"
 #include "../GameObject.hpp"
-#include "../Component/Texture.hpp"
+#include "../Component/Sprite.hpp"
 #include "../Component/Animation.hpp"
 #include "../../Time.hpp"
 namespace wlEngine {
@@ -23,7 +23,7 @@ namespace wlEngine {
             a->currentFrame %= a->currentAnimation->size();
         }
 
-        auto texture = a->gameObject->getComponent<Texture>();
+        auto texture = a->gameObject->getComponent<Sprite>();
         texture->clip(a->getCurrentClip());
     }
 }

@@ -19,7 +19,7 @@ namespace wlEngine {
         if (perspective) {
             updatePosition();
             updateEyeDirection();
-            if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
+            if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
                 SDL_SetRelativeMouseMode(SDL_TRUE);
             }
             else {

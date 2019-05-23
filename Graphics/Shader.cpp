@@ -1,9 +1,12 @@
 #include "Shader.hpp"
 
 namespace wlEngine {
+    std::map<std::string, Shader*> Shader::collection;
+
 	Shader::Shader() : Shader("texture.vert", "texture.frag") {
 
 	}
+
     Shader::Shader(const std::string& vertexCode, const std::string& fragmentCode) {
         const char* vShaderCode = vertexCode.c_str();
         const char* fShaderCode = fragmentCode.c_str();
@@ -83,8 +86,23 @@ namespace wlEngine {
         glDeleteShader(fragment);
     }
 
+    void Shader::loadShader(const std::string& name, const char* vertexPath, const char* fragmentPath) {
+        collection.insert({name, new Shader(vertexPath, fragmentPath)});
+    }
+
+    void Shader::deleteShader(const std::string& name) {
+        auto iter = collection.find(name);
+        if (iter != collection.end()) {
+            delete iter->second;
+            collection.erase(iter);
+        }
+        else {
+            assert(0 && "deleteShader: no such shader");
+        }
+    }
+
     void Shader::use() { 
-        glUseProgram(ID); 
+        glUseProgram(ID);
     }
 
     void Shader::setBool(const std::string &name, bool value) const {         

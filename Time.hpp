@@ -5,7 +5,7 @@ namespace wlEngine {
     class Time {
         public:
             static float deltaTime;
-            static double TimeAfterGameStart;
+            static double timeAfterGameStart;
             static void update();
         private:
             static std::chrono::time_point<std::chrono::system_clock> oldTime;

@@ -1,6 +1,7 @@
-#include "../Component/Texture.hpp"
+#include "../Component/Sprite.hpp"
 #include "../Component/Transform.hpp"
 #include "../Component/Animation.hpp"
+#include "../Component/Model.hpp"
 #include "../../EngineManager.hpp"
 
 namespace wlEngine {
@@ -35,37 +36,90 @@ namespace wlEngine {
 
     void RenderSystem::render() {
         beginRenderScene();
-        for (auto c : Texture::collection) {
-            render(c);
+        auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
+        if (camera->perspective) {
+            for (auto c : Model::collection) {
+                render(c);
+            }
         }
-		EngineManager::getwlEngine()->getCurrentScene()->getWorld()->DrawDebugData();
+        else {
+            for (auto c : Sprite::collection) {
+                render(c);
+            }
+        }
+        EngineManager::getwlEngine()->getCurrentScene()->getWorld()->DrawDebugData();
         endRenderScene();
     }
 
-    void RenderSystem::render(Texture* t) {
+    void RenderSystem::render(Sprite* t) {
         auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
 
-        auto cameraView = camera->getViewMatrix();
-        t->mShader.use();
+        t->mShader->use();
 
         glBindTexture(GL_TEXTURE_2D, t->mTexture);
 
         glm::mat4 proj = glm::mat4(1.0f);
 
-        if (camera->perspective) {
-            proj = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
-        }
-        else {
-            proj = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -1.0f, 1000.0f);
-        }
-        t->mShader.setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
-        t->mShader.setMat4("view", cameraView);
-        t->mShader.setMat4("projection", proj);
-
+        proj = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -1.0f, 1000.0f);
+        t->mShader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
+        t->mShader->setMat4("view", camera->getViewMatrix());
+        t->mShader->setMat4("projection", proj);
         glBindVertexArray(t->VAO);
 
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    }
+
+    void RenderSystem::render(Model* model) {
+        auto shader = model->shader;
+        auto gameObject = model->gameObject;
+        auto transform = gameObject->getComponent<Transform>();
+        auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
+        auto modelMatrix = transform->getModel();
+        auto view = camera->getViewMatrix();
+        auto proj = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
+		
+        shader->use();
+        shader->setMat4("model", modelMatrix);
+        shader->setMat4("view", view);
+        shader->setMat4("projection", proj); 
+        shader->setVec3("viewPos", camera->getComponent<Transform>()->position);
+
+        for (auto& mesh : model->meshes) {
+            // bind appropriate textures
+            unsigned int diffuseNr  = 1;
+            unsigned int specularNr = 1;
+            unsigned int normalNr   = 1;
+            unsigned int heightNr   = 1;
+            for(unsigned int i = 0; i < mesh.textures.size(); i++)
+            {
+                glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
+                // retrieve texture number (the N in diffuse_textureN)
+                std::string number;
+                std::string name = mesh.textures[i].type;
+                if(name == "texture_diffuse")
+                    number = std::to_string(diffuseNr++);
+                else if(name == "texture_specular")
+                    number = std::to_string(specularNr++); // transfer unsigned int to stream
+                else if(name == "texture_normal")
+                    number = std::to_string(normalNr++); // transfer unsigned int to stream
+                else if(name == "texture_height")
+                    number = std::to_string(heightNr++); // transfer unsigned int to stream
+
+                // now set the sampler to the correct texture unit
+                glUniform1i(glGetUniformLocation(model->shader->ID, (name + number).c_str()), i);
+                // and finally bind the texture
+                glBindTexture(GL_TEXTURE_2D, mesh.textures[i].id);
+            }
+            //
+            // draw mesh
+            glBindVertexArray(mesh.VAO);
+            glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
+            glBindVertexArray(0);
+
+            // always good practice to set everything back to defaults once configured.
+            glActiveTexture(GL_TEXTURE0);
+        }
+
     }
 
     void RenderSystem::endRenderScene(){
@@ -74,7 +128,7 @@ namespace wlEngine {
 
     void RenderSystem::beginRenderScene(){
         //glViewport(0, 0, winWidth, winHeight);
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }

@@ -28,6 +28,7 @@ namespace wlEngine {
 
 
     Scene::Scene() : mWorld(new b2World(b2Vec2(0, 0))) {
+        //physics world
         auto collisionListener = new WorldContactListener();
         auto physicsDebugDraw = new PhysicsDebugDraw();
 
@@ -36,6 +37,8 @@ namespace wlEngine {
 
         physicsDebugDraw->SetFlags(b2Draw::e_shapeBit);
     
+        //system
+        
     }
 
     Scene::~Scene() {

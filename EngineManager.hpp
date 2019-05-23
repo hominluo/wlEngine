@@ -43,6 +43,12 @@ namespace wlEngine {
 
             void initializeManagers();
             void initializeSystems();
+
+
+            /**
+             * @brief initialize anything that needs systemt to set up first
+             */
+            void postInitialization();
     };
 }
 

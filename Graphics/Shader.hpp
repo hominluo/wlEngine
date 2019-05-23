@@ -8,10 +8,15 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <string>
+#include <map>
 
 namespace wlEngine {
     class Shader {
     public:
+        static std::map<std::string, Shader*> collection;
+        static void loadShader(const std::string& name, const char* vertexPath, const char* fragmentPath);
+        static void deleteShader(const std::string& name);
         unsigned int ID;
         Shader(const char* vertexPath, const char* fragmentPath);
         Shader(const std::string& vertex, const std::string& fragment);

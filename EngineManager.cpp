@@ -4,6 +4,8 @@
 #include "GameObject/System/PhysicsSystem.hpp"
 #include "GameObject/System/AnimationSystem.hpp"
 
+#include "Graphics/Shader.hpp"
+
 namespace wlEngine {
     EngineManager* EngineManager::engine = nullptr;
 
@@ -11,6 +13,7 @@ namespace wlEngine {
         quit = false;
         initializeManagers();
 		initializeSystems();
+        postInitialization();
 
         eventManager->registerEvent(Create_Event(this, &EngineManager::setQuit));
     };
@@ -19,6 +22,10 @@ namespace wlEngine {
 
     void EngineManager::initializeManagers() {
         eventManager = EventManager::initialize();
+    }
+
+    void EngineManager::postInitialization() {
+        Shader::collection = {{"basic_shader", new Shader()}};       
     }
 
     EngineManager* EngineManager::getwlEngine() {
@@ -45,7 +52,6 @@ namespace wlEngine {
             update();
 
             Time::update();
-            
         }
     }
 
@@ -53,7 +59,7 @@ namespace wlEngine {
     bool EngineManager::isKeyPressed(const unsigned int& key) {
         return eventManager->isKeyPressed(key);
     }
-    
+
     void EngineManager::registerEvent(const Event& e) {
         eventManager->registerEvent(e);
     }
@@ -71,7 +77,7 @@ namespace wlEngine {
 
     void EngineManager::initializeSystems() {
         AnimationSystem::init();
-		ScriptSystem::init();
+        ScriptSystem::init();
         PhysicsSystem::init();
         RenderSystem::init();
     }

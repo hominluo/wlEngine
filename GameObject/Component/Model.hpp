@@ -1,0 +1,36 @@
+#pragma once
+#include <vector>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <stb_image.hpp>
+
+#include "Component.hpp"
+#include "../../Graphics/Mesh.hpp"
+
+namespace wlEngine {
+    struct Model : public Component{
+    public:
+        COMPONENT_DECLARATION(Component, Model, 50);
+        std::vector<Mesh> meshes;
+        bool gammaCorrection;
+        std::string directory;
+
+        Shader* shader;
+
+        Model(GameObject* go, const std::string& path, bool gamma = false) : Component(go), gammaCorrection(gamma) {
+            loadModel(path);
+        }
+
+        void useShader(const std::string& name) {
+            shader = Shader::collection.find(name)->second;
+        }
+
+    private:
+        void loadModel(const std::string& name);
+        void processNode(aiNode* node, const aiScene* scene);
+        Mesh processMesh(aiMesh* mesh, const aiScene* scene);
+        std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType textureType, std::string typeName);
+        size_t TextureFromFile(const char *path, const std::string &directory, bool gamma);
+    };
+}

@@ -16,6 +16,7 @@ namespace wlEngine {
         glm::mat4 positionMat4;
 		glm::mat4 rotation;
         glm::mat4 rotateArou;
+        glm::mat4 scaleMat4;
 
         void moveBy(const float& x, const float& y, const float& z);
         void setPosition(const glm::vec3& pos);
@@ -24,6 +25,7 @@ namespace wlEngine {
 
 		void rotate(const glm::vec3& axis, const float& radius);
 		void setRotation(const glm::mat4& ro);
+        void setScale(const float& x, const float& y, const float& z);
         void rotateAround(const glm::vec3& axis, const float& radius);
 		glm::mat4 getModel() const ;
     };
