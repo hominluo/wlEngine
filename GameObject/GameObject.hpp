@@ -9,7 +9,10 @@ namespace wlEngine {
         GameObject() = default;
         ~GameObject() = default;
         std::set<GameObject*> children;
-        GameObject* parent = nullptr;
+
+        GameObject* getParent() {return parent;}
+        void setParent(GameObject*);
+
         std::set<std::shared_ptr<Component>> components;
         
         template <typename ComponentType, typename... Args>
@@ -31,6 +34,9 @@ namespace wlEngine {
                 (*iter)->update();
             }
         }
+    private:
+        GameObject* parent = nullptr;
+        friend class Transform;
     };
 
     template<typename ComponentType, typename... Args>

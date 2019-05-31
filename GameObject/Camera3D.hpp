@@ -15,7 +15,6 @@ namespace wlEngine {
 		glm::mat4 getViewMatrix() override;
         void update() override;
 
-    protected:
         glm::vec3 front;
         glm::vec3 right;
         const glm::vec3 WORLD_UP = glm::vec3(0,1,0);
@@ -24,17 +23,15 @@ namespace wlEngine {
         int relX;
         int relY;
         float sensitivity = 0.3;
-
+		bool enableMouse = false;
         float pitch = 0;
         float yaw = -90;
 
-        float speed = 15;
+        float speed = 5;
     private:
         void updateEyeDirection();
         void updatePosition();
     };
-
-    
 }
 
 #endif

@@ -4,6 +4,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <stb_image.hpp>
+#include <functional>
 
 #include "Component.hpp"
 #include "../../Graphics/Mesh.hpp"
@@ -26,11 +27,14 @@ namespace wlEngine {
             shader = Shader::collection.find(name)->second;
         }
 
+        std::function<void()> beforeRenderFunc;
+        std::function<void()> afterRenderFunc;
+
     private:
+        std::vector<Texture> loaded;
         void loadModel(const std::string& name);
         void processNode(aiNode* node, const aiScene* scene);
-        Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-        std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType textureType, std::string typeName);
+        std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType textureType, std::string typeName, const aiScene*);
         size_t TextureFromFile(const char *path, const std::string &directory, bool gamma);
     };
 }

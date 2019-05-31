@@ -33,6 +33,10 @@ namespace wlEngine {
     class Mesh {
     public:
         Mesh(std::vector<Texture>& textures, std::vector<GLuint>& indices, std::vector<Vertex>& vertices);
+        Mesh(std::vector<Texture>&& textures, std::vector<GLuint>&& indices, std::vector<Vertex>&& vertices);
+		Mesh(const Mesh& mesh) = default;
+		Mesh(Mesh&& mesh) noexcept;
+
 		~Mesh() {};
 
     private:

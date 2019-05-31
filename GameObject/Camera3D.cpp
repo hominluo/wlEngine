@@ -21,9 +21,11 @@ namespace wlEngine {
             updateEyeDirection();
             if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
                 SDL_SetRelativeMouseMode(SDL_TRUE);
+                enableMouse = true;
             }
             else {
                 SDL_SetRelativeMouseMode(SDL_FALSE);
+                enableMouse = false;
             }
         }
         else {
@@ -32,9 +34,11 @@ namespace wlEngine {
 
     }
     void Camera3D::updateEyeDirection() {
-        SDL_GetRelativeMouseState(&relX, &relY);
-        yaw += relX * sensitivity;
-        pitch -= relY * sensitivity;
+        if (enableMouse) {
+            SDL_GetRelativeMouseState(&relX, &relY);
+            yaw += relX * sensitivity;
+            pitch -= relY * sensitivity;
+        }
 
         if (pitch > 89.0f)
             pitch = 89.0f;

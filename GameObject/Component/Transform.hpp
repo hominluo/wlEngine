@@ -28,6 +28,8 @@ namespace wlEngine {
         void setScale(const float& x, const float& y, const float& z);
         void rotateAround(const glm::vec3& axis, const float& radius);
 		glm::mat4 getModel() const ;
+    private:
+        friend class GameObject;
     };
 }
 

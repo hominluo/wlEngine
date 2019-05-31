@@ -17,12 +17,17 @@ namespace wlEngine {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+        SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
         SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
         stbi_set_flip_vertically_on_load(true);
         window = SDL_CreateWindow("OpenGL Test", 0, 0, windowWidth, windowHeight, SDL_WINDOW_OPENGL);
         glContext = SDL_GL_CreateContext(window);
         gladLoadGLLoader(SDL_GL_GetProcAddress);
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_STENCIL_TEST);
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+
+        glClearStencil(0);
 
         registerSystem(this);
     }
@@ -70,6 +75,7 @@ namespace wlEngine {
     }
 
     void RenderSystem::render(Model* model) {
+        if (model->beforeRenderFunc) model->beforeRenderFunc();
         auto shader = model->shader;
         auto gameObject = model->gameObject;
         auto transform = gameObject->getComponent<Transform>();
@@ -118,6 +124,7 @@ namespace wlEngine {
 
             // always good practice to set everything back to defaults once configured.
             glActiveTexture(GL_TEXTURE0);
+            if (model->afterRenderFunc) model->afterRenderFunc();
         }
 
     }
@@ -128,9 +135,7 @@ namespace wlEngine {
 
     void RenderSystem::beginRenderScene(){
         //glViewport(0, 0, winWidth, winHeight);
-        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
 
     void RenderSystem::update() {

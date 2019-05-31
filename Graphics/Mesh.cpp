@@ -2,7 +2,16 @@
 
 namespace wlEngine {
     Mesh::Mesh(std::vector<Texture>& textures, std::vector<GLuint>& indices, std::vector<Vertex>& vertices): textures(textures), indices(indices), vertices(vertices) {
-        setupMesh(); 
+		EBO = 0;
+		VAO = 0;
+		VBO = 0;
+		setupMesh(); 
+    }
+    Mesh::Mesh(std::vector<Texture>&& textures, std::vector<GLuint>&& indices, std::vector<Vertex>&& vertices) : textures(std::move(textures)), indices(std::move(indices)), vertices(std::move(vertices)) {
+		EBO = 0;
+		VAO = 0;
+		VBO = 0;
+		setupMesh();
     }
     void Mesh::setupMesh() {
         glGenVertexArrays(1, &VAO);
@@ -33,5 +42,14 @@ namespace wlEngine {
         glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bitangent));
 
         glBindVertexArray(0);
+    }
+
+    Mesh::Mesh(Mesh&& mesh) noexcept {
+        this->vertices = std::move(mesh.vertices);
+        this->indices = std::move(mesh.indices);
+        this->textures = std::move(mesh.textures);
+        this->EBO = mesh.EBO;
+        this->VAO = mesh.VAO;
+        this->VBO = mesh.VBO;
     }
 }

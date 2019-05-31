@@ -15,7 +15,8 @@ namespace wlEngine {
         positionMat4 = glm::translate(glm::mat4(1.0), position);
 
         for (auto iter = gameObject->children.begin(); iter != gameObject->children.end(); iter++) {
-            (*iter)->getComponent<Transform>()->moveBy(x, y, z);
+            auto t = (*iter)->getComponent<Transform>();
+            t->moveBy(x, y, z);
         }
     }
 
@@ -45,7 +46,8 @@ namespace wlEngine {
         positionMat4 = glm::translate(glm::mat4(1.0), position);
 
         for (auto iter = gameObject->children.begin(); iter != gameObject->children.end(); iter++) {
-            (*iter)->getComponent<Transform>()->moveBy(moveVector.x, moveVector.y, moveVector.z);
+            auto t = (*iter)->getComponent<Transform>();
+            if (t) t->moveBy(moveVector.x, moveVector.y, moveVector.z);
         }
     }
 
@@ -53,12 +55,13 @@ namespace wlEngine {
         glm::vec3 newPosition = gameObject->parent->getComponent<Transform>()->position + pos;
         glm::vec3 moveVector = newPosition - position;
 
-        position = pos;
+        position = newPosition;
 
         positionMat4 = glm::translate(glm::mat4(1.0), position);
 
         for (auto iter = gameObject->children.begin(); iter != gameObject->children.end(); iter++) {
-            (*iter)->getComponent<Transform>()->moveBy(moveVector.x, moveVector.y, moveVector.z);
+            auto t= (*iter)->getComponent<Transform>();
+            if(t)t->moveBy(moveVector.x, moveVector.y, moveVector.z);
         }
     }
 
