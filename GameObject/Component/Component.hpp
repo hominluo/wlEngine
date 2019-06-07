@@ -4,6 +4,7 @@
 #include <string>
 #include <set>
 #include <iostream>
+#include <unordered_set>
 
 #include "Memory.hpp"
 
@@ -17,7 +18,7 @@ template<typename... Args> \
 static auto createComponent(Args&& ... params){\
     auto ptr = componentAllocator.allocate(std::forward<Args>(params)...); \
     collection.insert(ptr); \
-    return std::shared_ptr<TypeClass>(std::move(ptr), &destroy); \
+    return std::shared_ptr<TypeClass>(ptr, &destroy); \
 } \
 friend ComponentAllocator<TypeClass, N>;
 
@@ -59,7 +60,7 @@ template<typename... Args> \
 static auto createComponent(Args&& ... params){\
     auto ptr = componentAllocator.allocate(std::forward<Args>(params)...); \
     ParentName::collection.insert(ptr); \
-    return std::shared_ptr<TypeName>(std::move(ptr), &destroy); \
+    return std::shared_ptr<TypeName>(ptr, &destroy); \
 } \
 
 #define DERIVED_VIRTUAL_COMPONENT_DEFINATION(ParentName, TypeName, N) \
@@ -76,11 +77,24 @@ ParentName::collection.erase(ptr); \
 componentAllocator.deallocate(ptr); \
 } \
 
+
+#define STATIC_DECLARATION(P, T) \
+static const std::size_t componentId; \
+virtual bool isType(const std::size_t& typeId) const override; \
+static T* component; \
+static void destroy(T* ptr);\
+template<typename... Args> \
+static auto createComponent(Args&& ... params){\
+    component = new T(std::forward(params)); \
+    return std::shared_ptr<T>(ptr, &destroy); \
+} \
+
+//TODO: implement static component allocation
 namespace wlEngine {
     class GameObject;
     struct Component {
     public:
-        Component(GameObject* go):gameObject(go) {};
+        Component(GameObject* go): gameObject(go) {};
         GameObject* gameObject;
 
         static const std::size_t componentId;
