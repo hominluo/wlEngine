@@ -19,7 +19,7 @@ namespace wlEngine {
 		ComponentType* addComponent(Args&& ... params);
         
         template <typename ComponentType>
-        void addComponent(std::shared_ptr<ComponentType> );
+        void addComponent(std::shared_ptr<ComponentType>& );
         
         template <typename ComponentType>
         void removeComponent();
@@ -43,7 +43,7 @@ namespace wlEngine {
 	ComponentType* GameObject::addComponent(Args&&... params) {
 		auto p = ComponentType::createComponent(this, params...);
 		auto raw = p.get();
-        components.emplace(std::move(p));
+        components.insert(p);
 		return raw;
     }
 
@@ -60,18 +60,23 @@ namespace wlEngine {
     }
 
     template <typename ComponentType>
-    void GameObject::addComponent(std::shared_ptr<ComponentType> c) {
-        c->gameObject = this;
+    void GameObject::addComponent(std::shared_ptr<ComponentType>& c) {
+        if (c->gameObjects == nullptr) c->gameObject = this;
+        else c->gameObjects.insert(this);
+
         components.insert(c);
     }
 
     template <typename ComponentType>
-    void GameObject::removeComponent() {
-        for (auto& c : components) {
-            if (c->isType(ComponentType::componentId)) {
-                components.erase(c);
-                return;
+        void GameObject::removeComponent() {
+            for (auto& c : components) {
+                if (c->isType(ComponentType::componentId)) {
+                    if (c->gameObjects) {
+                        c->gameObjects->erase(this);
+                    }
+                    components.erase(c);
+                    return;
+                }
             }
         }
-    }
 }

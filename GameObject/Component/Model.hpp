@@ -19,7 +19,7 @@ namespace wlEngine {
 
         Shader* shader;
 
-        Model(GameObject* go, const std::string& path, bool gamma = false) : Component(go), gammaCorrection(gamma) {
+        Model(GameObject* go, const std::string& path, bool gamma = false) : Component(nullptr), gammaCorrection(gamma) {
             loadModel(path);
         }
 
