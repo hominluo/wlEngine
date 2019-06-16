@@ -48,6 +48,7 @@ namespace wlEngine {
         static const std::size_t componentId;
         virtual bool isType(const std::size_t& typeId) const;
 
+        virtual void destruct(GameObject* go){};
         virtual ~Component(){};
     };
 }

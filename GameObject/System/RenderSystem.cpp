@@ -42,17 +42,21 @@ namespace wlEngine {
     void RenderSystem::render() {
         beginRenderScene();
         auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
-        if (camera->perspective) {
+        if(camera->perspective) {
+            projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
             for (auto c : Model::collection) {
                 render(c);
             }
         }
         else {
-            for (auto c : Sprite::collection) {
-                render(c);
-            }
+            projection = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -1.0f, 1000.0f);
         }
-        EngineManager::getwlEngine()->getCurrentScene()->getWorld()->DrawDebugData();
+
+        for (auto c : Sprite::collection) {
+            render(c);
+        }
+
+        EngineManager::getwlEngine()->getCurrentScene()->getWorld()->DrawDebugData(); //TODO: has to be removed
         endRenderScene();
     }
 
@@ -63,12 +67,10 @@ namespace wlEngine {
 
         glBindTexture(GL_TEXTURE_2D, t->mTexture);
 
-        glm::mat4 proj = glm::mat4(1.0f);
 
-        proj = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -1.0f, 1000.0f);
         t->mShader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
         t->mShader->setMat4("view", camera->getViewMatrix());
-        t->mShader->setMat4("projection", proj);
+        t->mShader->setMat4("projection", projection);
         glBindVertexArray(t->VAO);
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -83,12 +85,11 @@ namespace wlEngine {
             auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
             auto modelMatrix = transform->getModel();
             auto view = camera->getViewMatrix();
-            auto proj = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
 
             shader->use();
             shader->setMat4("model", modelMatrix);
             shader->setMat4("view", view);
-            shader->setMat4("projection", proj); 
+            shader->setMat4("projection", projection); 
             shader->setVec3("viewPos", camera->getComponent<Transform>()->position);
 
             for (auto& mesh : model->meshes) {

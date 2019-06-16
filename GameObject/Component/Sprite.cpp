@@ -10,15 +10,16 @@
 namespace wlEngine {
 	COMPONENT_DEFINATION(Component, Sprite, 100);
 
-    Sprite::Sprite(GameObject* go): Component(go), mTexture(0), mWidth(0), mHeight(0), VAO(0), VBO(0), EBO(0) {
+    Sprite::Sprite(GameObject* go, const std::string& path): Component(go), mTexture(0), mWidth(0), mHeight(0), VAO(0), VBO(0), EBO(0) {
         mShader = Shader::collection["basic_shader"];
+        loadFromFile(path);
     }
 
     Sprite::~Sprite() {
         free();
     }
 
-    bool Sprite::loadFromFile(std::string path) {
+    bool Sprite::loadFromFile(const std::string& path) {
         free();
 
 		int nrChannel;
@@ -64,7 +65,7 @@ namespace wlEngine {
         return true;
     }
 
-    void Sprite::loadShader(const std::string& name) {
+    void Sprite::useShader(const std::string& name) {
         mShader = Shader::collection[name];
     }
 

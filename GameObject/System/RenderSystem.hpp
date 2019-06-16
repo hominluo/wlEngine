@@ -2,6 +2,7 @@
 #define GL_GLEXT_PROTOTYPES
 #include <SDL.h>
 #include <string>
+#include <glm/glm.hpp>
 #include <glad/glad.h>
 #include <stb_image.hpp>
 
@@ -33,6 +34,8 @@ namespace wlEngine {
 
         SDL_GLContext glContext;
         SDL_Window* window;
+
+        glm::mat4 projection;
 
         friend class PhysicsDebugDraw;
     };

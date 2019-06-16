@@ -20,8 +20,12 @@ namespace wlEngine {
         Shader* shader;
 
         Model(GameObject* go, const std::string& path, bool gamma = false) : Component(nullptr), gammaCorrection(gamma) {
+            gameObjects->insert(go);
+
             loadModel(path);
         }
+
+        void destruct(GameObject* go) override;
 
         void useShader(const std::string& name) {
             shader = Shader::collection.find(name)->second;

@@ -20,6 +20,7 @@ namespace wlEngine {
         for (size_t i = 0; i < node->mNumMeshes; i++) {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
+            
             std::vector<Vertex> vertices;
             std::vector<GLuint> indices;
             std::vector<Texture> textures;
@@ -161,5 +162,9 @@ namespace wlEngine {
         }
 
         return textureID;
+    }
+
+    void Model::destruct(GameObject* go) {
+        if (gameObjects) gameObjects->erase(go);
     }
 }

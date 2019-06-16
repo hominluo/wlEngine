@@ -6,4 +6,10 @@ namespace wlEngine {
         parent = go;
         go->children.insert(this);
     }
+    
+    GameObject::~GameObject() {
+        for(auto& c : components) {
+            c->destruct(this);
+        }
+    }
 }

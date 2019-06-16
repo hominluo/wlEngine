@@ -18,15 +18,15 @@ namespace wlEngine {
     struct Sprite : Component {
 	public:
         COMPONENT_DECLARATION(Component, Sprite, 100);
-        Sprite(GameObject*);
+        Sprite(GameObject*, const std::string& path);
         ~Sprite();
 
         /* load image from path */
-        bool loadFromFile(std::string path);
+        bool loadFromFile(const std::string& path);
 
         void free();
 
-        void loadShader(const std::string& name);
+        void useShader(const std::string& name);
 
         int getWidth() { return mWidth; };
         int getHeight() { return mHeight; };
