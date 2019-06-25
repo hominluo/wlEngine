@@ -25,7 +25,8 @@ namespace wlEngine {
 		int nrChannel;
         unsigned char* imageData = stbi_load(path.c_str(), &mWidth, &mHeight, &nrChannel, 0);
 		//if (!imageData) return false; It can be a plain color
-        //float mNormalizationPara = mWidth > mHeight ? mWidth : mHeight; // for 3d
+        normalizationPara = mWidth > mHeight ? mWidth : mHeight; // for 3d
+
         Rect rect(0, 0, mWidth, mHeight);
         clip(&rect, false);
 		unsigned int glColorChannel = nrChannel == 4 ? GL_RGBA : GL_RGB;

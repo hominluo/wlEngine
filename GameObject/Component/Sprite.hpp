@@ -40,7 +40,7 @@ namespace wlEngine {
         int mWidth;
         int mHeight;
 
-        float mNormalizationPara;
+        float normalizationPara;
 
 		//opengl
 		GLuint VAO;
