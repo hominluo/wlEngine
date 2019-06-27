@@ -42,6 +42,7 @@ file(GLOB source_file
     "${CMAKE_CURRENT_SOURCE_DIR}/Event/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Event/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Physics/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Physics/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/imgui/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/imgui/*.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/src/glad.cpp"
 )
 

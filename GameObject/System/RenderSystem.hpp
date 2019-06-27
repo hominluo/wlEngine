@@ -36,6 +36,7 @@ namespace wlEngine {
         SDL_Window* window;
 
         glm::mat4 projection;
+        bool perspective;
 
         friend class PhysicsDebugDraw;
     };

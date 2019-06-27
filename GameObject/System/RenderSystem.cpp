@@ -3,11 +3,21 @@
 #include "../Component/Animation.hpp"
 #include "../Component/Model.hpp"
 #include "../../EngineManager.hpp"
+#include "../../Settings.hpp"
 
 namespace wlEngine {
     RenderSystem* RenderSystem::renderSystem = nullptr;
 
     RenderSystem::RenderSystem() {
+        if (Settings::settings["perspective"]) {
+            projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
+            perspective = true;
+        }
+        else {
+            projection = glm::ortho(0.0f, (float)windowWidth , 0.0f, (float)windowHeight, -1.0f, 1000.0f);
+            perspective = false;
+        }
+
         if (SDL_Init( SDL_INIT_VIDEO ) < 0) {
             std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
             exit(-1);
@@ -16,7 +26,6 @@ namespace wlEngine {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
         SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
         SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
         stbi_set_flip_vertically_on_load(true);
@@ -25,6 +34,7 @@ namespace wlEngine {
         gladLoadGLLoader(SDL_GL_GetProcAddress);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_STENCIL_TEST);
+        glEnable(GL_BLEND);
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
         glClearStencil(0);
@@ -41,15 +51,10 @@ namespace wlEngine {
 
     void RenderSystem::render() {
         beginRenderScene();
-        auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
-        if(camera->perspective) {
-            projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
+        if(perspective) {
             for (auto c : Model::collection) {
                 render(c);
             }
-        }
-        else {
-            projection = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -1.0f, 1000.0f);
         }
 
         for (auto c : Sprite::collection) {
@@ -66,7 +71,6 @@ namespace wlEngine {
         t->mShader->use();
 
         glBindTexture(GL_TEXTURE_2D, t->mTexture);
-
 
         t->mShader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
         t->mShader->setMat4("view", camera->getViewMatrix());

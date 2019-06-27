@@ -1,4 +1,5 @@
 #include "EngineManager.hpp"
+#include "Settings.hpp"
 #include "GameObject/System/RenderSystem.hpp"
 #include "GameObject/System/ScriptSystem.hpp"
 #include "GameObject/System/PhysicsSystem.hpp"
@@ -25,7 +26,7 @@ namespace wlEngine {
     }
 
     void EngineManager::postInitialization() {
-        Shader::collection = {{"basic_shader", new Shader()}};       
+        //Shader::collection = {{"basic_shader", new Shader()}};       
     }
 
     EngineManager* EngineManager::getwlEngine() {
@@ -50,7 +51,6 @@ namespace wlEngine {
         while(!quit) {
             pollEvent();
             update();
-
             Time::update();
         }
     }
@@ -76,6 +76,8 @@ namespace wlEngine {
     }
 
     void EngineManager::initializeSystems() {
+        Settings::init();
+
         AnimationSystem::init();
         ScriptSystem::init();
         PhysicsSystem::init();

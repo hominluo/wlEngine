@@ -6,6 +6,5 @@ namespace wlEngine {
     class Camera : public GameObject {
     public:
         virtual glm::mat4 getViewMatrix() = 0;
-        bool perspective = false;
     };
 }

@@ -3,7 +3,6 @@
 #include "Component/Transform.hpp"
 namespace wlEngine {
     Camera3D::Camera3D() : Camera(), front(0,0, -1),right(1,0,0) {
-        perspective = true;
 		SDL_GetMouseState(&relX, &relY);
         
     };
@@ -16,20 +15,15 @@ namespace wlEngine {
 	
     void Camera3D::update() {
         Camera::update();
-        if (perspective) {
-            updatePosition();
-            updateEyeDirection();
-            if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-                SDL_SetRelativeMouseMode(SDL_TRUE);
-                enableMouse = true;
-            }
-            else {
-                SDL_SetRelativeMouseMode(SDL_FALSE);
-                enableMouse = false;
-            }
+        updatePosition();
+        updateEyeDirection();
+        if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+            SDL_SetRelativeMouseMode(SDL_TRUE);
+            enableMouse = true;
         }
         else {
-
+            SDL_SetRelativeMouseMode(SDL_FALSE);
+            enableMouse = false;
         }
 
     }

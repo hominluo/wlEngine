@@ -6,12 +6,12 @@
 #include "Sprite.hpp"
 #include "../Camera.hpp"
 #include "../../EngineManager.hpp"
+#include "../../Settings.hpp"
 
 namespace wlEngine {
 	COMPONENT_DEFINATION(Component, Sprite, 100);
 
     Sprite::Sprite(GameObject* go, const std::string& path): Component(go), mTexture(0), mWidth(0), mHeight(0), VAO(0), VBO(0), EBO(0) {
-        mShader = Shader::collection["basic_shader"];
         loadFromFile(path);
     }
 
@@ -78,16 +78,17 @@ namespace wlEngine {
     }
 
     void Sprite::clip(Rect* rect, bool subData) {
-		int widthHalf = rect->width >> 1;
-		int heightHalf = rect->height >> 1;
-		vertices[0] = widthHalf;
-		vertices[1] = heightHalf;
-		vertices[5] = widthHalf;
-		vertices[6] = -heightHalf;
-		vertices[10] = -widthHalf;
-		vertices[11] = -heightHalf;
-		vertices[15] = -widthHalf;
-		vertices[16] = heightHalf;
+		float width = (Settings::settings["perspective"] ? rect->width / normalizationPara : rect->width);
+		float height = (Settings::settings["perspective"] ? rect->height / normalizationPara : rect->height);
+
+		vertices[0] = width;
+		vertices[1] = height;
+		vertices[5] = width;
+		vertices[6] = 0;
+		vertices[10] = 0;
+		vertices[11] = 0;
+		vertices[15] = 0;
+		vertices[16] = height;
 
         //texture coor
         

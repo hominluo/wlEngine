@@ -4,6 +4,7 @@
 
 #include "../EngineManager.hpp"
 #include "../GameObject/System/RenderSystem.hpp"
+#include "../Settings.hpp"
 
 #include <SDL.h>
 #include <SDL_opengl.h>
@@ -47,7 +48,7 @@ namespace wlEngine {
         glm::mat4 proj = glm::mat4(1.0f);
         glm::mat4 cameraView = camera->getViewMatrix();
 
-        if (camera->perspective) {
+        if (Settings::settings["perspective"]) {
             proj = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
         }
         else {
