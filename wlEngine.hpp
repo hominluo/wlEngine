@@ -4,8 +4,5 @@
 #include "GameObject/GameObject.hpp"
 #include "GameObject/Camera.hpp"
 
-#include "Event/EventManager.hpp"
-#include "Event/Event.hpp"
-
 #include "EngineManager.hpp"
 #endif

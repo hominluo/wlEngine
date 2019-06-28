@@ -1,6 +1,5 @@
 #ifndef ENGINE_MANAGER_H
 #define ENGINE_MANAGER_H
-#include "Event/EventManager.hpp"
 
 #include "System/RenderSystem.hpp"
 
@@ -15,16 +14,11 @@ namespace wlEngine {
 
             void setScene(Scene*);
 
-            /*Event*/
-            void registerEvent(const Event&);
-            void unregisterEvent(const Event&);
-            bool isKeyPressed(const unsigned int& key);
             
             void loop();
             
             ~EngineManager();
 
-            void setQuit(const EngineEvent&);
 
             Scene* getCurrentScene() {return currentScene;};
         private:
@@ -33,17 +27,11 @@ namespace wlEngine {
             EngineManager();
             static EngineManager* engine;
 
-            EventManager* eventManager;
-
             Scene* currentScene; 
 
-            /* update and render the whole current scene*/
-            void pollEvent();
             void update();
 
-            void initializeManagers();
             void initializeSystems();
-
 
             /**
              * @brief initialize anything that needs systemt to set up first
