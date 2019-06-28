@@ -22,6 +22,9 @@ namespace wlEngine {
         void render(Model*);
         
         void update() override;
+
+        SDL_GLContext* getSDL_GLContext() {return &glContext;};
+        SDL_Window* getSDL_Window() {return window;};
     private:
         static RenderSystem* renderSystem;
         int windowHeight = 720;

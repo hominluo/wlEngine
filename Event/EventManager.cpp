@@ -1,4 +1,6 @@
 #include "EventManager.hpp"
+#include "../imgui/imgui.h"
+#include "../imgui/imgui_impl_sdl.h"
 #include <algorithm>
 
 namespace wlEngine {
@@ -9,6 +11,8 @@ namespace wlEngine {
 
     void EventManager::pollEvent() {
         while (SDL_PollEvent(&event)) {
+			ImGui_ImplSDL2_ProcessEvent(&event);
+
             for (auto iter = handlers.begin(); iter != handlers.end(); iter++) {
                 (*iter)(event);
             }

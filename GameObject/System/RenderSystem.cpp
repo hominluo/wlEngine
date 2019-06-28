@@ -5,6 +5,8 @@
 #include "../../EngineManager.hpp"
 #include "../../Settings.hpp"
 
+#include "UISystem.hpp"
+
 namespace wlEngine {
     RenderSystem* RenderSystem::renderSystem = nullptr;
 
@@ -61,6 +63,7 @@ namespace wlEngine {
             render(c);
         }
 
+        UISystem::get()->render();
         EngineManager::getwlEngine()->getCurrentScene()->getWorld()->DrawDebugData(); //TODO: has to be removed
         endRenderScene();
     }
@@ -148,4 +151,5 @@ namespace wlEngine {
     void RenderSystem::update() {
         render();
     }
+
 }

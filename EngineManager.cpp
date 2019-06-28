@@ -4,6 +4,7 @@
 #include "GameObject/System/ScriptSystem.hpp"
 #include "GameObject/System/PhysicsSystem.hpp"
 #include "GameObject/System/AnimationSystem.hpp"
+#include "GameObject/System/UISystem.hpp"
 
 #include "Graphics/Shader.hpp"
 
@@ -12,8 +13,8 @@ namespace wlEngine {
 
     EngineManager::EngineManager(){
         quit = false;
-        initializeManagers();
 		initializeSystems();
+        initializeManagers();
         postInitialization();
 
         eventManager->registerEvent(Create_Event(this, &EngineManager::setQuit));
@@ -78,10 +79,11 @@ namespace wlEngine {
     void EngineManager::initializeSystems() {
         Settings::init();
 
+        RenderSystem::init();
+        UISystem::init();
         AnimationSystem::init();
         ScriptSystem::init();
         PhysicsSystem::init();
-        RenderSystem::init();
     }
 }
 
