@@ -8,7 +8,7 @@
 
 #include "Component.hpp"
 #include "Struct/Clip.hpp"
-#include "../../Graphics/Shader.hpp"
+#include "../Graphics/Shader.hpp"
 
 namespace wlEngine {
     /* class Texture

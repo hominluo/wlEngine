@@ -1,5 +1,5 @@
 #include "GameObject.hpp"
-#include "Component/Transform.hpp"
+#include "../Component/Transform.hpp"
 
 namespace wlEngine {
     void GameObject::setParent(GameObject* go) {

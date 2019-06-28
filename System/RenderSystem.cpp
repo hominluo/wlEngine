@@ -2,8 +2,8 @@
 #include "../Component/Transform.hpp"
 #include "../Component/Animation.hpp"
 #include "../Component/Model.hpp"
-#include "../../EngineManager.hpp"
-#include "../../Settings.hpp"
+#include "../EngineManager.hpp"
+#include "../Settings.hpp"
 
 #include "UISystem.hpp"
 

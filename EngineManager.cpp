@@ -1,10 +1,10 @@
 #include "EngineManager.hpp"
 #include "Settings.hpp"
-#include "GameObject/System/RenderSystem.hpp"
-#include "GameObject/System/ScriptSystem.hpp"
-#include "GameObject/System/PhysicsSystem.hpp"
-#include "GameObject/System/AnimationSystem.hpp"
-#include "GameObject/System/UISystem.hpp"
+#include "System/RenderSystem.hpp"
+#include "System/ScriptSystem.hpp"
+#include "System/PhysicsSystem.hpp"
+#include "System/AnimationSystem.hpp"
+#include "System/UISystem.hpp"
 
 #include "Graphics/Shader.hpp"
 

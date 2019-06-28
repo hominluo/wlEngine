@@ -7,7 +7,7 @@
 #include <functional>
 
 #include "Component.hpp"
-#include "../../Graphics/Mesh.hpp"
+#include "../Graphics/Mesh.hpp"
 
 namespace wlEngine {
     struct Model : public Component{

@@ -1,7 +1,7 @@
 #include "PhysicsSystem.hpp"
 #include "../Component/RigidBody.hpp"
 #include "../Component/Transform.hpp"
-#include "../GameObject.hpp"
+#include "../GameObject/GameObject.hpp"
 
 namespace wlEngine {
     PhysicsSystem* PhysicsSystem::system = nullptr;

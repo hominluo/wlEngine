@@ -1,6 +1,6 @@
 #include "Camera3D.hpp"
 #include "../Time.hpp"
-#include "Component/Transform.hpp"
+#include "../Component/Transform.hpp"
 namespace wlEngine {
     Camera3D::Camera3D() : Camera(), front(0,0, -1),right(1,0,0) {
 		SDL_GetMouseState(&relX, &relY);

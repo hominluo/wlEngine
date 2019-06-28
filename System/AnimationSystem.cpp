@@ -1,8 +1,8 @@
 #include "AnimationSystem.hpp"
-#include "../GameObject.hpp"
+#include "../GameObject/GameObject.hpp"
 #include "../Component/Sprite.hpp"
 #include "../Component/Animation.hpp"
-#include "../../Time.hpp"
+#include "../Time.hpp"
 namespace wlEngine {
     SYSTEM_DEFINATION(AnimationSystem);
     AnimationSystem::AnimationSystem() {

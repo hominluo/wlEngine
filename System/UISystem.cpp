@@ -41,4 +41,8 @@ namespace wlEngine {
     void UISystem::update(){
         
     }
+
+    void UISystem::eventUpdate(SDL_Event& event) {
+        ImGui_ImplSDL2_ProcessEvent(&event);
+    }
 }

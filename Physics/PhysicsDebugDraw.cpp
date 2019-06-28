@@ -3,7 +3,7 @@
 
 
 #include "../EngineManager.hpp"
-#include "../GameObject/System/RenderSystem.hpp"
+#include "../System/RenderSystem.hpp"
 #include "../Settings.hpp"
 
 #include <SDL.h>

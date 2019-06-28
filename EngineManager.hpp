@@ -2,7 +2,7 @@
 #define ENGINE_MANAGER_H
 #include "Event/EventManager.hpp"
 
-#include "GameObject/System/RenderSystem.hpp"
+#include "System/RenderSystem.hpp"
 
 #include "GameObject/GameObject.hpp"
 #include "GameObject/Scene.hpp"

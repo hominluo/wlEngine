@@ -1,5 +1,5 @@
 #include "Transform.hpp"
-#include "../GameObject.hpp"
+#include "../GameObject/GameObject.hpp"
 
 namespace wlEngine {
     COMPONENT_DEFINATION(Component, Transform, COMPONENT_ALLOCATION_SIZE);

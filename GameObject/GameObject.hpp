@@ -1,5 +1,5 @@
 #pragma once
-#include "Component/Component.hpp"
+#include "../Component/Component.hpp"
 #include <set>
 #include <memory>
 

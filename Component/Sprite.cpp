@@ -4,9 +4,9 @@
 #include <glad/glad.h>
 #include <stb_image.hpp>
 #include "Sprite.hpp"
-#include "../Camera.hpp"
-#include "../../EngineManager.hpp"
-#include "../../Settings.hpp"
+#include "../GameObject/Camera.hpp"
+#include "../EngineManager.hpp"
+#include "../Settings.hpp"
 
 namespace wlEngine {
 	COMPONENT_DEFINATION(Component, Sprite, 100);

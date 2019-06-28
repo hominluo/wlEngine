@@ -2,7 +2,7 @@
 
 #include "../Physics/WorldContactListener.hpp"
 #include "../Physics/PhysicsDebugDraw.hpp"
-#include "System/System.hpp"
+#include "../System/System.hpp"
 
 namespace wlEngine {
     void Scene::update() {
