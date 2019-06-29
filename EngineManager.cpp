@@ -5,7 +5,7 @@
 #include "System/PhysicsSystem.hpp"
 #include "System/AnimationSystem.hpp"
 #include "System/UISystem.hpp"
-#include "System/EventSystem.hpp"
+#include "System/InputSystem.hpp"
 
 #include "Graphics/Shader.hpp"
 
@@ -55,7 +55,7 @@ namespace wlEngine {
         AnimationSystem::init();
         ScriptSystem::init();
         PhysicsSystem::init();
-        EventSystem::init();
+        InputSystem::init();
     }
 }
 

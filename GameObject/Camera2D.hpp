@@ -4,7 +4,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <SDL.h>
 namespace wlEngine {
     class Camera2D : public wlEngine::Camera {
     public:

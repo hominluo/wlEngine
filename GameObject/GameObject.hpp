@@ -6,8 +6,9 @@
 namespace wlEngine {
     class GameObject {
     public:
-        GameObject() = default;
+        GameObject(std::string&& name);
         ~GameObject();
+        std::string name;
         std::set<GameObject*> children;
 
         GameObject* getParent() {return parent;}

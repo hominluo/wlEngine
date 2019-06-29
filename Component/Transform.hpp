@@ -18,6 +18,8 @@ namespace wlEngine {
         glm::mat4 rotateArou;
         glm::mat4 scaleMat4;
 
+        glm::vec3 scale;
+
         void moveBy(const float& x, const float& y, const float& z);
         void setPosition(const glm::vec3& pos);
         void setLocalPosition(const glm::vec3& pos);

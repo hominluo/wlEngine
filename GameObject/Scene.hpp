@@ -22,6 +22,7 @@ namespace wlEngine {
 			b2World* getWorld() {
 				return mWorld;
 			}
+            const std::set<GameObject*>* getGameObjects(){return &mGameObjects;};
         private:
             std::set<GameObject*> mGameObjects;
             Camera* camera;

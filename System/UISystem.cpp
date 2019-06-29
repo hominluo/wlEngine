@@ -1,5 +1,8 @@
 #include "UISystem.hpp"
 #include "RenderSystem.hpp"
+#include "../UI/DeveloperUI.hpp"
+#include "../Settings.hpp"
+#include <iostream>
 namespace wlEngine {
     UISystem* UISystem::get() {return system;}
     UISystem* UISystem::system = nullptr;
@@ -16,6 +19,14 @@ namespace wlEngine {
 
         ImGui_ImplOpenGL3_Init("#version 450");
         registerSystem(this);
+
+        if (Settings::settings["development_mode"]) {
+            developerUI = new DeveloperUI;
+        }
+    }
+
+    void UISystem::turnOnDeveloperUI() {
+
     }
 
     void UISystem::render() {
@@ -23,12 +34,7 @@ namespace wlEngine {
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
 
-        bool showAnotherWindow = true;
-        ImGui::Begin("First Window", &showAnotherWindow);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-        ImGui::Text("wlEngine's first UI");
-        if (ImGui::Button("Close Me"))
-            showAnotherWindow= false;
-        ImGui::End();
+        if (developerUI && developerUISwitch) developerUI->render();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -39,10 +45,22 @@ namespace wlEngine {
     }
 
     void UISystem::update(){
-        
+
     }
 
     void UISystem::eventUpdate(SDL_Event& event) {
         ImGui_ImplSDL2_ProcessEvent(&event);
+        switch(event.type) {
+            case SDL_KEYDOWN:
+                if (event.key.keysym.scancode == SDL_SCANCODE_F5) {
+                    developerUISwitch = !developerUISwitch;
+                }
+        }        
+    }
+
+    UISystem::~UISystem() {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplSDL2_Shutdown();
+        ImGui::DestroyContext();
     }
 }

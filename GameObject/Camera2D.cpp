@@ -1,5 +1,6 @@
 #include "Camera2D.hpp"
 
+#include "../Input.hpp"
 namespace wlEngine {
     Camera2D::Camera2D(): Camera(){
         transform = addComponent<Transform>();
@@ -7,19 +8,18 @@ namespace wlEngine {
     };
 
     void Camera2D::update(){
-        auto keyboard = SDL_GetKeyboardState(nullptr);
 
         float speedDelta = speed * Time::deltaTime;
-        if (keyboard[SDL_SCANCODE_A]) {
+        if (Input::getKeyStatus(SDL_SCANCODE_LEFT)) {
             transform->position.x -= speedDelta;
         }
-        if (keyboard[SDL_SCANCODE_D]) {
+        if (Input::getKeyStatus(SDL_SCANCODE_RIGHT)) {
             transform->position.x +=  speedDelta;
         }
-        if (keyboard[SDL_SCANCODE_W]) {
+        if (Input::getKeyStatus(SDL_SCANCODE_UP)) {
             transform->position.y += speedDelta;
         }
-        if (keyboard[SDL_SCANCODE_S]) {
+        if (Input::getKeyStatus(SDL_SCANCODE_DOWN)) {
             transform->position.y -= speedDelta;
         }
     }

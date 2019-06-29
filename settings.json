@@ -1,3 +1,4 @@
 {
-    "perspective" : false
+    "perspective" : false,
+    "development_mode" : true
 }

@@ -31,7 +31,7 @@ namespace wlEngine {
         SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
         SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
         stbi_set_flip_vertically_on_load(true);
-        window = SDL_CreateWindow("OpenGL Test", 0, 0, windowWidth, windowHeight, SDL_WINDOW_OPENGL);
+        window = SDL_CreateWindow("OpenGL Test", 50, 50, windowWidth, windowHeight, SDL_WINDOW_OPENGL);
         glContext = SDL_GL_CreateContext(window);
         gladLoadGLLoader(SDL_GL_GetProcAddress);
         glEnable(GL_DEPTH_TEST);

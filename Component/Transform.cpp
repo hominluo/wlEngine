@@ -4,7 +4,8 @@
 namespace wlEngine {
     COMPONENT_DEFINATION(Component, Transform, COMPONENT_ALLOCATION_SIZE);
     
-    Transform::Transform(GameObject* gm) : Component(gm), position(0.0, 0.0, 0.0), rotation(1.0f), positionMat4(1.0), rotateArou(1.0), scaleMat4(1.0) {
+    Transform::Transform(GameObject* gm) : Component(gm), position(0.0, 0.0, 0.0), rotation(1.0f), positionMat4(1.0), rotateArou(1.0), scaleMat4(1.0), scale(1.0) {
+        
     }
     
     void Transform::moveBy(const float& x, const float& y, const float& z) {
@@ -25,6 +26,7 @@ namespace wlEngine {
     }
 
     void Transform::setScale(const float& x, const float& y, const float& z ) {
+        scale = {x,y,z};
         scaleMat4 = glm::scale(glm::mat4(1.0), {x,y,z});              
     }
     void Transform::rotate(const glm::vec3& axis, const float& radius) {
@@ -52,7 +54,7 @@ namespace wlEngine {
     }
 
     void Transform::setLocalPosition(const glm::vec3& pos) {
-        glm::vec3 newPosition = gameObject->parent->getComponent<Transform>()->position + pos;
+        glm::vec3 newPosition = (gameObject->parent ? gameObject->parent->getComponent<Transform>()->getLocalPosition() : glm::vec3(0.0)) + pos;
         glm::vec3 moveVector = newPosition - position;
 
         position = newPosition;
