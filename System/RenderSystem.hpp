@@ -23,12 +23,17 @@ namespace wlEngine {
         
         void update() override;
 
+        void setViewPort(int x, int y, int width, int height);
+
         SDL_GLContext* getSDL_GLContext() {return &glContext;};
         SDL_Window* getSDL_Window() {return window;};
     private:
         static RenderSystem* renderSystem;
         int windowHeight = 720;
         int windowWidth = 1280;
+        int sceneHeight = 720;
+        int sceneWidth = 1280;
+        const int topMenuHeight = 20;
 
         RenderSystem();
 
@@ -41,7 +46,10 @@ namespace wlEngine {
         glm::mat4 projection;
         bool perspective;
 
-        friend class PhysicsDebugDraw;
-    };
+        int windowResizeCallback(void* data, SDL_Event* event);
+        static int windowResizeCallbackWrapper(void* data, SDL_Event* event);
 
+        friend class PhysicsDebugDraw;
+        friend class DeveloperUI;
+    };
 }

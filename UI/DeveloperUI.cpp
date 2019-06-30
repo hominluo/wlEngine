@@ -4,7 +4,7 @@
 #include "../EngineManager.hpp"
 
 #include "../Component/Transform.hpp"
-
+#include "../System/RenderSystem.hpp"
 namespace wlEngine {
     DeveloperUI::DeveloperUI() : selectedGameObject(nullptr) {
 
@@ -15,6 +15,10 @@ namespace wlEngine {
     }
 
     void DeveloperUI::render() {
+        auto renderSystem = RenderSystem::get();
+
+        renderSystem->setViewPort(0,0,renderSystem->windowWidth, renderSystem->windowHeight);
+        showMenu();
         showAllGameObjects();
     }
 
@@ -69,5 +73,26 @@ namespace wlEngine {
         }
         ImGui::End();
 
+    }
+
+    void DeveloperUI::showMenu() {
+        if (ImGui::BeginMainMenuBar())
+        {
+            if (ImGui::BeginMenu("File"))
+            {
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Edit"))
+            {
+                if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+                if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+                ImGui::Separator();
+                if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+                if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+                if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
+        }
     }
 }

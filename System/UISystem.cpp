@@ -55,6 +55,7 @@ namespace wlEngine {
                 if (event.key.keysym.scancode == SDL_SCANCODE_F5) {
                     developerUISwitch = !developerUISwitch;
                 }
+                break;
         }        
     }
 

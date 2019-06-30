@@ -18,7 +18,7 @@ namespace wlEngine {
         
         template <typename ComponentType, typename... Args>
 		ComponentType* addComponent(Args&& ... params);
-        
+
         template <typename ComponentType>
         void addComponent(std::shared_ptr<ComponentType>& );
         

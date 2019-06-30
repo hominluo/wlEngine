@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 #include <string>
+#include "../GameObject/GameObject.hpp"
 
 #include <SDL.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -47,7 +48,6 @@ namespace wlEngine {
 		GLuint VBO;
 		GLuint EBO;
         
-
         float vertices[20] = {
             0.0f,  0.0f, 0.0f,  1.0f, 1.0f,   // top right
             0.0f,  0.0f, 0.0f,  1.0f, 0.0f,   // bottom right

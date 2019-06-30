@@ -20,5 +20,6 @@ namespace wlEngine {
         void showAllGameObjects();
         void pushGameObject(std::set<GameObject*>::iterator iter, const std::set<GameObject*>* gameObjects);
         void showGameObjectInfo();
+        void showMenu();
     };
 }

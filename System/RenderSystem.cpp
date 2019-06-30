@@ -4,6 +4,7 @@
 #include "../Component/Model.hpp"
 #include "../EngineManager.hpp"
 #include "../Settings.hpp"
+#include "../config.h"
 
 #include "UISystem.hpp"
 
@@ -11,6 +12,7 @@ namespace wlEngine {
     RenderSystem* RenderSystem::renderSystem = nullptr;
 
     RenderSystem::RenderSystem() {
+        //settings
         if (Settings::settings["perspective"]) {
             projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
             perspective = true;
@@ -20,6 +22,7 @@ namespace wlEngine {
             perspective = false;
         }
 
+        //SDL and OpenGL init
         if (SDL_Init( SDL_INIT_VIDEO ) < 0) {
             std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
             exit(-1);
@@ -31,8 +34,17 @@ namespace wlEngine {
         SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
         SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
         stbi_set_flip_vertically_on_load(true);
-        window = SDL_CreateWindow("OpenGL Test", 50, 50, windowWidth, windowHeight, SDL_WINDOW_OPENGL);
+#if DEVELOPMENT_MODE
+        int SDL_Flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+        windowHeight += topMenuHeight;
+#else
+        int SDL_Flags = SDL_WINDOW_OPENGL;
+#endif
+        window = SDL_CreateWindow("OpenGL Test", 50, 50, windowWidth, windowHeight, SDL_Flags);
         glContext = SDL_GL_CreateContext(window);
+#ifdef DEVELOPMENT_MODE
+        SDL_AddEventWatch(windowResizeCallbackWrapper, window);
+#endif
         gladLoadGLLoader(SDL_GL_GetProcAddress);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_STENCIL_TEST);
@@ -144,7 +156,11 @@ namespace wlEngine {
     }
 
     void RenderSystem::beginRenderScene(){
-        //glViewport(0, 0, winWidth, winHeight);
+#if DEVELOPMENT_MODE
+        glViewport(0, windowHeight - sceneHeight - topMenuHeight, sceneWidth, sceneHeight);
+#else
+        glViewport(0, windowHeight - sceneHeight, sceneWidth, sceneHeight);
+#endif
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
 
@@ -152,4 +168,24 @@ namespace wlEngine {
         render();
     }
 
+    int RenderSystem::windowResizeCallbackWrapper(void* data, SDL_Event* event) {
+        if(renderSystem)
+            return renderSystem->windowResizeCallback(data, event);
+        return 0;
+    }
+
+    int RenderSystem::windowResizeCallback(void* data, SDL_Event* event) {
+        if(event->type == SDL_WINDOWEVENT) {
+            switch (event->window.event) {
+                case SDL_WINDOWEVENT_RESIZED:
+                    SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+                break;
+            }
+        }
+
+        return 0;
+    }
+    void RenderSystem::setViewPort(int x, int y, int width, int height) {
+        glViewport(x,y,width,height);
+    }
 }
