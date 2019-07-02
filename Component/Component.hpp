@@ -42,11 +42,11 @@
     std::set<T*> T::collection = std::set<T*>(); \
 
 #define COMPONENT_EDITABLE_DEC()\
-    static std::function<void(GameObject* go, void* arr)> addToGameObject; \
+    static std::function<void(GameObject* go, void** arr)> addToGameObject; \
     static bool isComponentReg; \
 
 #define COMPONENT_EDITABLE_DEF_BEGIN(T)\
-    std::function<void(GameObject*, void*)> T::addToGameObject = [](GameObject* go, void* args)
+    std::function<void(GameObject*, void**)> T::addToGameObject = [](GameObject* go, void** args)
 
 #define COMPONENT_EDITABLE_DEF_END(T)\
     bool T::isComponentReg = registerComponent<T>();\
@@ -55,7 +55,8 @@ namespace wlEngine {
     class GameObject;
     struct Component {
     public:
-        static std::map<std::string, std::function<void(GameObject*, void*)>> componentFactoryList;
+        static std::map<std::string, std::function<void(GameObject*, void**)>>* componentFactoryList;
+		static std::map<std::string, std::function<void(GameObject*, void**)>>* getComponentFactoryList();
         Component(GameObject* go);
         GameObject* gameObject = nullptr;
         std::set<GameObject*>* gameObjects = nullptr;
@@ -71,7 +72,7 @@ namespace wlEngine {
 
     template<class T>
         bool Component::registerComponent() {
-            componentFactoryList[T::name] = T::addToGameObject;
+            (*getComponentFactoryList())[T::name] = T::addToGameObject;
             return true;
         }
 }

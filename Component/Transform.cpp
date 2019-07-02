@@ -4,8 +4,10 @@
 namespace wlEngine {
     COMPONENT_DEFINATION(Component, Transform, COMPONENT_ALLOCATION_SIZE);
 	COMPONENT_EDITABLE_DEF_BEGIN(Transform) {
-		float* temp = static_cast<float*>(args);
-		go->addComponent<Transform>(temp[0], temp[1], temp[2]);
+		float* arg0 = static_cast<float*>(args[0]);
+		float* arg1 = static_cast<float*>(args[1]);
+		float* arg2 = static_cast<float*>(args[2]);
+		go->addComponent<Transform>(*arg0, *arg1, *arg2);
 	};
 	COMPONENT_EDITABLE_DEF_END(Transform);
     

@@ -96,11 +96,6 @@ namespace wlEngine {
     }
 
     void GameEditor::loadScene(const std::string& filePath) {
-        std::ifstream ifs;
-        ifs.open(filePath);
-        std::ostringstream oss;
-        oss << ifs.rdbuf();
-        currentScene = json::parse(oss.str());
         
     }
 }

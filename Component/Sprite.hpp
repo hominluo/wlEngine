@@ -19,7 +19,9 @@ namespace wlEngine {
     struct Sprite : Component {
 	public:
         COMPONENT_DECLARATION(Component, Sprite, 100);
+        COMPONENT_EDITABLE_DEC();
         Sprite(GameObject*, const std::string& path);
+        Sprite(GameObject*, const std::string& path, const std::string& shader);
         ~Sprite();
 
         /* load image from path */

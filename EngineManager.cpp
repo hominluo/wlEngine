@@ -43,6 +43,7 @@ namespace wlEngine {
         while(!quit) {
             update();
             Time::update();
+            std::cout << 1/ Time::deltaTime << std::endl;
         }
     }
 

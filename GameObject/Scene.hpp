@@ -16,7 +16,7 @@ namespace wlEngine {
             ~Scene();
             void update();
             void setCamera(Camera* camera);
-            void loadScene(const nlohmann::json& scene_json);
+            void loadScene(const std::string& path);
             Camera* getCamera() {return camera;};
             b2Body* createBody(b2BodyDef& def);
 			b2World* getWorld() {
@@ -24,7 +24,7 @@ namespace wlEngine {
 			}
             const std::set<GameObject*>* getSceneGraph(){return &sceneGraph;};
 
-            GameObject* createGameObject(std::string&& name);
+            GameObject* createGameObject(const std::string& name);
             void deallocateGameObject(GameObject*);
 
             void addGameObject(GameObject*);
@@ -38,7 +38,7 @@ namespace wlEngine {
             //resonsible for converting z position to x and y
             void render();
             void clearScene();
-            void loadGameObjectFromJson(const nlohmann::json&);
+            void loadGameObjectFromJson(const nlohmann::json&, GameObject* parent);
 
             FixedArrayAllocator<GameObject, 3000> gameObjectAllocator;
             static void destoryGameObject(GameObject*);

@@ -10,9 +10,20 @@
 
 namespace wlEngine {
 	COMPONENT_DEFINATION(Component, Sprite, 100);
+    COMPONENT_EDITABLE_DEF_BEGIN(Sprite){
+        std::string path(*static_cast<std::string*>(args[0]));
+        std::string shader(*static_cast<std::string*>(args[1]));
+        go->addComponent<Sprite>(path, shader);
+    };
+	COMPONENT_EDITABLE_DEF_END(Sprite);
 
     Sprite::Sprite(GameObject* go, const std::string& path): Component(go), mTexture(0), mWidth(0), mHeight(0), VAO(0), VBO(0), EBO(0) {
         loadFromFile(path);
+    }
+
+    Sprite::Sprite(GameObject* go, const std::string& path, const std::string& shader): Component(go), mTexture(0), mWidth(0), mHeight(0), VAO(0), VBO(0), EBO(0) {
+        loadFromFile(path);
+        useShader(shader);
     }
 
     Sprite::~Sprite() {
