@@ -57,6 +57,8 @@ namespace wlEngine {
 
     void RenderSystem::render(Sprite* t) {
         auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
+        auto animation = t->gameObject->getComponent<Animation>();
+        if (animation) t->clip(animation->getCurrentClip(), true);
 
         t->mShader->use();
 
@@ -166,8 +168,8 @@ namespace wlEngine {
         stbi_set_flip_vertically_on_load(true);
 
         int SDL_Flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
-        windowHeight += topMenuHeight + 300;
-        windowWidth += 400;
+        //windowHeight += topMenuHeight + 300;
+        //windowWidth += 400;
 
         window = SDL_CreateWindow("OpenGL Test", 50, 50, windowWidth, windowHeight, SDL_Flags);
         glContext = SDL_GL_CreateContext(window);

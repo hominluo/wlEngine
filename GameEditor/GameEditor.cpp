@@ -52,6 +52,9 @@ namespace wlEngine {
             GameObject* go = selectedGameObject;
             ImGui::Text("%s", go->name.c_str());
             auto transform = go->getComponent<Transform>();
+            for (auto& c: go->components){
+                
+            }
             auto pos = transform->getLocalPosition();
 
             char x[40];

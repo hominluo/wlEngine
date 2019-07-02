@@ -15,6 +15,13 @@ namespace wlEngine {
 		currentFrame = 0;
     }
 
+    Animation::Animation(GameObject* go, const std::string& path) : Component(go) {
+        currentAnimation = nullptr;
+        timeStamp = 0;
+        currentFrame = 0;
+        loadClips(path.data());
+    }
+
     void Animation::loadClips(const char* path) {
         std::ifstream jsonInput(path);
 
@@ -54,7 +61,7 @@ namespace wlEngine {
 
     Rect* Animation::getCurrentClip() {
         if (currentAnimation == nullptr) return nullptr;
-        
+
         return &currentAnimation->at(currentFrame).clip;// NEED TO CHANGE
     }
 }

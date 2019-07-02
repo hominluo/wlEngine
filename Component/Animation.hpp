@@ -17,6 +17,7 @@ namespace wlEngine {
     public:
         COMPONENT_DECLARATION(Component, Animation, 100);
         Animation(GameObject* go);
+        Animation(GameObject* go, const std::string& path);
 
         void playAnimation(std::string&&);
         void loadClips(const char* path);

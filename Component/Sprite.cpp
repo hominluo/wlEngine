@@ -101,8 +101,6 @@ namespace wlEngine {
 		vertices[15] = 0;
 		vertices[16] = height;
 
-        //texture coor
-        
         //top right
         vertices[3] = (float)(rect->x + rect->width) / mWidth;
         vertices[4] = (float)(rect->y + rect->height) / mHeight;       
