@@ -14,7 +14,6 @@ namespace wlEngine {
 	}
 	
     void Camera3D::update() {
-        Camera::update();
         updatePosition();
         updateEyeDirection();
         if (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) {

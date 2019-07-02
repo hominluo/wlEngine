@@ -8,18 +8,21 @@
 
 #include "System.hpp"
 
+//NOTE: The G-Syn is limiting the frame rate to 60 I think!
 class b2World;
 namespace wlEngine {
     struct Sprite;
     struct Model;
+    class GameEditor;
     class RenderSystem : public System {
     public:
         static RenderSystem* get();
         static void init();
+        ~RenderSystem();
 
         void render();
-        void render(Sprite*);
-        void render(Model*);
+        void UIRender();
+        void inputHandler(SDL_Event& event);
         
         void update() override;
 
@@ -37,19 +40,23 @@ namespace wlEngine {
 
         RenderSystem();
 
-        void beginRenderScene();
-        void endRenderScene();
+        void SDLInit();
+        void ImGuiInit();
+
+        void renderGame();
+        void render(Sprite*);
+        void render(Model*);
 
         SDL_GLContext glContext;
         SDL_Window* window;
+        GameEditor* gameEditor;
 
         glm::mat4 projection;
-        bool perspective;
 
         int windowResizeCallback(void* data, SDL_Event* event);
         static int windowResizeCallbackWrapper(void* data, SDL_Event* event);
 
         friend class PhysicsDebugDraw;
-        friend class DeveloperUI;
+        friend class GameEditor;
     };
 }

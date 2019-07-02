@@ -37,6 +37,8 @@ namespace wlEngine {
              * @brief initialize anything that needs systemt to set up first
              */
             void postInitialization();
+
+            void systemUpdate();
     };
 }
 

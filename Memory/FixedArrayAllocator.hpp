@@ -10,20 +10,20 @@ namespace wlEngine {
     }
 
     template <typename T, size_t N>
-    class ComponentAllocator {
+    class FixedArrayAllocator {
     private:
-        struct ComponentMemoryChunk {
+        struct MemoryChunk {
             struct Arena {
                 static_assert(sizeof(T) > sizeof(void*), "Component Class has to have a size larger than a size of a pointer");
                 char bytes[sizeof(T)];
-                ComponentMemoryChunk* chunk;
+                MemoryChunk* chunk;
             }  arena[N]; //store N arena, 1 arena for 1 object of type T
 
             size_t freeCount = N;
             /**
              * @brief Initialize Component Allocator
              */
-            ComponentMemoryChunk()  {
+            MemoryChunk()  {
                 size_t i = 0;
                 for (; i < N - 1; i++) {
                     arena[i].chunk = this;
@@ -33,19 +33,19 @@ namespace wlEngine {
                 *reinterpret_cast<Arena**>(arena[i].bytes) = nullptr;
             }
             
-            ~ComponentMemoryChunk() = default;
+            ~MemoryChunk() = default;
         };
     public:
-        ComponentAllocator() {
+        FixedArrayAllocator() {
 			beacon = allocateNewChunk();
         }
         
-        ~ComponentAllocator() = default;
+        ~FixedArrayAllocator() = default;
         
         template<typename... Args>
         T* allocate(Args&& ... params) {
             
-            auto succ = *reinterpret_cast<typename ComponentMemoryChunk::Arena**>(beacon->bytes);
+            auto succ = *reinterpret_cast<typename MemoryChunk::Arena**>(beacon->bytes);
             auto temp = beacon;
             
             beacon->chunk->freeCount -= 1;
@@ -58,7 +58,7 @@ namespace wlEngine {
         }
 
         void deallocate(T* ptr) {
-            auto arenaPtr = reinterpret_cast<typename ComponentMemoryChunk::Arena*>(ptr);
+            auto arenaPtr = reinterpret_cast<typename MemoryChunk::Arena*>(ptr);
             auto chunk = arenaPtr->chunk;
             chunk->freeCount += 1;
             
@@ -68,16 +68,16 @@ namespace wlEngine {
                 beacon = nullptr;
             }
             
-            *reinterpret_cast<typename ComponentMemoryChunk::Arena**>(arenaPtr->bytes) = beacon;
+            *reinterpret_cast<typename MemoryChunk::Arena**>(arenaPtr->bytes) = beacon;
             beacon = arenaPtr;
         }
     private:
-        typename ComponentMemoryChunk::Arena* beacon;
+        typename MemoryChunk::Arena* beacon;
         size_t chunkCount;
 
-        typename ComponentMemoryChunk::Arena* allocateNewChunk() {
+        typename MemoryChunk::Arena* allocateNewChunk() {
             chunkCount += 1;
-            auto chunk = new ComponentMemoryChunk;
+            auto chunk = new MemoryChunk;
             return chunk->arena;
         }
     };

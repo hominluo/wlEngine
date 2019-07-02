@@ -3,15 +3,15 @@
 
 using json = nlohmann::json;
 namespace wlEngine {
-    class Settings {
-    public:
-        ~Settings() {};
+    namespace Settings{
+        extern enum class GameDimension : uint8_t {
+            Dimension2D = 0,
+            Dimension3D = 1
+        } gameDimension;
 
-        static nlohmann::json settings;
-
-        static void init();
-    private:
-        Settings();
-
-    };
+        extern enum class EngineMode : uint8_t {
+            Gameplay = 0,
+            Editor = 1
+        } engineMode;
+    }
 }

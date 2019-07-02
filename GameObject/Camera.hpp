@@ -7,5 +7,6 @@ namespace wlEngine {
     public:
 		Camera() :GameObject("Camera") {};
         virtual glm::mat4 getViewMatrix() = 0;
+        virtual void update() = 0;
     };
 }

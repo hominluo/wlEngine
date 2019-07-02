@@ -3,58 +3,39 @@
 #include "../Component/Animation.hpp"
 #include "../Component/Model.hpp"
 #include "../EngineManager.hpp"
+#include "../GameEditor/GameEditor.hpp"
 #include "../Settings.hpp"
-#include "../config.h"
 
-#include "UISystem.hpp"
+#include "../imgui/imgui.h"
+#include "../imgui/imgui_impl_sdl.h"
+#include "../imgui/imgui_impl_opengl3.h"
 
 namespace wlEngine {
     RenderSystem* RenderSystem::renderSystem = nullptr;
 
     RenderSystem::RenderSystem() {
         //settings
-        if (Settings::settings["perspective"]) {
+        if (Settings::gameDimension == Settings::GameDimension::Dimension3D) {
             projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
-            perspective = true;
         }
         else {
             projection = glm::ortho(0.0f, (float)windowWidth , 0.0f, (float)windowHeight, -1.0f, 1000.0f);
-            perspective = false;
         }
 
+        gameEditor = new GameEditor;
         //SDL and OpenGL init
-        if (SDL_Init( SDL_INIT_VIDEO ) < 0) {
-            std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
-            exit(-1);
-        }
-
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-        SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
-        stbi_set_flip_vertically_on_load(true);
-#if DEVELOPMENT_MODE
-        int SDL_Flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
-        windowHeight += topMenuHeight;
-#else
-        int SDL_Flags = SDL_WINDOW_OPENGL;
-#endif
-        window = SDL_CreateWindow("OpenGL Test", 50, 50, windowWidth, windowHeight, SDL_Flags);
-        glContext = SDL_GL_CreateContext(window);
-#ifdef DEVELOPMENT_MODE
-        SDL_AddEventWatch(windowResizeCallbackWrapper, window);
-#endif
-        gladLoadGLLoader(SDL_GL_GetProcAddress);
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_STENCIL_TEST);
-        glEnable(GL_BLEND);
-        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-
-        glClearStencil(0);
-
+        SDLInit();
+        ImGuiInit();   
+        
         registerSystem(this);
     }
+
+    RenderSystem::~RenderSystem() {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplSDL2_Shutdown();
+        ImGui::DestroyContext();
+    }
+
     RenderSystem* RenderSystem::get() {
         return renderSystem;
     } 
@@ -64,20 +45,14 @@ namespace wlEngine {
     }
 
     void RenderSystem::render() {
-        beginRenderScene();
-        if(perspective) {
-            for (auto c : Model::collection) {
-                render(c);
-            }
-        }
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-        for (auto c : Sprite::collection) {
-            render(c);
-        }
+		UIRender();
+        renderGame();
 
-        UISystem::get()->render();
         EngineManager::getwlEngine()->getCurrentScene()->getWorld()->DrawDebugData(); //TODO: has to be removed
-        endRenderScene();
+
+        SDL_GL_SwapWindow(window);
     }
 
     void RenderSystem::render(Sprite* t) {
@@ -151,18 +126,6 @@ namespace wlEngine {
 
     }
 
-    void RenderSystem::endRenderScene(){
-        SDL_GL_SwapWindow(window);
-    }
-
-    void RenderSystem::beginRenderScene(){
-#if DEVELOPMENT_MODE
-        glViewport(0, windowHeight - sceneHeight - topMenuHeight, sceneWidth, sceneHeight);
-#else
-        glViewport(0, windowHeight - sceneHeight, sceneWidth, sceneHeight);
-#endif
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    }
 
     void RenderSystem::update() {
         render();
@@ -179,13 +142,84 @@ namespace wlEngine {
             switch (event->window.event) {
                 case SDL_WINDOWEVENT_RESIZED:
                     SDL_GetWindowSize(window, &windowWidth, &windowHeight);
-                break;
+                    break;
             }
         }
 
         return 0;
     }
+
     void RenderSystem::setViewPort(int x, int y, int width, int height) {
         glViewport(x,y,width,height);
+    }
+
+    void RenderSystem::SDLInit() {
+        if (SDL_Init( SDL_INIT_VIDEO ) < 0) {
+            std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
+            exit(-1);
+        }
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+        SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+        stbi_set_flip_vertically_on_load(true);
+
+        int SDL_Flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+        windowHeight += topMenuHeight + 300;
+        windowWidth += 400;
+
+        window = SDL_CreateWindow("OpenGL Test", 50, 50, windowWidth, windowHeight, SDL_Flags);
+        glContext = SDL_GL_CreateContext(window);
+        SDL_AddEventWatch(windowResizeCallbackWrapper, window);
+        gladLoadGLLoader(SDL_GL_GetProcAddress);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_STENCIL_TEST);
+        glEnable(GL_BLEND);
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+
+        glClearStencil(0);
+    }
+
+    void RenderSystem::ImGuiInit() {
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO();
+
+        ImGui::StyleColorsDark();
+        ImGui_ImplSDL2_InitForOpenGL(window, &glContext);
+
+        ImGui_ImplOpenGL3_Init("#version 450");
+
+    }
+
+    void RenderSystem::UIRender() {
+        ImGui_ImplOpenGL3_NewFrame();   
+        ImGui_ImplSDL2_NewFrame(window);
+        ImGui::NewFrame();
+
+        glViewport(0, 0, windowWidth, windowHeight);
+        gameEditor->render();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
+
+
+    void RenderSystem::inputHandler(SDL_Event& event){
+        ImGui_ImplSDL2_ProcessEvent(&event);
+    }
+
+    void RenderSystem::renderGame() {
+        glViewport(0, windowHeight - sceneHeight - topMenuHeight, sceneWidth, sceneHeight);
+
+        if(Settings::gameDimension == Settings::GameDimension::Dimension3D) {
+            for (auto c : Model::collection) {
+                render(c);
+            }
+        }
+
+        for (auto c : Sprite::collection) {
+            render(c);
+        }
     }
 }

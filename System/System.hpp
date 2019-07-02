@@ -4,7 +4,7 @@
 #define SYSTEM_DECLARATION(SystemName) \
     public: \
         static SystemName* get(); \
-        static void init(); \
+        static SystemName* init(); \
         void update() override; \
     private: \
         static SystemName* system; \
@@ -15,9 +15,10 @@
     SystemName* SystemName::get() { \
         return system; \
     } \
-    void SystemName::init() { \
+    SystemName* SystemName::init() { \
         system = new SystemName(); \
         System::registerSystem(system); \
+        return system; \
     } 
 namespace wlEngine {
     class System {

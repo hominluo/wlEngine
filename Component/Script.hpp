@@ -4,15 +4,15 @@
 #define SCRIPT_DECLARATION(P, T, N) \
 static const std::size_t componentId; \
 virtual bool isType(const std::size_t& typeId) const override; \
-static ComponentAllocator<T, N> componentAllocator; \
+static FixedArrayAllocator<T, N> fixedArrayAllocator; \
 static void destroy(T* ptr);\
 template<typename... Args> \
 static auto createComponent(Args&& ... params){\
-    auto ptr = componentAllocator.allocate(std::forward<Args>(params)...); \
+    auto ptr = fixedArrayAllocator.allocate(std::forward<Args>(params)...); \
     collection.insert(ptr); \
     return std::shared_ptr<T>(ptr, &destroy); \
 } \
-friend ComponentAllocator<T, N>;
+friend FixedArrayAllocator<T, N>;
 
 #define SCRIPT_DEFINATION(P, T, N) \
 const std::size_t T::componentId = std::hash<std::string>()(#T); \
@@ -21,11 +21,11 @@ if ( typeId == T::componentId ) \
 return true; \
 return P::isType( typeId ); \
 }\
-ComponentAllocator<T, N> T::componentAllocator = ComponentAllocator<T, N>(); \
+FixedArrayAllocator<T, N> T::fixedArrayAllocator = FixedArrayAllocator<T, N>(); \
 \
 void T::destroy(T* ptr) { \
 collection.erase(ptr); \
-componentAllocator.deallocate(ptr); \
+fixedArrayAllocator.deallocate(ptr); \
 } \
 
 namespace wlEngine {

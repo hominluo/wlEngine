@@ -2,6 +2,7 @@
 #include "System.hpp"
 #include <SDL_scancode.h>
 namespace wlEngine {
+    class RenderSystem;
     class InputSystem : System {
         SYSTEM_DECLARATION(InputSystem);
 

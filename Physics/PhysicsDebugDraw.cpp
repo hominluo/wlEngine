@@ -48,7 +48,7 @@ namespace wlEngine {
         glm::mat4 proj = glm::mat4(1.0f);
         glm::mat4 cameraView = camera->getViewMatrix();
 
-        if (Settings::settings["perspective"]) {
+        if (Settings::gameDimension == Settings::GameDimension::Dimension3D) {
             proj = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
         }
         else {

@@ -78,8 +78,8 @@ namespace wlEngine {
     }
 
     void Sprite::clip(Rect* rect, bool subData) {
-		float width = (Settings::settings["perspective"] ? rect->width / normalizationPara : rect->width);
-		float height = (Settings::settings["perspective"] ? rect->height / normalizationPara : rect->height);
+		float width = (Settings::gameDimension == Settings::GameDimension::Dimension3D ? rect->width / normalizationPara : rect->width);
+		float height = (Settings::gameDimension == Settings::GameDimension::Dimension3D ? rect->height / normalizationPara : rect->height);
 
 		vertices[0] = width;
 		vertices[1] = height;

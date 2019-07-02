@@ -2,17 +2,18 @@
 #include "../Component/Component.hpp"
 #include <set>
 #include <memory>
-
 namespace wlEngine {
+    class Scene;
     class GameObject {
     public:
-        GameObject(std::string&& name);
+        GameObject(const std::string& name);
         ~GameObject();
         std::string name;
         std::set<GameObject*> children;
 
         GameObject* getParent() {return parent;}
         void setParent(GameObject*);
+        void setParent(Scene*);
 
         std::set<std::shared_ptr<Component>> components;
         
@@ -27,14 +28,6 @@ namespace wlEngine {
 
         template <typename ComponentType>
         ComponentType* getComponent();
-
-        virtual void update(){
-            //updateWorldPosition(); has some problem when applied to camera
-
-            for (auto iter = children.begin(); iter != children.end(); iter++) {
-                (*iter)->update();
-            }
-        }
     private:
         GameObject* parent = nullptr;
         friend class Transform;

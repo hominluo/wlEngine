@@ -1,10 +1,8 @@
 #include "EngineManager.hpp"
-#include "Settings.hpp"
 #include "System/RenderSystem.hpp"
 #include "System/ScriptSystem.hpp"
 #include "System/PhysicsSystem.hpp"
 #include "System/AnimationSystem.hpp"
-#include "System/UISystem.hpp"
 #include "System/InputSystem.hpp"
 
 #include "Graphics/Shader.hpp"
@@ -37,6 +35,7 @@ namespace wlEngine {
     }
 
     void EngineManager::update() {
+        systemUpdate();
         currentScene->update();
     }
 
@@ -47,11 +46,14 @@ namespace wlEngine {
         }
     }
 
-    void EngineManager::initializeSystems() {
-        Settings::init();
+    void EngineManager::systemUpdate() {
+        for (auto& i : System::collection) {
+            i->update();
+        }
+    }
 
+    void EngineManager::initializeSystems() {
         RenderSystem::init();
-        UISystem::init();
         AnimationSystem::init();
         ScriptSystem::init();
         PhysicsSystem::init();

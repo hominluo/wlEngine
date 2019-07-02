@@ -1,36 +1,35 @@
+#include <fstream>
+#include <sstream>
 #include "../imgui/imgui.h"
 
-#include "DeveloperUI.hpp"
+#include "GameEditor.hpp"
 #include "../EngineManager.hpp"
 
 #include "../Component/Transform.hpp"
 #include "../System/RenderSystem.hpp"
 namespace wlEngine {
-    DeveloperUI::DeveloperUI() : selectedGameObject(nullptr) {
+    GameEditor::GameEditor() : selectedGameObject(nullptr) {
 
     }
 
-    DeveloperUI::~DeveloperUI(){
+    GameEditor::~GameEditor(){
 
     }
 
-    void DeveloperUI::render() {
-        auto renderSystem = RenderSystem::get();
-
-        renderSystem->setViewPort(0,0,renderSystem->windowWidth, renderSystem->windowHeight);
+    void GameEditor::render() {
         showMenu();
         showAllGameObjects();
     }
 
-    void DeveloperUI::showAllGameObjects() {
+    void GameEditor::showAllGameObjects() {
         ImGui::Begin("Scene Graph", nullptr, ImGuiWindowFlags_None);
-        auto gameObjects = EngineManager::getwlEngine()->getCurrentScene()->getGameObjects();
+        auto gameObjects = EngineManager::getwlEngine()->getCurrentScene()->getSceneGraph();
         pushGameObject(gameObjects->begin(), gameObjects);
         ImGui::End();
         showGameObjectInfo();
     }
 
-    void DeveloperUI::pushGameObject(std::set<GameObject*>::iterator iter, const std::set<GameObject*>* gameObjects) {
+    void GameEditor::pushGameObject(std::set<GameObject*>::iterator iter, const std::set<GameObject*>* gameObjects) {
         if(iter != gameObjects->end()) {
             bool open = ImGui::TreeNodeEx((*iter)->name.c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
 
@@ -47,7 +46,7 @@ namespace wlEngine {
         }
     }
 
-    void DeveloperUI::showGameObjectInfo() {
+    void GameEditor::showGameObjectInfo() {
         ImGui::Begin("GameObject");
         if(selectedGameObject) {
             GameObject* go = selectedGameObject;
@@ -75,7 +74,7 @@ namespace wlEngine {
 
     }
 
-    void DeveloperUI::showMenu() {
+    void GameEditor::showMenu() {
         if (ImGui::BeginMainMenuBar())
         {
             if (ImGui::BeginMenu("File"))
@@ -94,5 +93,14 @@ namespace wlEngine {
             }
             ImGui::EndMainMenuBar();
         }
+    }
+
+    void GameEditor::loadScene(const std::string& filePath) {
+        std::ifstream ifs;
+        ifs.open(filePath);
+        std::ostringstream oss;
+        oss << ifs.rdbuf();
+        currentScene = json::parse(oss.str());
+        
     }
 }

@@ -1,11 +1,14 @@
 #include "GameObject.hpp"
 #include "../Component/Transform.hpp"
-
+#include "Scene.hpp"
 namespace wlEngine {
-    GameObject::GameObject(std::string&& name) : name(name) {
+    GameObject::GameObject(const std::string& name) : name(name) {
         
     }
 
+    void GameObject::setParent(Scene* scene) {
+        scene->addGameObject(this);       
+    }
     void GameObject::setParent(GameObject* go) {
         parent = go;
         go->children.insert(this);
@@ -16,4 +19,5 @@ namespace wlEngine {
             c->destruct(this);
         }
     }
+
 }

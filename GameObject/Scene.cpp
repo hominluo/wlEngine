@@ -3,28 +3,13 @@
 #include "../Physics/WorldContactListener.hpp"
 #include "../Physics/PhysicsDebugDraw.hpp"
 #include "../System/System.hpp"
+#include <memory>
 
 namespace wlEngine {
     void Scene::update() {
         mWorld->Step(FIXED_DELTA_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-
-        if (camera) { 
-            camera->update();
-        }
-        else assert( 0 && "No Camera Provided for Scene");
-        
-		for (auto& i : System::collection) {
-			i->update();
-		}
-
-		for (auto iter = mGameObjects.begin(); iter != mGameObjects.end(); iter++) {
-			(*iter)->update();
-		}
     }
 
-    void Scene::addGameObject(GameObject* gameObject){
-        mGameObjects.insert(gameObject);
-    }
 
 
     Scene::Scene() : mWorld(new b2World(b2Vec2(0, 0))) {
@@ -42,6 +27,7 @@ namespace wlEngine {
     }
 
     Scene::~Scene() {
+        clearScene();
     }
 
 
@@ -51,5 +37,43 @@ namespace wlEngine {
 
     b2Body* Scene::createBody(b2BodyDef& def) {
         return mWorld->CreateBody(&def);
+    }
+
+    void Scene::loadScene(const nlohmann::json& scene_json){
+        clearScene();
+
+        auto graph = scene_json["scene_graph"];
+    }
+
+
+    void Scene::loadGameObjectFromJson(const nlohmann::json& go_json) {
+
+    }
+
+    void Scene::clearScene() {
+        for (auto& k : allocatedGameObjects) {
+            deallocateGameObject(k);
+        }
+    }
+
+    GameObject* Scene::createGameObject(std::string&& name) {
+        auto ptr = gameObjectAllocator.allocate(name);
+        allocatedGameObjects.insert(ptr);
+        return ptr;
+    }
+
+    void Scene::deallocateGameObject(GameObject* ptr) {
+        gameObjectAllocator.deallocate(ptr);
+    }
+
+    void Scene::addGameObject(GameObject* go){
+        sceneGraph.insert(go);       
+    }
+    void Scene::removeGameObject(GameObject* go){
+        auto parent = go->getParent();
+        if (parent) {
+            parent->children.erase(go);
+        }
+        sceneGraph.erase(go);
     }
 }
