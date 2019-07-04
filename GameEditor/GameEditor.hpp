@@ -16,7 +16,7 @@ namespace wlEngine {
         /**
          * @brief called by UISystem
          */
-        void render();
+        void render(void** data);
 
         void loadScene(const std::string&);
 
@@ -24,9 +24,15 @@ namespace wlEngine {
         GameObject* selectedGameObject;
         json currentScene;
 
+        void showGameObjectInfo();
         void showAllGameObjects();
         void pushGameObject(std::set<GameObject*>::iterator iter, const std::set<GameObject*>* gameObjects);
-        void showGameObjectInfo();
+
         void showMenu();
+
+        void showAnimationInfo(GameObject*);
+        void showTransformInfo(GameObject*);
+
+        void showGameWindow(void** data);
     };
 }

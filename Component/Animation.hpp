@@ -23,10 +23,13 @@ namespace wlEngine {
         void loadClips(const char* path);
         Rect* getCurrentClip();
         void pause();
+		bool isPlaying(const std::string&);
     private:
         Clips* currentAnimation;
         int currentFrame = 0;
         float timeStamp = 0;
+        int gridX = 0;
+        int gridY = 0;
         ClipsMap clips;
 
         friend class AnimationSystem;

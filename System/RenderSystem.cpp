@@ -4,7 +4,6 @@
 #include "../Component/Model.hpp"
 #include "../EngineManager.hpp"
 #include "../GameEditor/GameEditor.hpp"
-#include "../Settings.hpp"
 
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_impl_sdl.h"
@@ -16,10 +15,10 @@ namespace wlEngine {
     RenderSystem::RenderSystem() {
         //settings
         if (Settings::gameDimension == Settings::GameDimension::Dimension3D) {
-            projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
+            projection = glm::perspective(glm::radians(45.0f), (float)sceneWidth / sceneHeight, 0.1f, 100000.0f);
         }
         else {
-            projection = glm::ortho(0.0f, (float)windowWidth , 0.0f, (float)windowHeight, -1.0f, 1000.0f);
+            projection = glm::ortho(0.0f, (float)sceneWidth , 0.0f, (float)sceneHeight, -1.0f, 1000.0f);
         }
 
         gameEditor = new GameEditor;
@@ -34,6 +33,13 @@ namespace wlEngine {
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplSDL2_Shutdown();
         ImGui::DestroyContext();
+
+
+#if SETTINGS_ENGINEMODE
+        glDeleteFramebuffers(1,&sceneFramebuffer);
+        glDeleteTextures(1, &sceneTexture);
+        glDeleteTextures(1, &depthAndStencilTexture);
+#endif
     }
 
     RenderSystem* RenderSystem::get() {
@@ -45,10 +51,22 @@ namespace wlEngine {
     }
 
     void RenderSystem::render() {
+#if SETTINGS_ENGINEMODE
+        glBindFramebuffer(GL_FRAMEBUFFER, sceneFramebuffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-		UIRender();
+        glViewport(0,0, sceneWidth, sceneHeight);
         renderGame();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glViewport(0, 0, windowWidth, windowHeight);
+        renderGameEditor();
+#else
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glViewport(0, 0, windowWidth, windowHeight);
+        renderGame();
+#endif
+        
 
         EngineManager::getwlEngine()->getCurrentScene()->getWorld()->DrawDebugData(); //TODO: has to be removed
 
@@ -57,8 +75,6 @@ namespace wlEngine {
 
     void RenderSystem::render(Sprite* t) {
         auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
-        auto animation = t->gameObject->getComponent<Animation>();
-        if (animation) t->clip(animation->getCurrentClip(), true);
 
         t->mShader->use();
 
@@ -168,9 +184,10 @@ namespace wlEngine {
         stbi_set_flip_vertically_on_load(true);
 
         int SDL_Flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
-        //windowHeight += topMenuHeight + 300;
-        //windowWidth += 400;
-
+#if SETTINGS_ENGINEMODE == 0
+        windowWidth = sceneWidth;
+        windowHeight = sceneHeight;
+#endif
         window = SDL_CreateWindow("OpenGL Test", 50, 50, windowWidth, windowHeight, SDL_Flags);
         glContext = SDL_GL_CreateContext(window);
         SDL_AddEventWatch(windowResizeCallbackWrapper, window);
@@ -180,6 +197,30 @@ namespace wlEngine {
         glEnable(GL_BLEND);
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
+#if SETTINGS_ENGINEMODE
+        glGenFramebuffers(1, &sceneFramebuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, sceneFramebuffer);
+
+        //sceneTexture
+        glGenTextures(1, &sceneTexture);
+        glBindTexture(GL_TEXTURE_2D, sceneTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sceneWidth, sceneHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sceneTexture, 0);
+
+        //depth and stencil texture
+        glGenTextures(1, &depthAndStencilTexture);
+        glBindTexture(GL_TEXTURE_2D, depthAndStencilTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, sceneWidth, sceneHeight, 0,
+                GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthAndStencilTexture, 0);
+
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_STENCIL_TEST);
+        glEnable(GL_BLEND);
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+#endif
         glClearStencil(0);
     }
 
@@ -193,27 +234,28 @@ namespace wlEngine {
         ImGui_ImplOpenGL3_Init("#version 450");
 
     }
-
-    void RenderSystem::UIRender() {
+#if SETTINGS_ENGINEMODE
+    void RenderSystem::renderGameEditor() {
         ImGui_ImplOpenGL3_NewFrame();   
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
 
-        glViewport(0, 0, windowWidth, windowHeight);
-        gameEditor->render();
+        void* data[3];
+        data[0] = &sceneTexture;
+        data[1] = &sceneWidth;
+        data[2] = &sceneHeight;
+        gameEditor->render(data);
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
-
+#endif
 
     void RenderSystem::inputHandler(SDL_Event& event){
         ImGui_ImplSDL2_ProcessEvent(&event);
     }
 
     void RenderSystem::renderGame() {
-        glViewport(0, windowHeight - sceneHeight - topMenuHeight, sceneWidth, sceneHeight);
-
         if(Settings::gameDimension == Settings::GameDimension::Dimension3D) {
             for (auto c : Model::collection) {
                 render(c);

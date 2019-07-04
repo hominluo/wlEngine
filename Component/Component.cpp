@@ -1,7 +1,7 @@
 #include "Component.hpp"
 
 namespace wlEngine {
-	std::map<std::string, std::function<void(GameObject*, void**)>>* Component::componentFactoryList = getComponentFactoryList();
+	std::map<std::size_t, std::function<void(GameObject*, void**)>>* Component::componentFactoryList = getComponentFactoryList();
     Component::Component(GameObject* go): gameObject(go) {
         if (go == nullptr) {
             gameObjects = new std::set<GameObject*>;
@@ -12,11 +12,15 @@ namespace wlEngine {
         return Component::componentId == typeId;
     }
 
-	std::map<std::string, std::function<void(GameObject*, void**)>>* Component::getComponentFactoryList() {
+	std::map<std::size_t, std::function<void(GameObject*, void**)>>* Component::getComponentFactoryList() {
 		if (componentFactoryList == nullptr) {
-			componentFactoryList = new std::map<std::string, std::function<void(GameObject*, void**)>>();
+			componentFactoryList = new std::map<std::size_t, std::function<void(GameObject*, void**)>>();
 		}
 		return componentFactoryList;
 	}
+
+    std::size_t Component::getId() {
+        return componentId;
+    }
 }
 

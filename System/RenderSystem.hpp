@@ -7,6 +7,7 @@
 #include <stb_image.hpp>
 
 #include "System.hpp"
+#include "../Settings.hpp"
 
 //NOTE: The G-Syn is limiting the frame rate to 60 I think!
 class b2World;
@@ -21,7 +22,7 @@ namespace wlEngine {
         ~RenderSystem();
 
         void render();
-        void UIRender();
+        
         void inputHandler(SDL_Event& event);
         
         void update() override;
@@ -31,11 +32,18 @@ namespace wlEngine {
         SDL_GLContext* getSDL_GLContext() {return &glContext;};
         SDL_Window* getSDL_Window() {return window;};
     private:
+#if SETTINGS_ENGINEMODE
+        unsigned int sceneTexture;
+        unsigned int sceneFramebuffer;
+        unsigned int depthAndStencilTexture;
+		void renderGameEditor();
+#endif
+
         static RenderSystem* renderSystem;
-        int windowHeight = 720;
-        int windowWidth = 1280;
-        int sceneHeight = 720;
-        int sceneWidth = 1280;
+		int windowHeight = 768;
+        int windowWidth = 1440;
+        int sceneHeight = 360;
+        int sceneWidth = 640;
         const int topMenuHeight = 20;
 
         RenderSystem();

@@ -1,6 +1,8 @@
 #include <json.hpp>
 
 #include "Animation.hpp"
+#include "Sprite.hpp"
+#include "../GameObject/GameObject.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -29,19 +31,30 @@ namespace wlEngine {
             std::string jsonStr (
                     (std::istreambuf_iterator<char>(jsonInput)), 
                     (std::istreambuf_iterator<char>()        ));
+			auto animation = json::parse(jsonStr);
+			auto clipsJson = animation["clips"]; // key is the name of the animation
+			std::vector<int> grid = animation["grid"];
 
-            auto clipsJson = json::parse(jsonStr)["clips"]; // key is the name of the animation
-            for (json::iterator iter = clipsJson.begin(); iter != clipsJson.end(); iter++) {
+			gridX = grid[0];
+			gridY = grid[1];
+
+            auto sprite = gameObject->getComponent<Sprite>();
+            int clipWidth = sprite->getWidth() / gridX;
+            int clipHeight = sprite->getHeight() / gridY;
+
+            for (json::iterator iter = clipsJson.begin(); iter != clipsJson.end(); ++iter) {
                 auto clipsData = iter.value();
+               
                 std::vector<std::vector<int>> clipArr = clipsData["clip"];
                 std::vector<float> duration = clipsData["duration"];
 
+
                 for (size_t i = 0 ; i < clipArr.size(); i++) {
                     clips[iter.key()].push_back(Clip{duration[i] , Rect{
-                            clipArr[i][0], 
-                            clipArr[i][1], 
-                            clipArr[i][2], 
-                            clipArr[i][3]}});
+                            clipArr[i][0] * clipWidth, 
+                            clipArr[i][1] * clipHeight, 
+                            clipWidth, 
+                            clipHeight}});
                 }
             }
         }
@@ -62,6 +75,10 @@ namespace wlEngine {
     Rect* Animation::getCurrentClip() {
         if (currentAnimation == nullptr) return nullptr;
 
-        return &currentAnimation->at(currentFrame).clip;// NEED TO CHANGE
+        return &currentAnimation->at(currentFrame).clip;
     }
+
+	bool Animation::isPlaying(const std::string& name) {
+		return currentAnimation == &clips[name];
+	}
 }

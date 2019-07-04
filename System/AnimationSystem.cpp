@@ -17,13 +17,13 @@ namespace wlEngine {
 
     void AnimationSystem::updateClip(Animation* a) {
         a->timeStamp += Time::deltaTime;
-        if (a->timeStamp >= a->currentAnimation->at(a->currentFrame).duration) { // 1 is the duration of this frame
+        if (a->timeStamp >= a->currentAnimation->at(a->currentFrame).duration) {
             a->timeStamp = 0;
             a->currentFrame++;
             a->currentFrame %= a->currentAnimation->size();
         }
 
-        auto texture = a->gameObject->getComponent<Sprite>();
-        texture->clip(a->getCurrentClip());
+        auto sprite = a->gameObject->getComponent<Sprite>();
+        sprite->clip(a->getCurrentClip(), true);
     }
 }
