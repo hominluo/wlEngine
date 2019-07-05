@@ -6,6 +6,7 @@
 #include "System/InputSystem.hpp"
 
 #include "Graphics/Shader.hpp"
+#include "Settings.hpp"
 
 namespace wlEngine {
     EngineManager* EngineManager::engine = nullptr;
@@ -40,13 +41,27 @@ namespace wlEngine {
     }
 
     void EngineManager::loop() {
-        while(!quit) {
-            update();
-            Time::update();
+#if SETTINGS_ENGINEMODE
+        while (!quit) {
+            if (Settings::engineMode == Settings::EngineMode::Gameplay) {
+                update();
+                Time::update();
+            }
+            else {
+                RenderSystem::get()->update();
+                InputSystem::get()->update();
+                currentScene->update();
+            }
+#else
+            while(!quit) {
+                update();
+                Time::update();
+            }
+#endif
         }
     }
 
-    void EngineManager::systemUpdate() {
+    void EngineManager::systemUpdate(){
         for (auto& i : System::collection) {
             i->update();
         }

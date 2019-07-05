@@ -92,14 +92,14 @@ namespace wlEngine {
 		float width = (Settings::gameDimension == Settings::GameDimension::Dimension3D ? rect->width / normalizationPara : rect->width);
 		float height = (Settings::gameDimension == Settings::GameDimension::Dimension3D ? rect->height / normalizationPara : rect->height);
 
-		vertices[0] = width;
-		vertices[1] = height;
-		vertices[5] = width;
-		vertices[6] = 0;
-		vertices[10] = 0;
-		vertices[11] = 0;
-		vertices[15] = 0;
-		vertices[16] = height;
+		vertices[0] = width / 2;
+		vertices[1] = height / 2;
+		vertices[5] = width / 2;
+		vertices[6] = -height / 2;
+		vertices[10] = -width / 2;
+		vertices[11] = -height / 2;
+		vertices[15] = -width / 2;
+		vertices[16] = height / 2;
 
         //top right
         vertices[3] = (float)(rect->x + rect->width) / mWidth;

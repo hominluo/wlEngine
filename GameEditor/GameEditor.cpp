@@ -8,6 +8,7 @@
 #include "../Component/Transform.hpp"
 #include "../Component/Animation.hpp"
 #include "../System/RenderSystem.hpp"
+#include "../Settings.hpp"
 namespace wlEngine {
     GameEditor::GameEditor() : selectedGameObject(nullptr) {
 
@@ -24,12 +25,18 @@ namespace wlEngine {
     }
 
     void GameEditor::showGameWindow(void** data) {
-        ImGui::Begin("Game Window", nullptr, ImGuiWindowFlags_NoResize);
-		float sceneWidth = *(int*)(data[1]);
-		float sceneHeight = *(int*)(data[2]);
+        auto& style = ImGui::GetStyle();
+        auto windowPadding = style.WindowPadding;
+        style.WindowPadding = {0,0};
+        std::string windowName;
+        if (Settings::engineMode == Settings::EngineMode::Gameplay) windowName = "Game: GamePlay###";
+        else windowName = "Game: Editor###";
+        ImGui::Begin(windowName.data(),nullptr, ImGuiWindowFlags_NoResize);
+        float sceneWidth = *(int*)(data[1]);
+        float sceneHeight = *(int*)(data[2]);
         ImGui::Image((void*)*(unsigned int*)(data[0]), {sceneWidth,sceneHeight}, {0,1}, {1,0});//one commnet from imgui.cpp: my_void_ptr = (void*)(intptr_t)my_tex;                  // cast a GLuint into a void* (we don't take its address! we literally store the value inside the pointer)
-        
         ImGui::End();
+        style.WindowPadding = windowPadding;
     }
 
     void GameEditor::showAllGameObjects() {
@@ -98,7 +105,7 @@ namespace wlEngine {
     }
 
     void GameEditor::showAnimationInfo(GameObject* go){
-        
+
     }
 
     void GameEditor::showTransformInfo(GameObject* go) {
