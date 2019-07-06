@@ -2,7 +2,7 @@
 #include "../Component/Transform.hpp"
 #include "Scene.hpp"
 namespace wlEngine {
-    GameObject::GameObject(const std::string& name) : name(name) {
+    GameObject::GameObject(const std::string& name) : name(name), json_ptr(nullptr) {
         
     }
 

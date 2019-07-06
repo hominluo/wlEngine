@@ -1,5 +1,6 @@
 #include "InputSystem.hpp"
 #include "RenderSystem.hpp"
+#include "../EngineManager.hpp"
 #include "../Settings.hpp"
 namespace wlEngine {
     SYSTEM_DEFINATION(InputSystem);
@@ -22,6 +23,8 @@ namespace wlEngine {
                         else {
                             Settings::engineMode = Settings::EngineMode::Gameplay;
                         }
+                        auto currentScene = EngineManager::getwlEngine()->getCurrentScene();
+                        currentScene->loadScene(currentScene->scene_json["scene_path"]);
                     }
                     break;
             }        

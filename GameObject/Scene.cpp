@@ -47,22 +47,22 @@ namespace wlEngine {
         ifs.open(filePath);
         std::ostringstream oss;
         oss << ifs.rdbuf();
-
-        const nlohmann::json& scene_json = nlohmann::json::parse(oss.str());
-
-        auto graph = scene_json["scene_graph"];
+        scene_json = nlohmann::json::parse(oss.str());
+        scene_json["scene_path"] = filePath;
+        auto& graph = scene_json["scene_graph"];
         for (auto iter = graph.begin(); iter != graph.end(); ++iter){
             loadGameObjectFromJson(*iter, nullptr);
         }
     }
 
 
-    void Scene::loadGameObjectFromJson(const nlohmann::json& go_json, GameObject* parent) {
+    void Scene::loadGameObjectFromJson(nlohmann::json& go_json, GameObject* parent) {
         std::string name = go_json["name"];
-        auto components = go_json["components"];
-        auto children = go_json["children"];
+        auto& components = go_json["components"];
+        auto& children = go_json["children"];
 
         auto go = createGameObject(name);
+        go->json_ptr = &go_json;
         if (parent) go->setParent(parent);
         else addGameObject(go);
         for (nlohmann::json::iterator iter = components.begin(); iter != components.end(); ++iter) {
@@ -102,8 +102,7 @@ namespace wlEngine {
         }
         
         for (nlohmann::json::iterator iter = children.begin(); iter != children.end(); ++iter) {
-			nlohmann::json s = *iter;
-            loadGameObjectFromJson(s, go);
+            loadGameObjectFromJson(*iter, go);
         }
     }
 
@@ -111,6 +110,8 @@ namespace wlEngine {
         for (auto& k : allocatedGameObjects) {
             deallocateGameObject(k);
         }
+        sceneGraph.clear();
+        allocatedGameObjects.clear();
     }
 
     GameObject* Scene::createGameObject(const std::string& name) {
@@ -120,6 +121,7 @@ namespace wlEngine {
     }
 
     void Scene::deallocateGameObject(GameObject* ptr) {
+        ptr->components.clear();
         gameObjectAllocator.deallocate(ptr);
     }
 

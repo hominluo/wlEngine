@@ -29,6 +29,8 @@ namespace wlEngine {
 
             void addGameObject(GameObject*);
             void removeGameObject(GameObject*);
+
+            nlohmann::json scene_json;
         private:
             std::set<GameObject*> allocatedGameObjects;
             std::set<GameObject*> sceneGraph;
@@ -38,7 +40,7 @@ namespace wlEngine {
             //resonsible for converting z position to x and y
             void render();
             void clearScene();
-            void loadGameObjectFromJson(const nlohmann::json&, GameObject* parent);
+            void loadGameObjectFromJson(nlohmann::json&, GameObject* parent);
 
             FixedArrayAllocator<GameObject, 3000> gameObjectAllocator;
             static void destoryGameObject(GameObject*);
@@ -46,6 +48,7 @@ namespace wlEngine {
             friend FixedArrayAllocator<GameObject, 3000>;
             friend class EngineManager;
             friend class GameObject;
+
     };
 }
 

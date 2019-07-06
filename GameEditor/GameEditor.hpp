@@ -1,5 +1,4 @@
 #pragma once
-
 #include <SDL_events.h>
 #include <set>
 #include <string>
@@ -8,6 +7,8 @@
 using json = nlohmann::json;
 namespace wlEngine {
     class GameObject;
+    class Sprite;
+    class Animation;
     class GameEditor {
     public:
         GameEditor();
@@ -22,7 +23,6 @@ namespace wlEngine {
 
     private:
         GameObject* selectedGameObject;
-        json currentScene;
 
         void showGameObjectInfo();
         void showAllGameObjects();
@@ -30,9 +30,12 @@ namespace wlEngine {
 
         void showMenu();
 
-        void showAnimationInfo(GameObject*);
+        void showAnimationInfo(Animation*);
         void showTransformInfo(GameObject*);
+        void showSpriteInfo(Sprite*);
 
         void showGameWindow(void** data);
+
+        void showResource();
     };
 }

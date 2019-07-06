@@ -58,6 +58,7 @@ namespace wlEngine {
         };
 
         friend class RenderSystem;
+        friend class GameEditor;
     };
 }
 #endif

@@ -16,7 +16,7 @@ namespace wlEngine {
     }
 
     Transform::Transform(GameObject* gm, const float& x, const float& y, const float& z): Component(gm), position(x,y,z), rotation(1.0f), positionMat4(1.0f), rotateArou(1.0f), scaleMat4(1.0f), scale(1.0f) {
-        setPosition({x,y,z});
+        setLocalPosition({x,y,z});
 
     }
     

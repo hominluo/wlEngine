@@ -3,6 +3,7 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <stb_image.hpp>
+#include "Animation.hpp"
 #include "Sprite.hpp"
 #include "../GameObject/Camera.hpp"
 #include "../EngineManager.hpp"
@@ -72,7 +73,6 @@ namespace wlEngine {
 			 
 			stbi_image_free(imageData);
 		}
-
 
         return true;
     }

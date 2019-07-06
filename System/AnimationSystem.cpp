@@ -17,10 +17,10 @@ namespace wlEngine {
 
     void AnimationSystem::updateClip(Animation* a) {
         a->timeStamp += Time::deltaTime;
-        if (a->timeStamp >= a->currentAnimation->at(a->currentFrame).duration) {
+        if (a->timeStamp >= a->currentAnimation->second.at(a->currentFrame).duration) {
             a->timeStamp = 0;
             a->currentFrame++;
-            a->currentFrame %= a->currentAnimation->size();
+            a->currentFrame %= a->currentAnimation->second.size();
         }
 
         auto sprite = a->gameObject->getComponent<Sprite>();

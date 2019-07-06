@@ -7,7 +7,6 @@ namespace wlEngine {
     public:
         static void init();
         static ResourceManager* get() {return resourceManager;};
-        unsigned char* getImage(const std::string& path, int& width, int& height, int& nrComponents);
         ~ResourceManager();
 
     private:

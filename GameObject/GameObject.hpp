@@ -2,6 +2,10 @@
 #include "../Component/Component.hpp"
 #include <set>
 #include <memory>
+#include "../Settings.hpp"
+#if SETTINGS_ENGINEMODE
+#include <json.hpp>
+#endif
 namespace wlEngine {
     class Scene;
     class GameObject {
@@ -28,6 +32,8 @@ namespace wlEngine {
 
         template <typename ComponentType>
         ComponentType* getComponent();
+
+        nlohmann::json* json_ptr;
     private:
         GameObject* parent = nullptr;
         friend class Transform;

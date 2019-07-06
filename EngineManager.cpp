@@ -21,7 +21,6 @@ namespace wlEngine {
 
 
     void EngineManager::postInitialization() {
-
     }
 
     EngineManager* EngineManager::getwlEngine() {
@@ -48,6 +47,7 @@ namespace wlEngine {
                 Time::update();
             }
             else {
+                AnimationSystem::get()->update();
                 RenderSystem::get()->update();
                 InputSystem::get()->update();
                 currentScene->update();
@@ -73,6 +73,7 @@ namespace wlEngine {
         ScriptSystem::init();
         PhysicsSystem::init();
         InputSystem::init();
+
     }
 }
 

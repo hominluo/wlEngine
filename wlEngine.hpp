@@ -20,4 +20,6 @@
 
 #include "Time.hpp"
 #include "Input.hpp"
+
+#undef main
 #endif
