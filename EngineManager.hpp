@@ -1,8 +1,6 @@
 #ifndef ENGINE_MANAGER_H
 #define ENGINE_MANAGER_H
 
-#include "System/RenderSystem.hpp"
-
 #include "GameObject/GameObject.hpp"
 #include "GameObject/Scene.hpp"
 #include "Time.hpp"
@@ -32,6 +30,7 @@ namespace wlEngine {
             void update();
 
             void initializeSystems();
+            void initializeManagers();
 
             /**
              * @brief initialize anything that needs systemt to set up first

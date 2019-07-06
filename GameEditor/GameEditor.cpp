@@ -4,6 +4,7 @@
 
 #include "GameEditor.hpp"
 #include "../EngineManager.hpp"
+#include "../Manager/ResourceManager.hpp"
 
 #include "../Component/Transform.hpp"
 #include "../Component/Animation.hpp"
@@ -24,6 +25,7 @@ namespace wlEngine {
         showGameWindow(data);
         showMenu();
         showAllGameObjects();
+        showResourceWindow();
     }
 
     void GameEditor::showGameWindow(void** data) {
@@ -169,11 +171,16 @@ namespace wlEngine {
         (*go->json_ptr)["components"]["Transform"][2] = pos.z;
     }
 
-    void GameEditor::showResource() {
-
+    void GameEditor::showResourceWindow() {
+        auto textures = ResourceManager::get()->getTextures();
+        ImGui::Begin("Resource");
+        for (auto texture : textures) {
+            ImGui::Image((void*)texture.second.mTexture, {(float)texture.second.mWidth, (float)texture.second.mHeight}, {0,1}, {1,0});
+        }
+        ImGui::End();
     }
 
     void GameEditor::showSpriteInfo(Sprite* sprite) {
-        ImGui::Image((void*)sprite->mTexture, {(float)sprite->mWidth, (float)sprite->mHeight}, {0,1}, {1,0});
+        ImGui::Image((void*)sprite->texture->mTexture, {(float)sprite->texture->mWidth, (float)sprite->texture->mHeight}, {0,1}, {1,0});
     }
 }

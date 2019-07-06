@@ -12,36 +12,29 @@ namespace wlEngine {
     COMPONENT_DEFINATION(Component, Animation, 100);
     COMPONENT_EDITABLE_DEF_BEGIN(Animation) {
         std::string* path = static_cast<std::string*>(args[0]);
-        auto initialAni = static_cast<std::string*>(args[1]);
-        go->addComponent<Animation>(*path, *initialAni);
+        float* width = static_cast<float*>(args[1]);
+        float* height = static_cast<float*>(args[2]);
+        auto initialAni = static_cast<std::string*>(args[3]);
+        go->addComponent<Animation>(*path, *width, *height, *initialAni);
     };
     COMPONENT_EDITABLE_DEF_END(Animation);
 
-    Animation::Animation(GameObject* go): Component(go) {
+    Animation::Animation(GameObject* go, const std::string& path, const int& width, const int& height): Component(go) {
         currentAnimation = nullptr;
         timeStamp = 0;
 		currentFrame = 0;
+        this->width = width;
+        this->height = height;
+		loadClips(path.data());
     }
 
-    Animation::Animation(GameObject* go, const std::string& path) : Component(go) {
-        currentAnimation = nullptr;
-        timeStamp = 0;
-        currentFrame = 0;
-        loadClips(path.data());
-    }
-
-    Animation::Animation(GameObject* go, const std::string& path, const std::string& initialAni) : Component(go){
-        currentAnimation = nullptr;
-        timeStamp = 0;
-        currentFrame = 0;
-        loadClips(path.data());
-        playAnimation(initialAni);
+    Animation::Animation(GameObject* go, const std::string& path, const int& width, const int& height, const std::string& initialAni) : Animation(go, path,width, height){
+		playAnimation(initialAni);
     }
 
 
     void Animation::loadClips(const char* path) {
         std::ifstream jsonInput(path);
-        if (!sprite) sprite = gameObject->getComponent<Sprite>(); 
 
         if (jsonInput.good()) {
             std::string jsonStr (
@@ -54,8 +47,8 @@ namespace wlEngine {
             gridX = grid[0];
             gridY = grid[1];
 
-            int clipWidth = sprite->getWidth() / gridX;
-            int clipHeight = sprite->getHeight() / gridY;
+            int clipWidth = width / gridX;
+            int clipHeight = height / gridY;
 
             for (json::iterator iter = clipsJson.begin(); iter != clipsJson.end(); ++iter) {
                 auto clipsData = iter.value();

@@ -36,6 +36,6 @@ namespace wlEngine {
 
         void showGameWindow(void** data);
 
-        void showResource();
+        void showResourceWindow();
     };
 }

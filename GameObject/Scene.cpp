@@ -68,7 +68,7 @@ namespace wlEngine {
         for (nlohmann::json::iterator iter = components.begin(); iter != components.end(); ++iter) {
             
             auto componentGenerator = (*Component::getComponentFactoryList())[std::hash<std::string>()(iter.key())];
-            assert(componentGenerator != nullptr && "component is not editable!");
+			assert(componentGenerator != nullptr && "component is not editable!");
 
             auto args_json = iter.value();
             std::vector<void*> args(args_json.size());

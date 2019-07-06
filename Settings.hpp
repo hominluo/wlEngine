@@ -4,12 +4,8 @@
 using json = nlohmann::json;
 namespace wlEngine {
 #define SETTINGS_ENGINEMODE 1 // 1: editor, 0: gameplay
+#define SETTINGS_GAME_DIMENSION 0 // 1: 3D, 0: 2D
     namespace Settings{
-        extern enum class GameDimension : uint8_t {
-            Dimension2D = 0,
-            Dimension3D = 1
-        } gameDimension;
-
         extern enum class EngineMode : uint8_t {
             Gameplay = 0,
             Editor = 1

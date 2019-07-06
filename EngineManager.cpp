@@ -8,12 +8,15 @@
 #include "Graphics/Shader.hpp"
 #include "Settings.hpp"
 
+#include "Manager/ResourceManager.hpp"
+
 namespace wlEngine {
     EngineManager* EngineManager::engine = nullptr;
 
     EngineManager::EngineManager(){
         quit = false;
 		initializeSystems();
+        initializeManagers();
         postInitialization();
     };
 
@@ -51,6 +54,7 @@ namespace wlEngine {
                 RenderSystem::get()->update();
                 InputSystem::get()->update();
                 currentScene->update();
+                Time::update();
             }
 #else
             while(!quit) {
@@ -74,6 +78,10 @@ namespace wlEngine {
         PhysicsSystem::init();
         InputSystem::init();
 
+    }
+    
+    void EngineManager::initializeManagers() {
+        ResourceManager::init();
     }
 }
 

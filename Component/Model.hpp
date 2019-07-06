@@ -35,10 +35,10 @@ namespace wlEngine {
         std::function<void()> afterRenderFunc;
 
     private:
-        std::vector<Texture> loaded;
+        std::vector<Texture3D> loaded;
         void loadModel(const std::string& name);
         void processNode(aiNode* node, const aiScene* scene);
-        std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType textureType, std::string typeName, const aiScene*);
+        std::vector<Texture3D> loadMaterialTextures(aiMaterial* mat, aiTextureType textureType, std::string typeName, const aiScene*);
         size_t TextureFromFile(const char *path, const std::string &directory, bool gamma);
     };
 }

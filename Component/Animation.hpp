@@ -14,14 +14,12 @@ namespace wlEngine {
     using Clips = std::pair<std::string, std::vector<Clip>>;
     using ClipsMap = std::map<std::string , Clips>;
 
-    class Sprite;
     class Animation : public Component{
     public:
         COMPONENT_DECLARATION(Component, Animation, 100);
         COMPONENT_EDITABLE_DEC();
-        Animation(GameObject* go);
-        Animation(GameObject* go, const std::string& path);
-        Animation(GameObject* go, const std::string& path, const std::string& initialAni);
+        Animation(GameObject* go, const std::string& path, const int& width, const int& height);
+        Animation(GameObject* go, const std::string& path, const int& width, const int& height, const std::string& initialAni);
 
         void playAnimation(const std::string&);
         void loadClips(const char* path);
@@ -30,7 +28,6 @@ namespace wlEngine {
         void pause();
 		bool isPlaying(const std::string&);
     private:
-        Sprite* sprite = nullptr;
         Clips* currentAnimation;
         ClipsMap clips;
 
@@ -38,6 +35,8 @@ namespace wlEngine {
         float timeStamp = 0;
         int gridX = 0;
         int gridY = 0;
+        int width = 0;
+        int height = 0;
 
         friend class AnimationSystem;
         friend class GameEditor;

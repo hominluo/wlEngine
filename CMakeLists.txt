@@ -13,6 +13,7 @@ set(json_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/json/include)
 set(stb_image_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb/include)
 set(glad_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/include)
 set(assimp_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/assimp/include)
+set(dirent_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/dirent/include)
 
 #set(CMAKE_CXX_FLAGS -Wno-deprecated)
 find_package(OpenGL REQUIRED)
@@ -30,12 +31,14 @@ include_directories(
     ${stb_image_INCLUDE_DIR}
     ${glad_INCLUDE_DIR}
     ${assimp_INCLUDE_DIR} 
+    ${dirent_INCLUDE_DIR} 
 )
 
 file(GLOB source_file
     "${CMAKE_CURRENT_SOURCE_DIR}/Math/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Math/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Component/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Component*.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Component/Struct/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Component/Struct/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/System/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/System/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Memory/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Memory/*.hpp"

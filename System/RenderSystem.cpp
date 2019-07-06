@@ -1,8 +1,12 @@
+#include "RenderSystem.hpp"
+
+#include "../EngineManager.hpp"
+
 #include "../Component/Sprite.hpp"
 #include "../Component/Transform.hpp"
 #include "../Component/Animation.hpp"
 #include "../Component/Model.hpp"
-#include "../EngineManager.hpp"
+
 #include "../GameEditor/GameEditor.hpp"
 
 #include "../imgui/imgui.h"
@@ -14,12 +18,11 @@ namespace wlEngine {
 
     RenderSystem::RenderSystem() {
         //settings
-        if (Settings::gameDimension == Settings::GameDimension::Dimension3D) {
+#if SETTINGS_GAME_DIMENSION == 1
             projection = glm::perspective(glm::radians(45.0f), (float)sceneWidth / sceneHeight, 0.1f, 100000.0f);
-        }
-        else {
+#else
             projection = glm::ortho(0.0f, (float)sceneWidth , 0.0f, (float)sceneHeight, -1.0f, 1000.0f);
-        }
+#endif
 
         gameEditor = new GameEditor;
         //SDL and OpenGL init
@@ -74,18 +77,20 @@ namespace wlEngine {
     }
 
     void RenderSystem::render(Sprite* t) {
-        auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
+            auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
+            auto animation = t->gameObject->getComponent<Animation>();
+            if (animation) t->texture->clip(animation->getCurrentClip(),true);
 
-        t->mShader->use();
+            t->shader->use();
 
-        glBindTexture(GL_TEXTURE_2D, t->mTexture);
+            glBindTexture(GL_TEXTURE_2D, t->texture->mTexture);
+            
+            t->shader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
+            t->shader->setMat4("view", camera->getViewMatrix());
+            t->shader->setMat4("projection", projection);
+            glBindVertexArray(t->texture->VAO);
 
-        t->mShader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
-        t->mShader->setMat4("view", camera->getViewMatrix());
-        t->mShader->setMat4("projection", projection);
-        glBindVertexArray(t->VAO);
-
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
 
     void RenderSystem::render(Model* model) {
@@ -256,11 +261,12 @@ namespace wlEngine {
     }
 
     void RenderSystem::renderGame() {
-        if(Settings::gameDimension == Settings::GameDimension::Dimension3D) {
+#if SETTINGS_GAME_DIMENSION == 1
             for (auto c : Model::collection) {
                 render(c);
             }
         }
+#endif
 
         for (auto c : Sprite::collection) {
             render(c);

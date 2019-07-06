@@ -24,7 +24,7 @@ namespace wlEngine {
         Shininess = aiTextureType_SHININESS,
     };
 
-    struct Texture {
+    struct Texture3D {
         GLuint id;
         std::string type;
         std::string resourcePath;
@@ -32,15 +32,15 @@ namespace wlEngine {
 
     class Mesh {
     public:
-        Mesh(std::vector<Texture>& textures, std::vector<GLuint>& indices, std::vector<Vertex>& vertices);
-        Mesh(std::vector<Texture>&& textures, std::vector<GLuint>&& indices, std::vector<Vertex>&& vertices);
+        Mesh(std::vector<Texture3D>& textures, std::vector<GLuint>& indices, std::vector<Vertex>& vertices);
+        Mesh(std::vector<Texture3D>&& textures, std::vector<GLuint>&& indices, std::vector<Vertex>&& vertices);
 		Mesh(const Mesh& mesh) = default;
 		Mesh(Mesh&& mesh) noexcept;
 
 		~Mesh() {};
 
     private:
-        std::vector<Texture> textures;
+        std::vector<Texture3D> textures;
         std::vector<GLuint> indices;
         std::vector<Vertex> vertices;
 

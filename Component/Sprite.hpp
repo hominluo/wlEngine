@@ -10,7 +10,7 @@
 #include "Component.hpp"
 #include "Struct/Clip.hpp"
 #include "../Graphics/Shader.hpp"
-
+#include "Struct/Texture.hpp"
 namespace wlEngine {
     /* class Texture
      * @description: use initialized GraphicsManager to draw picture on windowRenderer
@@ -24,38 +24,12 @@ namespace wlEngine {
         Sprite(GameObject*, const std::string& path, const std::string& shader);
         ~Sprite();
 
-        /* load image from path */
-        bool loadFromFile(const std::string& path);
+        void useShader(const std::string&);
+        void loadTexture(const std::string& path);
 
-        void free();
-
-        void useShader(const std::string& name);
-
-        int getWidth() { return mWidth; };
-        int getHeight() { return mHeight; };
-        void clip(Rect*, bool subData=true);
-        Shader* getShader() {return mShader;};
-
+        Texture* texture;
     private:
-        unsigned int mTexture;
-        Shader* mShader;
-
-        int mWidth;
-        int mHeight;
-
-        float normalizationPara;
-
-		//opengl
-		GLuint VAO;
-		GLuint VBO;
-		GLuint EBO;
-        
-        float vertices[20] = {
-            0.0f,  0.0f, 0.0f,  1.0f, 1.0f,   // top right
-            0.0f,  0.0f, 0.0f,  1.0f, 0.0f,   // bottom right
-            0.0f,  0.0f, 0.0f,  0.0f, 0.0f,   // bottom left
-            0.0f,  0.0f, 0.0f,  0.0f, 1.0f    // top left 
-        };
+        Shader* shader;
 
         friend class RenderSystem;
         friend class GameEditor;

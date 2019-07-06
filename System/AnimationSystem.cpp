@@ -3,6 +3,7 @@
 #include "../Component/Sprite.hpp"
 #include "../Component/Animation.hpp"
 #include "../Time.hpp"
+
 namespace wlEngine {
     SYSTEM_DEFINATION(AnimationSystem);
     AnimationSystem::AnimationSystem() {
@@ -22,8 +23,5 @@ namespace wlEngine {
             a->currentFrame++;
             a->currentFrame %= a->currentAnimation->second.size();
         }
-
-        auto sprite = a->gameObject->getComponent<Sprite>();
-        sprite->clip(a->getCurrentClip(), true);
     }
 }
