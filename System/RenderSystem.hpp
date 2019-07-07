@@ -66,5 +66,6 @@ namespace wlEngine {
 
         friend class PhysicsDebugDraw;
         friend class GameEditor;
+        friend class EngineManager;
     };
 }

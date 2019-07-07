@@ -25,7 +25,7 @@ namespace wlEngine {
             0.0f,  0.0f, 0.0f,  0.0f, 1.0f    // top left 
         };
 
-        void loadFromFile(const std::string& path);
+        Texture* loadFromFile(const std::string& path);
         void clip(Rect*, bool subData=true);
         void free();
     };

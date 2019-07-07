@@ -1,5 +1,6 @@
 #include <fstream>
 #include <sstream>
+#include <dirent.h>
 #include "../imgui/imgui.h"
 
 #include "GameEditor.hpp"
@@ -172,15 +173,63 @@ namespace wlEngine {
     }
 
     void GameEditor::showResourceWindow() {
-        auto textures = ResourceManager::get()->getTextures();
-        ImGui::Begin("Resource");
-        for (auto texture : textures) {
-            ImGui::Image((void*)texture.second.mTexture, {(float)texture.second.mWidth, (float)texture.second.mHeight}, {0,1}, {1,0});
-        }
+        ImGui::Begin("Resource",nullptr,ImGuiWindowFlags_HorizontalScrollbar);
+        showResourceInDirectory("../resource");
         ImGui::End();
     }
 
     void GameEditor::showSpriteInfo(Sprite* sprite) {
         ImGui::Image((void*)sprite->texture->mTexture, {(float)sprite->texture->mWidth, (float)sprite->texture->mHeight}, {0,1}, {1,0});
+    }
+    void GameEditor::showResourceInDirectory(const std::string& path) {
+        DIR *dir;
+        struct dirent *ent;
+        /* Open directory stream */
+        dir = opendir (path.data());
+        if (dir != NULL) {
+            if(ImGui::TreeNodeEx(path.data())){
+                std::vector<std::string> directory;
+                std::vector<std::string> files;
+                while ((ent = readdir (dir)) != NULL) {
+                    switch (ent->d_type) {
+                        case DT_REG:{
+                            files.push_back(path + "/" + ent->d_name);
+                            break;
+                        }
+
+                        case DT_DIR:
+                            if(ent->d_name[0] != '.')
+                                directory.push_back(path+"/"+ent->d_name);
+                            break;
+
+                        default:
+                            printf ("%s*\n", ent->d_name);
+                    }
+                }
+
+                for (auto& dir : directory) {
+                    showResourceInDirectory(dir);
+                }
+                for (auto& filePath : files) {
+                    std::size_t dotPos = filePath.find_last_of('.');
+                    std::string etx = filePath.substr(dotPos+1, filePath.length());
+                    std::transform(etx.begin(), etx.end(), etx.begin(), [](unsigned char c) {return std::tolower(c); });
+                    if (etx == "png" || etx == "jpg") {
+						std::string name = filePath.substr(filePath.find_last_of("/") + 1, filePath.length());
+                        if (ImGui::TreeNodeEx(name.data())) {
+                            auto texture = ResourceManager::get()->getTexture(filePath);
+                            ImGui::Image((void*)texture->mTexture, {(float)texture->mWidth, (float)texture->mHeight}, {0,1}, {1,0});
+                            ImGui::TreePop();
+                        }
+                    }
+                }
+                ImGui::TreePop();
+            }
+
+            closedir (dir);
+
+        } else {
+            std::cerr << "Resource Manager path error\n";
+        }
     }
 }

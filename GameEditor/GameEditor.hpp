@@ -37,5 +37,6 @@ namespace wlEngine {
         void showGameWindow(void** data);
 
         void showResourceWindow();
+        void showResourceInDirectory(const std::string& path);
     };
 }

@@ -42,6 +42,7 @@ namespace wlEngine {
 
     void Scene::loadScene(const std::string& filePath){
         clearScene();
+        this->filePath = filePath;
 
         std::ifstream ifs;
         ifs.open(filePath);

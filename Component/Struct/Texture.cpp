@@ -1,7 +1,7 @@
 #include "Texture.hpp"
 #include "../../Settings.hpp"
 namespace wlEngine {
-    void Texture::loadFromFile(const std::string& path) {
+    Texture* Texture::loadFromFile(const std::string& path) {
         int nrChannel;
         unsigned char* imageData = stbi_load(path.c_str(), &mWidth, &mHeight, &nrChannel, 0);
         //if (!imageData) return false; It can be a plain color
@@ -41,6 +41,8 @@ namespace wlEngine {
 
             stbi_image_free(imageData);
         }
+
+        return this;
     }
 
     void Texture::free() {

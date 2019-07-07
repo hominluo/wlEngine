@@ -14,11 +14,10 @@ namespace wlEngine {
         Texture* getTexture(const std::string& path);
         const TextureMap& getTextures();
     private:
-        void loadTexture(const std::string& path);
+        Texture* loadTexture(const std::string& path);
         static ResourceManager* resourceManager;
         ResourceManager();
 
         TextureMap textures;
-        void visitDirectory(const std::string& dirname);
     };
 }

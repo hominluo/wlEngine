@@ -31,6 +31,7 @@ namespace wlEngine {
             void removeGameObject(GameObject*);
 
             nlohmann::json scene_json;
+            std::string filePath;
         private:
             std::set<GameObject*> allocatedGameObjects;
             std::set<GameObject*> sceneGraph;
