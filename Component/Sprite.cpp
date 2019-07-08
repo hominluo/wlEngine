@@ -21,6 +21,9 @@ namespace wlEngine {
 
     Sprite::~Sprite(){};
 
+    Sprite::Sprite(GameObject* go, Texture* t) : Component(go) {
+        texture = t;
+    }
     Sprite::Sprite(GameObject* go, const std::string& path): Component(go) {
         auto resourceManager = ResourceManager::get();
         texture = resourceManager->getTexture(path);

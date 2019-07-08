@@ -13,7 +13,7 @@ namespace wlEngine {
 
 
 
-    Scene::Scene() : mWorld(new b2World(b2Vec2(0, 0))) {
+    Scene::Scene() : mWorld(new b2World(b2Vec2(0, 0))), sceneGraph() {
         //physics world
         auto collisionListener = new WorldContactListener();
         auto physicsDebugDraw = new PhysicsDebugDraw();
@@ -62,10 +62,7 @@ namespace wlEngine {
         auto& components = go_json["components"];
         auto& children = go_json["children"];
 
-        auto go = createGameObject(name);
-        go->json_ptr = &go_json;
-        if (parent) go->setParent(parent);
-        else addGameObject(go);
+        auto go = createGameObject(name, parent, &go_json);
         for (nlohmann::json::iterator iter = components.begin(); iter != components.end(); ++iter) {
             
             auto componentGenerator = (*Component::getComponentFactoryList())[std::hash<std::string>()(iter.key())];
@@ -115,8 +112,8 @@ namespace wlEngine {
         allocatedGameObjects.clear();
     }
 
-    GameObject* Scene::createGameObject(const std::string& name) {
-        auto ptr = gameObjectAllocator.allocate(name);
+    GameObject* Scene::createGameObject(const std::string& name, GameObject* parent, nlohmann::json* json) {
+        auto ptr = gameObjectAllocator.allocate(name, parent, json);
         allocatedGameObjects.insert(ptr);
         return ptr;
     }

@@ -20,6 +20,8 @@ namespace wlEngine {
 	public:
         COMPONENT_DECLARATION(Component, Sprite, 100);
         COMPONENT_EDITABLE_DEC();
+
+        Sprite(GameObject*, Texture*);
         Sprite(GameObject*, const std::string& path);
         Sprite(GameObject*, const std::string& path, const std::string& shader);
         ~Sprite();

@@ -24,7 +24,7 @@ namespace wlEngine {
 			}
             const std::set<GameObject*>* getSceneGraph(){return &sceneGraph;};
 
-            GameObject* createGameObject(const std::string& name);
+            GameObject* createGameObject(const std::string& name, GameObject* parent, nlohmann::json*);
             void deallocateGameObject(GameObject*);
 
             void addGameObject(GameObject*);

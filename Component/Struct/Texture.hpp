@@ -6,7 +6,8 @@
 
 namespace wlEngine {
     struct Texture {
-        unsigned int mTexture;
+        unsigned int mTexture = 0;
+        std::string sourcePath;
 
         int mWidth;
         int mHeight;
@@ -14,9 +15,9 @@ namespace wlEngine {
         float normalizationPara;
 
 		//opengl
-		GLuint VAO;
-		GLuint VBO;
-		GLuint EBO;
+		GLuint VAO = 0;
+		GLuint VBO = 0;
+		GLuint EBO = 0;
         
         float vertices[20] = {
             0.0f,  0.0f, 0.0f,  1.0f, 1.0f,   // top right

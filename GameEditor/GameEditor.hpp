@@ -38,5 +38,6 @@ namespace wlEngine {
 
         void showResourceWindow();
         void showResourceInDirectory(const std::string& path);
+        void dropSprite(GameObject* parent);
     };
 }

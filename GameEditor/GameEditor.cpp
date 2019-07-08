@@ -47,7 +47,8 @@ namespace wlEngine {
     void GameEditor::showAllGameObjects() {
         ImGui::Begin("Scene Graph", nullptr, ImGuiWindowFlags_None);
         auto gameObjects = EngineManager::getwlEngine()->getCurrentScene()->getSceneGraph();
-        pushGameObject(gameObjects->begin(), gameObjects);
+		dropSprite(nullptr);
+		pushGameObject(gameObjects->begin(), gameObjects);
         ImGui::End();
         showGameObjectInfo();
     }
@@ -55,6 +56,7 @@ namespace wlEngine {
     void GameEditor::pushGameObject(std::set<GameObject*>::iterator iter, const std::set<GameObject*>* gameObjects) {
         if(iter != gameObjects->end()) {
             bool open = ImGui::TreeNodeEx((*iter)->name.c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
+			dropSprite(*iter);
 
             if(ImGui::IsItemClicked() && (ImGui::GetMousePos().x - ImGui::GetItemRectMin().x) > ImGui::GetTreeNodeToLabelSpacing()) {
                 selectedGameObject = *iter;
@@ -156,20 +158,20 @@ namespace wlEngine {
     void GameEditor::showTransformInfo(GameObject* go) {
         auto transform = go->getComponent<Transform>();
         auto pos = transform->getLocalPosition();
-
-        ImGui::InputFloat("local x", &pos.x);
-        ImGui::InputFloat("local y", &pos.y);
-        ImGui::InputFloat("local z", &pos.z);
+		bool inputX = ImGui::InputFloat("local x", &pos.x);
+		bool inputY = ImGui::InputFloat("local y", &pos.y);
+		bool inputZ = ImGui::InputFloat("local z", &pos.z);
+		if ( inputX|| inputY || inputZ) {
+			transform->setLocalPosition(pos);
+			(*go->json_ptr)["components"]["Transform"][0] = pos.x;
+			(*go->json_ptr)["components"]["Transform"][1] = pos.y;
+			(*go->json_ptr)["components"]["Transform"][2] = pos.z;
+		}
 
         float scale_f = transform->scale.x;
-        ImGui::InputFloat("Scale Aspect Ratio", &scale_f);
-
-        transform->setScale(scale_f, scale_f, scale_f);
-        transform->setLocalPosition(pos);
-
-        (*go->json_ptr)["components"]["Transform"][0] = pos.x;
-        (*go->json_ptr)["components"]["Transform"][1] = pos.y;
-        (*go->json_ptr)["components"]["Transform"][2] = pos.z;
+		if (ImGui::InputFloat("Scale Aspect Ratio", &scale_f)) {
+			transform->setScale(scale_f, scale_f, scale_f);
+		}
     }
 
     void GameEditor::showResourceWindow() {
@@ -215,11 +217,18 @@ namespace wlEngine {
                     std::string etx = filePath.substr(dotPos+1, filePath.length());
                     std::transform(etx.begin(), etx.end(), etx.begin(), [](unsigned char c) {return std::tolower(c); });
                     if (etx == "png" || etx == "jpg") {
-						std::string name = filePath.substr(filePath.find_last_of("/") + 1, filePath.length());
+                        std::string name = filePath.substr(filePath.find_last_of("/") + 1, filePath.length());
                         if (ImGui::TreeNodeEx(name.data())) {
                             auto texture = ResourceManager::get()->getTexture(filePath);
                             ImGui::Image((void*)texture->mTexture, {(float)texture->mWidth, (float)texture->mHeight}, {0,1}, {1,0});
                             ImGui::TreePop();
+                        }
+                        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+                        {
+                            Texture* texture = ResourceManager::get()->getTexture(filePath);
+							ImGui::SetDragDropPayload("Sprite", &texture, sizeof(Texture*));        // Set payload to carry the index of our item (could be anything)
+                            ImGui::Text("%s", filePath.data());
+                            ImGui::EndDragDropSource();
                         }
                     }
                 }
@@ -230,6 +239,34 @@ namespace wlEngine {
 
         } else {
             std::cerr << "Resource Manager path error\n";
+        }
+    }
+
+    void GameEditor::dropSprite(GameObject* parent) {
+        if (ImGui::BeginDragDropTarget()){
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Sprite")){
+                Texture** texture_ptr = static_cast<Texture**>(payload->Data);
+                auto engine = EngineManager::getwlEngine();
+                auto scene = engine->getCurrentScene();
+                auto go = scene->createGameObject("New GameObject", parent, nullptr);
+				auto& json = *go->json_ptr;
+
+                auto sprite = go->addComponent<Sprite>(*texture_ptr);
+                sprite->useShader("sprite_shader");
+                
+                nlohmann::json sprite_json = nlohmann::json::array();
+                sprite_json.push_back((*texture_ptr)->sourcePath);
+                sprite_json.push_back("sprite_shader");
+                json["components"]["Sprite"] = sprite_json;
+
+				go->addComponent<Transform>();
+                nlohmann::json transforom_json = nlohmann::json::array();
+                transforom_json.push_back(0);
+                transforom_json.push_back(0);
+                transforom_json.push_back(0);
+                json["components"]["Transform"] = transforom_json;
+            }
+            ImGui::EndDragDropTarget();
         }
     }
 }

@@ -2,6 +2,9 @@
 #include "../../Settings.hpp"
 namespace wlEngine {
     Texture* Texture::loadFromFile(const std::string& path) {
+        free();
+        sourcePath = path;
+
         int nrChannel;
         unsigned char* imageData = stbi_load(path.c_str(), &mWidth, &mHeight, &nrChannel, 0);
         //if (!imageData) return false; It can be a plain color

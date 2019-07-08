@@ -10,7 +10,7 @@ namespace wlEngine {
     class Scene;
     class GameObject {
     public:
-        GameObject(const std::string& name);
+        GameObject(const std::string& name, GameObject* parent, nlohmann::json* json = nullptr);
         ~GameObject();
         std::string name;
         std::set<GameObject*> children;

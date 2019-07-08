@@ -23,10 +23,11 @@ namespace wlEngine {
     }
 
     Texture* ResourceManager::getTexture(const std::string& path) {
-        if (textures.find(path) == textures.end()) {
+		auto t = textures.find(path);
+        if (t == textures.end()) {
             return loadTexture(path);
         }
-        return &textures[path];
+        return &t->second;
     }
 
     const TextureMap& ResourceManager::getTextures(){
