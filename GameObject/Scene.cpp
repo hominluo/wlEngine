@@ -41,15 +41,15 @@ namespace wlEngine {
     void Scene::loadScene(const std::string& filePath){
         clearScene();
         this->filePath = filePath;
-
-        std::ifstream ifs;
-        ifs.open(filePath);
-        std::ostringstream oss;
-        oss << ifs.rdbuf();
+		std::ifstream ifs;
+		ifs.open(filePath);
+		std::ostringstream oss;
+		oss << ifs.rdbuf();
 		ifs.close();
-        sceneData.data = nlohmann::json::parse(oss.str());
-        sceneData.data["scene_path"] = filePath;
-        auto& graph = sceneData.data["scene_graph"];
+		sceneData.data["scene_graph"] = Json::array(); //the structure of data will be built using loadGameObjectFromJson, because createGameObject of SceneData will insert data into sceneData.data
+		sceneData.data["scene_path"] = filePath;
+
+		auto graph = nlohmann::json::parse(oss.str())["scene_graph"];
         for (auto iter = graph.begin(); iter != graph.end(); ++iter){
             loadGameObjectFromJson(*iter, nullptr); //load game object without parent para
         }
@@ -60,7 +60,8 @@ namespace wlEngine {
         std::string name = go_json["name"];
         auto& components = go_json["components"];
         auto& children = go_json["children"];
-        auto go = createGameObject(name, parent, &go_json);
+
+		auto go = createGameObject(name, parent, &go_json);
         for (nlohmann::json::iterator iter = components.begin(); iter != components.end(); ++iter) {
             if (iter.key() == "Camera2D") setCamera(go);
             auto componentGenerator = (*Component::getComponentFactoryList())[std::hash<std::string>()(iter.key())];
@@ -92,9 +93,7 @@ namespace wlEngine {
                 }
 				i++;
             }
-
             componentGenerator(go, args.data());
-            
         }
         
         for (nlohmann::json::iterator iter = children.begin(); iter != children.end(); ++iter) {
@@ -104,14 +103,17 @@ namespace wlEngine {
 
     void Scene::clearScene() {
         for (auto& k : allocatedGameObjects) {
-            deallocateGameObject(k);
+			gameObjectAllocator.deallocate(k);
         }
         sceneGraph.clear();
         allocatedGameObjects.clear();
+		sceneData.clear();
     }
 
     GameObject* Scene::createGameObject(const std::string& name, GameObject* parent, nlohmann::json* json) {
+
         auto ptr = gameObjectAllocator.allocate(name);
+
         if (parent) {
             ptr->setParent(parent);
         }
@@ -119,14 +121,20 @@ namespace wlEngine {
             ptr->setParent(this);
         }
         allocatedGameObjects.insert(ptr);
+
 #if SETTINGS_ENGINEMODE
         sceneData.createGameObject(ptr, parent, json);
 #endif
         return ptr;
     }
 
-    void Scene::deallocateGameObject(GameObject* ptr) {
-        ptr->components.clear();
+    void Scene::destroyGameObject(GameObject* ptr) {
+#if SETTINGS_ENGINEMODE
+		sceneData.destroyGameObject(ptr);
+#endif
+		if (auto parent = ptr->getParent()) parent->children.erase(ptr);
+		else sceneGraph.erase(ptr);
+		allocatedGameObjects.erase(ptr);
         gameObjectAllocator.deallocate(ptr);
     }
 

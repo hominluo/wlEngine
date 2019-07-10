@@ -4,10 +4,6 @@
 #include <cstddef>
 
 namespace wlEngine {
-    template<typename T>
-    void destroy(T* ptr) {
-        T::destroy(ptr);
-    }
 
     template <typename T, size_t N>
     class FixedArrayAllocator {
@@ -38,13 +34,14 @@ namespace wlEngine {
     public:
         FixedArrayAllocator() {
 			beacon = allocateNewChunk();
+			chunkCount = 1;
         }
         
         ~FixedArrayAllocator() = default;
         
         template<typename... Args>
         T* allocate(Args&& ... params) {
-            
+			
             auto succ = *reinterpret_cast<typename MemoryChunk::Arena**>(beacon->bytes);
             auto temp = beacon;
             
@@ -54,10 +51,11 @@ namespace wlEngine {
             else
                 beacon = allocateNewChunk();
 
-            return new (reinterpret_cast<T*>(temp)) T(params...);
+			return new (reinterpret_cast<T*>(temp)) T(params...);
         }
 
         void deallocate(T* ptr) {
+			ptr->~T();
             auto arenaPtr = reinterpret_cast<typename MemoryChunk::Arena*>(ptr);
             auto chunk = arenaPtr->chunk;
             chunk->freeCount += 1;

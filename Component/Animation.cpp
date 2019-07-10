@@ -70,6 +70,7 @@ namespace wlEngine {
         else {
             std::cerr << "wlEngine::Animation: fail to load json at " << path; 
         }
+        jsonInput.close();
 
     }
     void Animation::playAnimation(const std::string& name) {

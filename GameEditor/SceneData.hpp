@@ -18,7 +18,10 @@ namespace wlEngine {
         void addSprite(GameObject* go, const std::string& sourcePath, const std::string& shader);
         void addTransform(GameObject* go);
         void setCamera();
+		void clear();
+		void destroyGameObject(GameObject*);
         std::map<GameObject*, json*> gameObjectData;
+		
     };
 }
 #endif

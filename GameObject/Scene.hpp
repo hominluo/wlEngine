@@ -24,7 +24,7 @@ namespace wlEngine {
             const std::set<GameObject*>* getSceneGraph(){return &sceneGraph;};;
 
             GameObject* createGameObject(const std::string& name, GameObject* parent, nlohmann::json*);
-            void deallocateGameObject(GameObject*);
+            void destroyGameObject(GameObject*);
 
             void addGameObject(GameObject*);
             void removeGameObject(GameObject*);
@@ -45,7 +45,6 @@ namespace wlEngine {
             void loadGameObjectFromJson(nlohmann::json&, GameObject* parent);
 
             FixedArrayAllocator<GameObject, 3000> gameObjectAllocator;
-            static void destoryGameObject(GameObject*);
 
             friend FixedArrayAllocator<GameObject, 3000>;
             friend class EngineManager;
