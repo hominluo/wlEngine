@@ -8,13 +8,14 @@
 
 #include "System.hpp"
 #include "../Settings.hpp"
-
+#include "../Component/Camera2D.hpp"
 //NOTE: The G-Syn is limiting the frame rate to 60 I think!
 class b2World;
 namespace wlEngine {
     struct Sprite;
     struct Model;
     class GameEditor;
+    class Camera3D;
     class RenderSystem : public System {
     public:
         static RenderSystem* get();
@@ -58,6 +59,8 @@ namespace wlEngine {
         SDL_GLContext glContext;
         SDL_Window* window;
         GameEditor* gameEditor;
+        Camera2D* camera2D = nullptr;
+        Camera3D* camera3D = nullptr; //under development
 
         glm::mat4 projection;
 

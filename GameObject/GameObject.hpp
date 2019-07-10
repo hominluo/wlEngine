@@ -1,19 +1,15 @@
 #pragma once
 #include "../Component/Component.hpp"
-#include <set>
 #include <memory>
 #include "../Settings.hpp"
-#if SETTINGS_ENGINEMODE
-#include <json.hpp>
-#endif
 namespace wlEngine {
     class Scene;
     class GameObject {
     public:
-        GameObject(const std::string& name, GameObject* parent, nlohmann::json* json = nullptr);
+        GameObject(const std::string& name);
         ~GameObject();
         std::string name;
-        std::set<GameObject*> children;
+		std::set<GameObject*> children;
 
         GameObject* getParent() {return parent;}
         void setParent(GameObject*);
@@ -32,11 +28,10 @@ namespace wlEngine {
 
         template <typename ComponentType>
         ComponentType* getComponent();
-
-        nlohmann::json* json_ptr;
     private:
         GameObject* parent = nullptr;
         friend class Transform;
+        friend class SceneData;
     };
 
     template<typename ComponentType, typename... Args>

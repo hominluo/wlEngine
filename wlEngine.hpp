@@ -11,12 +11,10 @@
 #include "Component/Script.hpp"
 #include "Component/Animation.hpp"
 #include "Component/Model.hpp"
+#include "Component/Camera2D.hpp"
 
-#include "GameObject/Camera2D.hpp"
-#include "GameObject/Camera3D.hpp"
 #include "GameObject/Scene.hpp"
 #include "GameObject/GameObject.hpp"
-#include "GameObject/Camera.hpp"
 
 #include "Time.hpp"
 #include "Input.hpp"

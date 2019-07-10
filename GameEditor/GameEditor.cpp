@@ -23,6 +23,7 @@ namespace wlEngine {
     }
 
     void GameEditor::render(void** data) {
+        scene = EngineManager::getwlEngine()->getCurrentScene();
         showGameWindow(data);
         showMenu();
         showAllGameObjects();
@@ -46,7 +47,7 @@ namespace wlEngine {
 
     void GameEditor::showAllGameObjects() {
         ImGui::Begin("Scene Graph", nullptr, ImGuiWindowFlags_None);
-        auto gameObjects = EngineManager::getwlEngine()->getCurrentScene()->getSceneGraph();
+        auto gameObjects = scene->getSceneGraph();
 		dropSprite(nullptr);
 		pushGameObject(gameObjects->begin(), gameObjects);
         ImGui::End();
@@ -75,8 +76,12 @@ namespace wlEngine {
         ImGui::Begin("GameObject");
         if(selectedGameObject) {
             GameObject* go = selectedGameObject;
-            ImGui::Text("%s", go->name.c_str());
-
+            char name[512];
+            strcpy(name, go->name.data());
+			if(ImGui::InputText("Object Name", name, 512)) {
+                go->name = name;
+                scene->sceneData.gameObjectData[go]->operator[]("name") = name;
+            }
             for (auto& c : go->components) {
                 if (c->getId() == Transform::componentId) {
                     bool open = ImGui::TreeNodeEx("Transform");
@@ -112,7 +117,7 @@ namespace wlEngine {
             {
                 ImGui::MenuItem("Save", "CTRL+S");
                 if(ImGui::IsItemClicked()) {
-                    const nlohmann::json& scene_jsonRef = EngineManager::getwlEngine()->getCurrentScene()->scene_json;
+                    const nlohmann::json& scene_jsonRef = scene->sceneData.data;
                     std::ofstream ofs;
                     ofs.open(scene_jsonRef["scene_path"].get<std::string>());
                     if (ofs.good()) {
@@ -163,9 +168,10 @@ namespace wlEngine {
 		bool inputZ = ImGui::InputFloat("local z", &pos.z);
 		if ( inputX|| inputY || inputZ) {
 			transform->setLocalPosition(pos);
-			(*go->json_ptr)["components"]["Transform"][0] = pos.x;
-			(*go->json_ptr)["components"]["Transform"][1] = pos.y;
-			(*go->json_ptr)["components"]["Transform"][2] = pos.z;
+            Json& json = *scene->sceneData.gameObjectData[go];
+			json["components"]["Transform"][0] = pos.x;
+			json["components"]["Transform"][1] = pos.y;
+			json["components"]["Transform"][2] = pos.z;
 		}
 
         float scale_f = transform->scale.x;
@@ -246,25 +252,17 @@ namespace wlEngine {
         if (ImGui::BeginDragDropTarget()){
             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Sprite")){
                 Texture** texture_ptr = static_cast<Texture**>(payload->Data);
-                auto engine = EngineManager::getwlEngine();
-                auto scene = engine->getCurrentScene();
                 auto go = scene->createGameObject("New GameObject", parent, nullptr);
-				auto& json = *go->json_ptr;
 
-                auto sprite = go->addComponent<Sprite>(*texture_ptr);
-                sprite->useShader("sprite_shader");
-                
-                nlohmann::json sprite_json = nlohmann::json::array();
-                sprite_json.push_back((*texture_ptr)->sourcePath);
-                sprite_json.push_back("sprite_shader");
-                json["components"]["Sprite"] = sprite_json;
+                std::string shader = "sprite_shader";
+                std::string sourcePath = (*texture_ptr)->sourcePath;
+                auto sprite = go->addComponent<Sprite>(sourcePath);
+                sprite->useShader(shader);
+                scene->sceneData.addSprite(go, sourcePath, shader);
 
-				go->addComponent<Transform>();
-                nlohmann::json transforom_json = nlohmann::json::array();
-                transforom_json.push_back(0);
-                transforom_json.push_back(0);
-                transforom_json.push_back(0);
-                json["components"]["Transform"] = transforom_json;
+                //transform
+				go->addComponent<Transform>()->setLocalPosition({0,0,0});
+                scene->sceneData.addTransform(go);
             }
             ImGui::EndDragDropTarget();
         }

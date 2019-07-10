@@ -1,9 +1,8 @@
 #pragma once
 #include <SDL_events.h>
-#include <set>
 #include <string>
 #include <json.hpp>
-
+#include "../GameObject/Scene.hpp"
 using json = nlohmann::json;
 namespace wlEngine {
     class GameObject;
@@ -23,6 +22,7 @@ namespace wlEngine {
 
     private:
         GameObject* selectedGameObject;
+        Scene* scene;
 
         void showGameObjectInfo();
         void showAllGameObjects();

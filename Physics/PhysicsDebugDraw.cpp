@@ -5,6 +5,7 @@
 #include "../EngineManager.hpp"
 #include "../System/RenderSystem.hpp"
 #include "../Settings.hpp"
+#include "../Component/Camera2D.hpp"
 
 #include <SDL.h>
 #include <SDL_opengl.h>
@@ -30,8 +31,7 @@ namespace wlEngine {
     }
 
     void PhysicsDebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color) {
-        auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
-
+		auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera()->getComponent<Camera2D>();
         std::vector<float> glVertices(vertexCount * 2);
         shader.use();
         for (int i = 0; i < vertexCount; i++) {

@@ -24,7 +24,7 @@ namespace wlEngine {
                             Settings::engineMode = Settings::EngineMode::Gameplay;
                         }
                         auto currentScene = EngineManager::getwlEngine()->getCurrentScene();
-                        currentScene->loadScene(currentScene->scene_json["scene_path"]);
+                        currentScene->loadScene(currentScene->sceneData.data["scene_path"]);
                     }
                     break;
             }        

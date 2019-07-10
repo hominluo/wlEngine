@@ -23,8 +23,6 @@ namespace wlEngine {
 
         physicsDebugDraw->SetFlags(b2Draw::e_shapeBit);
     
-        //system
-        
     }
 
     Scene::~Scene() {
@@ -32,7 +30,7 @@ namespace wlEngine {
     }
 
 
-    void Scene::setCamera(Camera* newCamera) {
+    void Scene::setCamera(GameObject* newCamera) {
         this->camera = newCamera;
     }
 
@@ -48,11 +46,12 @@ namespace wlEngine {
         ifs.open(filePath);
         std::ostringstream oss;
         oss << ifs.rdbuf();
-        scene_json = nlohmann::json::parse(oss.str());
-        scene_json["scene_path"] = filePath;
-        auto& graph = scene_json["scene_graph"];
+		ifs.close();
+        sceneData.data = nlohmann::json::parse(oss.str());
+        sceneData.data["scene_path"] = filePath;
+        auto& graph = sceneData.data["scene_graph"];
         for (auto iter = graph.begin(); iter != graph.end(); ++iter){
-            loadGameObjectFromJson(*iter, nullptr);
+            loadGameObjectFromJson(*iter, nullptr); //load game object without parent para
         }
     }
 
@@ -61,10 +60,9 @@ namespace wlEngine {
         std::string name = go_json["name"];
         auto& components = go_json["components"];
         auto& children = go_json["children"];
-
         auto go = createGameObject(name, parent, &go_json);
         for (nlohmann::json::iterator iter = components.begin(); iter != components.end(); ++iter) {
-            
+            if (iter.key() == "Camera2D") setCamera(go);
             auto componentGenerator = (*Component::getComponentFactoryList())[std::hash<std::string>()(iter.key())];
 			assert(componentGenerator != nullptr && "component is not editable!");
 
@@ -113,8 +111,17 @@ namespace wlEngine {
     }
 
     GameObject* Scene::createGameObject(const std::string& name, GameObject* parent, nlohmann::json* json) {
-        auto ptr = gameObjectAllocator.allocate(name, parent, json);
+        auto ptr = gameObjectAllocator.allocate(name);
+        if (parent) {
+            ptr->setParent(parent);
+        }
+        else {
+            ptr->setParent(this);
+        }
         allocatedGameObjects.insert(ptr);
+#if SETTINGS_ENGINEMODE
+        sceneData.createGameObject(ptr, parent, json);
+#endif
         return ptr;
     }
 

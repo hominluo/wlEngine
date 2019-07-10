@@ -54,6 +54,10 @@ namespace wlEngine {
     }
 
     void RenderSystem::render() {
+#if SETTINGS_GAME_DIMENSION==0
+        camera2D = EngineManager::getwlEngine()->getCurrentScene()->getCamera()->getComponent<Camera2D>();
+#endif
+
 #if SETTINGS_ENGINEMODE
         glBindFramebuffer(GL_FRAMEBUFFER, sceneFramebuffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -77,7 +81,6 @@ namespace wlEngine {
     }
 
     void RenderSystem::render(Sprite* t) {
-            auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
             auto animation = t->gameObject->getComponent<Animation>();
             if (animation) t->texture->clip(animation->getCurrentClip(),true);
 
@@ -86,7 +89,7 @@ namespace wlEngine {
             glBindTexture(GL_TEXTURE_2D, t->texture->mTexture);
             
             t->shader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
-            t->shader->setMat4("view", camera->getViewMatrix());
+            t->shader->setMat4("view", camera2D->getViewMatrix());
             t->shader->setMat4("projection", projection);
             glBindVertexArray(t->texture->VAO);
 
@@ -99,15 +102,14 @@ namespace wlEngine {
             if (model->beforeRenderFunc) model->beforeRenderFunc();
             auto shader = model->shader;
             auto transform = gameObject->getComponent<Transform>();
-            auto camera = EngineManager::getwlEngine()->getCurrentScene()->getCamera();
             auto modelMatrix = transform->getModel();
-            auto view = camera->getViewMatrix();
+            auto view = camera2D->getViewMatrix(); //shuold be 3D
 
             shader->use();
             shader->setMat4("model", modelMatrix);
             shader->setMat4("view", view);
             shader->setMat4("projection", projection); 
-            shader->setVec3("viewPos", camera->getComponent<Transform>()->position);
+            shader->setVec3("viewPos", camera2D->transform->position); // should be 3D
 
             for (auto& mesh : model->meshes) {
                 // bind appropriate textures

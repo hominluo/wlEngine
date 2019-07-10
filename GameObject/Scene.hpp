@@ -1,5 +1,4 @@
-#ifndef SCENE_H
-#define SCENE_H
+#pragma once
 #include <set>
 #include <Box2D.h>
 #include <glm/glm.hpp>
@@ -7,7 +6,7 @@
 #include <SDL.h>
 
 #include "GameObject.hpp"
-#include "Camera.hpp"
+#include "../GameEditor/SceneData.hpp"
 #include <json.hpp>
 namespace wlEngine {
     class Scene {
@@ -15,14 +14,14 @@ namespace wlEngine {
             Scene();
             ~Scene();
             void update();
-            void setCamera(Camera* camera);
-            void loadScene(const std::string& path);
-            Camera* getCamera() {return camera;};
+            void setCamera(GameObject* camera);
+			void loadScene(const std::string& path);
+            GameObject* getCamera() {return camera;};
             b2Body* createBody(b2BodyDef& def);
 			b2World* getWorld() {
 				return mWorld;
 			}
-            const std::set<GameObject*>* getSceneGraph(){return &sceneGraph;};
+            const std::set<GameObject*>* getSceneGraph(){return &sceneGraph;};;
 
             GameObject* createGameObject(const std::string& name, GameObject* parent, nlohmann::json*);
             void deallocateGameObject(GameObject*);
@@ -30,12 +29,14 @@ namespace wlEngine {
             void addGameObject(GameObject*);
             void removeGameObject(GameObject*);
 
-            nlohmann::json scene_json;
+#if SETTINGS_ENGINEMODE
+            SceneData sceneData;
+#endif
             std::string filePath;
         private:
-            std::set<GameObject*> allocatedGameObjects;
-            std::set<GameObject*> sceneGraph;
-            Camera* camera;
+			std::set<GameObject*> allocatedGameObjects;
+			std::set<GameObject*> sceneGraph;
+            GameObject* camera;
 			b2World* mWorld;
 
             //resonsible for converting z position to x and y
@@ -52,5 +53,3 @@ namespace wlEngine {
 
     };
 }
-
-#endif
