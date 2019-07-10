@@ -3,28 +3,42 @@
 namespace wlEngine {
 
     void SceneData::createGameObject(GameObject* go, GameObject* parent, Json* json_ptr){
+		nlohmann::json j;
+		size_t index = 0;
+		
 		if (json_ptr == nullptr) {
-			nlohmann::json j;
 			j["name"] = go->name;
 			j["components"] = nlohmann::json();
 			j["children"] = json::array();
 			json_ptr = &j;
 		}
+		
 		if (parent) {
-			auto children = (*gameObjectData[parent])["children"];
+			auto& children = getData(parent)["children"];
 			children.push_back(*json_ptr);
-			json_ptr = &(*(children.end() - 1));
+			json_ptr = &children.back();
+			index = children.size();
 		}
 		else {
 			auto& scene_graph = data["scene_graph"];
 			scene_graph.push_back(*json_ptr);
-			json_ptr = &*(scene_graph.end() - 1);
+			json_ptr = &scene_graph.back();
+			index = scene_graph.size();
 		}
-        gameObjectData[go] = json_ptr;
+
+		//build json pointer
+		if (parent) {
+			auto parent_ptr = gameObjectData[parent];
+			auto parent_str = parent_ptr.to_string();
+			gameObjectData[go] = Json::json_pointer(parent_str + "/children/" + std::to_string(index));
+		}
+		else {
+			gameObjectData[go] = Json::json_pointer("/scene_graph/" + std::to_string(index));
+		}
     }
 
     void SceneData::addSprite(GameObject* go, const std::string& sourcePath, const std::string& shader) {
-        Json& json = *gameObjectData[go];
+        Json& json = getData(go);
         nlohmann::json sprite_json = nlohmann::json::array();
         sprite_json.push_back(sourcePath);
         sprite_json.push_back(shader);
@@ -32,7 +46,7 @@ namespace wlEngine {
     }
 
     void SceneData::addTransform(GameObject* go){
-        Json& json = *gameObjectData[go];
+        Json& json = getData(go);
         nlohmann::json transforom_json = nlohmann::json::array();
         transforom_json.push_back(0);
         transforom_json.push_back(0);
@@ -46,29 +60,10 @@ namespace wlEngine {
 	}
 
 	void SceneData::destroyGameObject(GameObject* go) {
-		auto j_go = gameObjectData[go];
-		if (auto parent = go->parent) {
-			auto& j_parent = *gameObjectData[parent];
-			Json::iterator iter = j_parent["children"].begin();
-			Json::iterator end = j_parent["children"].end();
-			for (; iter != end; ++iter) {
-				if (&*iter == j_go) break;
-			}
-			if (iter == end) assert(0 && "parent doesn't have this child");
-			j_parent["children"].erase(iter);
-		}
-		else {
-			Json::iterator iter = data["scene_graph"].begin();
-			Json::iterator end = data["scene_graph"].end();
-			for (; iter != end; ++iter) {
-				if (&*iter == j_go) break;
-			}
-			if (iter == end) {
-				assert(0 && "scene doesn't have this gameObject");
+		data.erase(gameObjectData[go]);
+	}
 
-			}
-			data["scene_graph"].erase(iter);
-		}
-		gameObjectData.erase(go);
+	Json& SceneData::getData(GameObject* go) {
+		return data[gameObjectData[go]];
 	}
 }

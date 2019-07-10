@@ -9,7 +9,7 @@
 #include "System.hpp"
 #include "../Settings.hpp"
 #include "../Component/Camera2D.hpp"
-//NOTE: The G-Syn is limiting the frame rate to 60 I think!
+//NOTE: The G-Syn is limiting the frame rate to 60!
 class b2World;
 namespace wlEngine {
     struct Sprite;

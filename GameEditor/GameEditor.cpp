@@ -80,7 +80,7 @@ namespace wlEngine {
             strcpy(name, go->name.data());
 			if(ImGui::InputText("Object Name", name, 512)) {
                 go->name = name;
-                scene->sceneData.gameObjectData[go]->operator[]("name") = name;
+                scene->sceneData.getData(go)["name"] = name;
             }
             for (auto& c : go->components) {
                 if (c->getId() == Transform::componentId) {
@@ -168,7 +168,7 @@ namespace wlEngine {
 		bool inputZ = ImGui::InputFloat("local z", &pos.z);
 		if ( inputX|| inputY || inputZ) {
 			transform->setLocalPosition(pos);
-            Json& json = *scene->sceneData.gameObjectData[go];
+            Json& json = scene->sceneData.getData(go);
 			json["components"]["Transform"][0] = pos.x;
 			json["components"]["Transform"][1] = pos.y;
 			json["components"]["Transform"][2] = pos.z;

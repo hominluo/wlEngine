@@ -110,8 +110,7 @@ namespace wlEngine {
 		sceneData.clear();
     }
 
-    GameObject* Scene::createGameObject(const std::string& name, GameObject* parent, nlohmann::json* json) {
-
+    GameObject* Scene::createGameObject(const std::string& name, GameObject* parent, Json* json) {
         auto ptr = gameObjectAllocator.allocate(name);
 
         if (parent) {

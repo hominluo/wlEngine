@@ -20,7 +20,9 @@ namespace wlEngine {
         void setCamera();
 		void clear();
 		void destroyGameObject(GameObject*);
-        std::map<GameObject*, json*> gameObjectData;
+		Json& getData(GameObject*);
+	private:
+		std::map<GameObject*, Json::json_pointer> gameObjectData;
 		
     };
 }
