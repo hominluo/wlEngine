@@ -251,18 +251,16 @@ namespace wlEngine {
     void GameEditor::dropSprite(GameObject* parent) {
         if (ImGui::BeginDragDropTarget()){
             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Sprite")){
-                Texture** texture_ptr = static_cast<Texture**>(payload->Data);
-                auto go = scene->createGameObject("New GameObject", parent, nullptr);
-
-                std::string shader = "sprite_shader";
-                std::string sourcePath = (*texture_ptr)->sourcePath;
-                auto sprite = go->addComponent<Sprite>(sourcePath);
-                sprite->useShader(shader);
-                scene->sceneData.addSprite(go, sourcePath, shader);
-
-                //transform
-				go->addComponent<Transform>()->setLocalPosition({0,0,0});
-                scene->sceneData.addTransform(go);
+                Texture* texture_ptr = *static_cast<Texture**>(payload->Data);
+				Json go_json;
+				go_json["name"] = texture_ptr->sourcePath.substr(texture_ptr->sourcePath.find_last_of("/")+1, texture_ptr->sourcePath.size() - 4); // being lazy here, -4 becuase .jpg and .png all have 4 characters
+				go_json["components"] = Json::object();
+				go_json["children"] = json::array();
+				Json spriteParams = Json::array({ texture_ptr->sourcePath ,"sprite_shader" });
+				Json transformParams = Json::array({0,0,0});
+				go_json["components"]["Sprite"] = spriteParams;
+				go_json["components"]["Transform"] = transformParams;
+				scene->loadGameObjectFromJson(go_json, parent); 
             }
             ImGui::EndDragDropTarget();
         }

@@ -16,14 +16,12 @@ namespace wlEngine {
 		if (parent) {
 			auto& children = getData(parent)["children"];
 			children.push_back(*json_ptr);
-			json_ptr = &children.back();
-			index = children.size();
+			index = children.size()-1;
 		}
 		else {
 			auto& scene_graph = data["scene_graph"];
 			scene_graph.push_back(*json_ptr);
-			json_ptr = &scene_graph.back();
-			index = scene_graph.size();
+			index = scene_graph.size()-1;
 		}
 
 		//build json pointer

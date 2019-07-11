@@ -28,7 +28,7 @@ namespace wlEngine {
 
             void addGameObject(GameObject*);
             void removeGameObject(GameObject*);
-
+			void loadGameObjectFromJson(nlohmann::json&, GameObject* parent);
 #if SETTINGS_ENGINEMODE
             SceneData sceneData;
 #endif
@@ -42,7 +42,7 @@ namespace wlEngine {
             //resonsible for converting z position to x and y
             void render();
             void clearScene();
-            void loadGameObjectFromJson(nlohmann::json&, GameObject* parent);
+            
 
             FixedArrayAllocator<GameObject, 3000> gameObjectAllocator;
 
