@@ -39,5 +39,13 @@ namespace wlEngine {
         void showResourceWindow();
         void showResourceInDirectory(const std::string& path);
         void dropSprite(GameObject* parent);
+
+        /**
+         * @brief we can't remove game object when they are being iterating, this function is called
+         * after all the rendering and operation
+         */
+        void removeGameObjects();
+
+        std::set<GameObject*> objectToRemove;
     };
 }

@@ -1,10 +1,11 @@
 #include "SceneData.hpp"
+#include "../Utility/Utility.hpp"
+#include <sstream>
 
 namespace wlEngine {
 
-    void SceneData::createGameObject(GameObject* go, GameObject* parent, Json* json_ptr){
+    void SceneData::createGameObject(GameObject* go, GameObject* parent, const Json* json_ptr){
 		nlohmann::json j;
-		size_t index = 0;
 		
 		if (json_ptr == nullptr) {
 			j["name"] = go->name;
@@ -13,26 +14,12 @@ namespace wlEngine {
 			json_ptr = &j;
 		}
 		
-		if (parent) {
-			auto& children = getData(parent)["children"];
-			children.push_back(*json_ptr);
-			index = children.size()-1;
-		}
-		else {
-			auto& scene_graph = data["scene_graph"];
-			scene_graph.push_back(*json_ptr);
-			index = scene_graph.size()-1;
-		}
+		std::string goId = Utility::toPointerString(go);
+        data["gameObjects"][goId] = *json_ptr;
 
-		//build json pointer
-		if (parent) {
-			auto parent_ptr = gameObjectData[parent];
-			auto parent_str = parent_ptr.to_string();
-			gameObjectData[go] = Json::json_pointer(parent_str + "/children/" + std::to_string(index));
-		}
-		else {
-			gameObjectData[go] = Json::json_pointer("/scene_graph/" + std::to_string(index));
-		}
+		std::string parentId = Utility::toPointerString(parent);
+        data["gameObjects"][goId]["parent"] = parentId;
+		if(parent) data["gameObjects"][parentId]["children"].push_back(goId);
     }
 
     void SceneData::addSprite(GameObject* go, const std::string& sourcePath, const std::string& shader) {
@@ -53,15 +40,32 @@ namespace wlEngine {
     }
 
 	void SceneData::clear() {
-		gameObjectData.clear();
 		data.clear();
 	}
 
 	void SceneData::destroyGameObject(GameObject* go) {
-		data.erase(gameObjectData[go]);
+		std::string goId = Utility::toPointerString(go);
+
+		if (go->parent) {
+			std::string parent = Utility::toPointerString(go->parent);
+			auto& children = data["gameObjects"][parent]["children"];
+			for (auto iter = children.begin(); iter != children.end(); ++iter) {
+				if (*iter == goId) {
+					children.erase(iter - children.begin());
+					break;
+				}
+			}
+		}
+        
+		auto children = data["gameObjects"][goId]["children"];
+		for (auto iter = children.begin(); iter != children.end(); ++iter) {
+			data["gameObjects"].erase(iter->get<std::string>());
+		}
+
+		data["gameObjects"].erase(goId);
 	}
 
 	Json& SceneData::getData(GameObject* go) {
-		return data[gameObjectData[go]];
+		return data["gameObjects"][Utility::toPointerString(go)];
 	}
 }

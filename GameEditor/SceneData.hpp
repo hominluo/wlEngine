@@ -14,15 +14,13 @@ namespace wlEngine {
     class SceneData {
     public:
         Json data;
-        void createGameObject(GameObject*, GameObject*, Json*);
+        void createGameObject(GameObject*, GameObject*, const Json*);
         void addSprite(GameObject* go, const std::string& sourcePath, const std::string& shader);
         void addTransform(GameObject* go);
         void setCamera();
 		void clear();
 		void destroyGameObject(GameObject*);
 		Json& getData(GameObject*);
-	private:
-		std::map<GameObject*, Json::json_pointer> gameObjectData;
 		
     };
 }

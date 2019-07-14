@@ -28,6 +28,7 @@ namespace wlEngine {
 
         template <typename ComponentType>
         ComponentType* getComponent();
+
     private:
         GameObject* parent = nullptr;
         friend class Transform;

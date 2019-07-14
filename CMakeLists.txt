@@ -46,6 +46,7 @@ file(GLOB source_file
     "${CMAKE_CURRENT_SOURCE_DIR}/Physics/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Physics/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/GameEditor/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/GameEditor/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Manager/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Manager/*.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Utility/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Utility/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/imgui/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/imgui/*.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/src/glad.cpp"

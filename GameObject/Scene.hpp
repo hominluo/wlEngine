@@ -23,12 +23,17 @@ namespace wlEngine {
 			}
             const std::set<GameObject*>* getSceneGraph(){return &sceneGraph;};;
 
-            GameObject* createGameObject(const std::string& name, GameObject* parent, nlohmann::json*);
+            GameObject* createGameObject(const std::string& name, GameObject* parent);
+			GameObject* createGameObject(const Json&, GameObject* parent);
+			void addComponent(GameObject*, const Json& json);
+            /**
+             * @brief destroy allocated game object
+             *
+             * @param GameObject
+             */
             void destroyGameObject(GameObject*);
 
             void addGameObject(GameObject*);
-            void removeGameObject(GameObject*);
-			void loadGameObjectFromJson(nlohmann::json&, GameObject* parent);
 #if SETTINGS_ENGINEMODE
             SceneData sceneData;
 #endif
@@ -43,6 +48,16 @@ namespace wlEngine {
             void render();
             void clearScene();
             
+            /**
+             * @brief load from child to parent
+             *
+             * @param json
+             * @param id
+             * @param loadedGameObjects
+             *
+             * @return 
+             */
+            GameObject* loadGameObjectFromFile(const Json& json, const std::string& id, const Json& jsonFile, std::map<std::string, GameObject*>& loadedGameObjects);
 
             FixedArrayAllocator<GameObject, 3000> gameObjectAllocator;
 

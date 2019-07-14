@@ -51,6 +51,7 @@ namespace wlEngine {
             }
             else {
                 AnimationSystem::get()->update();
+				if(currentScene->camera)
                 RenderSystem::get()->update();
                 InputSystem::get()->update();
                 currentScene->update();

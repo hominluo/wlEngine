@@ -1,4 +1,4 @@
-#include <fstream>
+﻿#include <fstream>
 #include <sstream>
 #include <dirent.h>
 #include "../imgui/imgui.h"
@@ -13,6 +13,8 @@
 
 #include "../System/RenderSystem.hpp"
 #include "../Settings.hpp"
+
+#include "../Utility/Utility.hpp"
 namespace wlEngine {
     GameEditor::GameEditor() : selectedGameObject(nullptr) {
 
@@ -24,10 +26,21 @@ namespace wlEngine {
 
     void GameEditor::render(void** data) {
         scene = EngineManager::getwlEngine()->getCurrentScene();
+
         showGameWindow(data);
         showMenu();
         showAllGameObjects();
         showResourceWindow();
+
+        removeGameObjects();
+    }
+    
+    void GameEditor::removeGameObjects() {
+        for(auto iter : objectToRemove) {
+            scene->destroyGameObject(iter);
+            if(iter == selectedGameObject) selectedGameObject = nullptr;
+        }
+        objectToRemove.clear();
     }
 
     void GameEditor::showGameWindow(void** data) {
@@ -57,10 +70,18 @@ namespace wlEngine {
     void GameEditor::pushGameObject(std::set<GameObject*>::iterator iter, const std::set<GameObject*>* gameObjects) {
         if(iter != gameObjects->end()) {
             bool open = ImGui::TreeNodeEx((*iter)->name.c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
-			dropSprite(*iter);
-
+            dropSprite(*iter); 
             if(ImGui::IsItemClicked() && (ImGui::GetMousePos().x - ImGui::GetItemRectMin().x) > ImGui::GetTreeNodeToLabelSpacing()) {
                 selectedGameObject = *iter;
+            }
+
+            //remove gameobject
+            if (ImGui::BeginPopupContextItem())
+            {
+                if(ImGui::MenuItem("Remove")) {
+                    objectToRemove.insert(*iter);
+                }
+                ImGui::EndPopup();
             }
 
             if(open) {
@@ -78,7 +99,7 @@ namespace wlEngine {
             GameObject* go = selectedGameObject;
             char name[512];
             strcpy(name, go->name.data());
-			if(ImGui::InputText("Object Name", name, 512)) {
+            if(ImGui::InputText("Object Name", name, 512)) {
                 go->name = name;
                 scene->sceneData.getData(go)["name"] = name;
             }
@@ -115,8 +136,22 @@ namespace wlEngine {
         {
             if (ImGui::BeginMenu("File"))
             {
+                ImGui::MenuItem("New Scene", "CTRL+N");
+                if (ImGui::IsItemClicked()) {
+                    std::string filePath = "../mainScene";
+                    while (std::ifstream(filePath)) {
+                        filePath += " New";
+                    }
+                    std::ofstream ofs;
+                    ofs.open(filePath);
+                    if (ofs.good()) {
+                        GameObject* nil = nullptr;
+                        ofs << "{\"gameObjects\": {\"1\" : {\"children\": [] , \"components\" : {\"Camera2D\": [] , \"Transform\" : [0.0, 0.0, 1000] }, \"name\" : \"Camera\", \"parent\" :" + Utility::toPointerString(nil) + "}} }";
+                    }
+                    ofs.close();
+                }
                 ImGui::MenuItem("Save", "CTRL+S");
-                if(ImGui::IsItemClicked()) {
+                if (ImGui::IsItemClicked()) {
                     const nlohmann::json& scene_jsonRef = scene->sceneData.data;
                     std::ofstream ofs;
                     ofs.open(scene_jsonRef["scene_path"].get<std::string>());
@@ -125,6 +160,7 @@ namespace wlEngine {
                     }
                     ofs.close();
                 }
+
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Edit"))
@@ -163,21 +199,21 @@ namespace wlEngine {
     void GameEditor::showTransformInfo(GameObject* go) {
         auto transform = go->getComponent<Transform>();
         auto pos = transform->getLocalPosition();
-		bool inputX = ImGui::InputFloat("local x", &pos.x);
-		bool inputY = ImGui::InputFloat("local y", &pos.y);
-		bool inputZ = ImGui::InputFloat("local z", &pos.z);
-		if ( inputX|| inputY || inputZ) {
-			transform->setLocalPosition(pos);
+        bool inputX = ImGui::InputFloat("local x", &pos.x);
+        bool inputY = ImGui::InputFloat("local y", &pos.y);
+        bool inputZ = ImGui::InputFloat("local z", &pos.z);
+        if ( inputX|| inputY || inputZ) {
+            transform->setLocalPosition(pos);
             Json& json = scene->sceneData.getData(go);
-			json["components"]["Transform"][0] = pos.x;
-			json["components"]["Transform"][1] = pos.y;
-			json["components"]["Transform"][2] = pos.z;
-		}
+            json["components"]["Transform"][0] = pos.x;
+            json["components"]["Transform"][1] = pos.y;
+            json["components"]["Transform"][2] = pos.z;
+        }
 
         float scale_f = transform->scale.x;
-		if (ImGui::InputFloat("Scale Aspect Ratio", &scale_f)) {
-			transform->setScale(scale_f, scale_f, scale_f);
-		}
+        if (ImGui::InputFloat("Scale Aspect Ratio", &scale_f)) {
+            transform->setScale(scale_f, scale_f, scale_f);
+        }
     }
 
     void GameEditor::showResourceWindow() {
@@ -232,7 +268,7 @@ namespace wlEngine {
                         if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
                         {
                             Texture* texture = ResourceManager::get()->getTexture(filePath);
-							ImGui::SetDragDropPayload("Sprite", &texture, sizeof(Texture*));        // Set payload to carry the index of our item (could be anything)
+                            ImGui::SetDragDropPayload("Sprite", &texture, sizeof(Texture*));        // Set payload to carry the index of our item (could be anything)
                             ImGui::Text("%s", filePath.data());
                             ImGui::EndDragDropSource();
                         }
@@ -252,15 +288,16 @@ namespace wlEngine {
         if (ImGui::BeginDragDropTarget()){
             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Sprite")){
                 Texture* texture_ptr = *static_cast<Texture**>(payload->Data);
-				Json go_json;
-				go_json["name"] = texture_ptr->sourcePath.substr(texture_ptr->sourcePath.find_last_of("/")+1, texture_ptr->sourcePath.size() - 4); // being lazy here, -4 becuase .jpg and .png all have 4 characters
-				go_json["components"] = Json::object();
-				go_json["children"] = json::array();
-				Json spriteParams = Json::array({ texture_ptr->sourcePath ,"sprite_shader" });
-				Json transformParams = Json::array({0,0,0});
-				go_json["components"]["Sprite"] = spriteParams;
-				go_json["components"]["Transform"] = transformParams;
-				scene->loadGameObjectFromJson(go_json, parent); 
+                Json go_json;
+                go_json["name"] = texture_ptr->sourcePath.substr(texture_ptr->sourcePath.find_last_of("/")+1, texture_ptr->sourcePath.size() - 4); // being lazy here, -4 becuase .jpg and .png all have 4 characters
+                go_json["components"] = Json::object();
+                go_json["children"] = json::array();
+                Json spriteParams = Json::array({ texture_ptr->sourcePath ,"sprite_shader"});
+                Json transformParams = Json::array({0,0,0});
+                go_json["components"]["Sprite"] = spriteParams;
+                go_json["components"]["Transform"] = transformParams;
+
+                auto go = scene->createGameObject(go_json, parent);
             }
             ImGui::EndDragDropTarget();
         }
