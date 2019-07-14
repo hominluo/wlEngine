@@ -47,11 +47,11 @@
     static std::function<void(GameObject* go, void** arr)> addToGameObject; \
     static bool isComponentReg; \
 
-#define COMPONENT_EDITABLE_DEF_BEGIN(T)\
-    std::function<void(GameObject*, void**)> T::addToGameObject = [](GameObject* go, void** args)
-
-#define COMPONENT_EDITABLE_DEF_END(T)\
-    bool T::isComponentReg = registerComponent<T>();\
+#define COMPONENT_EDITABLE_DEF(T)\
+    std::function<void(GameObject*, void**)> T::addToGameObject = [](GameObject* go, void** args) { \
+        go->addComponent<T>(args);\
+    };\
+    bool T::isComponentReg = registerComponent<T>();
 
 namespace wlEngine {
     class GameObject;

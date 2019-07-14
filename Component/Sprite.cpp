@@ -12,18 +12,22 @@
 
 namespace wlEngine {
 	COMPONENT_DEFINATION(Component, Sprite, 100);
-    COMPONENT_EDITABLE_DEF_BEGIN(Sprite){
-        std::string path(*static_cast<std::string*>(args[0]));
-        std::string shader(*static_cast<std::string*>(args[1]));
-        go->addComponent<Sprite>(path, shader);
-    };
-	COMPONENT_EDITABLE_DEF_END(Sprite);
+    COMPONENT_EDITABLE_DEF(Sprite);
 
     Sprite::~Sprite(){};
 
     Sprite::Sprite(GameObject* go, Texture* t) : Component(go) {
         texture = t;
     }
+
+    Sprite::Sprite(GameObject* go, void** args) : Component(go) {
+        std::string path(*static_cast<std::string*>(args[0]));
+        std::string shader(*static_cast<std::string*>(args[1]));
+        auto resourceManager = ResourceManager::get();
+        texture = resourceManager->getTexture(path);
+        useShader(shader);
+    }
+
     Sprite::Sprite(GameObject* go, const std::string& path): Component(go) {
         auto resourceManager = ResourceManager::get();
         texture = resourceManager->getTexture(path);

@@ -8,6 +8,7 @@ namespace wlEngine {
         COMPONENT_EDITABLE_DEC();
     public:
         Camera2D(GameObject* go);
+		Camera2D(GameObject* go, void** args) : Component(go){};
         glm::mat4 getViewMatrix();
         float speed = 100.0;
         Transform* transform = nullptr;

@@ -20,6 +20,7 @@ namespace wlEngine {
         COMPONENT_EDITABLE_DEC();
         Animation(GameObject* go, const std::string& path, const int& width, const int& height);
         Animation(GameObject* go, const std::string& path, const int& width, const int& height, const std::string& initialAni);
+		Animation(GameObject* go, void** args);
 
         void playAnimation(const std::string&);
         void loadClips(const char* path);

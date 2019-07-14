@@ -4,10 +4,7 @@
 #include "../Time.hpp"
 namespace wlEngine {
     COMPONENT_DEFINATION(Component, Camera2D, 3);
-    COMPONENT_EDITABLE_DEF_BEGIN(Camera2D) {
-        go->addComponent<Camera2D>();
-    };
-    COMPONENT_EDITABLE_DEF_END(Camera2D);
+	COMPONENT_EDITABLE_DEF(Camera2D);
 
     Camera2D::Camera2D(GameObject* go) : Component(go) {}
 

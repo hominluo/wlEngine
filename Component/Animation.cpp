@@ -10,14 +10,7 @@ namespace wlEngine {
     using json = nlohmann::json;
 
     COMPONENT_DEFINATION(Component, Animation, 100);
-    COMPONENT_EDITABLE_DEF_BEGIN(Animation) {
-        std::string* path = static_cast<std::string*>(args[0]);
-        float* width = static_cast<float*>(args[1]);
-        float* height = static_cast<float*>(args[2]);
-        auto initialAni = static_cast<std::string*>(args[3]);
-        go->addComponent<Animation>(*path, *width, *height, *initialAni);
-    };
-    COMPONENT_EDITABLE_DEF_END(Animation);
+	COMPONENT_EDITABLE_DEF(Animation);
 
     Animation::Animation(GameObject* go, const std::string& path, const int& width, const int& height): Component(go) {
         currentAnimation = nullptr;
@@ -27,6 +20,19 @@ namespace wlEngine {
         this->height = height;
 		loadClips(path.data());
     }
+
+	Animation::Animation(GameObject* go, void** args) : Component(go) {
+		std::string* path = static_cast<std::string*>(args[0]);
+		this->width = *static_cast<float*>(args[1]);
+		this->height = *static_cast<float*>(args[2]);
+		auto initialAni = *static_cast<std::string*>(args[3]);
+
+		currentAnimation = nullptr;
+		timeStamp = 0;
+		currentFrame = 0;
+		loadClips(path->data());
+		playAnimation(initialAni);
+	}
 
     Animation::Animation(GameObject* go, const std::string& path, const int& width, const int& height, const std::string& initialAni) : Animation(go, path,width, height){
 		playAnimation(initialAni);

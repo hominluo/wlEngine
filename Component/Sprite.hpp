@@ -24,6 +24,7 @@ namespace wlEngine {
         Sprite(GameObject*, Texture*);
         Sprite(GameObject*, const std::string& path);
         Sprite(GameObject*, const std::string& path, const std::string& shader);
+        Sprite(GameObject*, void** args);
         ~Sprite();
 
         void useShader(const std::string&);
