@@ -30,9 +30,10 @@ namespace wlEngine {
 
         void showMenu();
 
-        void showAnimationInfo(Animation*);
+        void showComponent(GameObject*, Component*, const std::string& name, std::function<void(GameObject*)>);
+        void showAnimationInfo(GameObject*);
         void showTransformInfo(GameObject*);
-        void showSpriteInfo(Sprite*);
+        void showSpriteInfo(GameObject*);
 
         void showGameWindow(void** data);
 
@@ -45,7 +46,24 @@ namespace wlEngine {
          * after all the rendering and operation
          */
         void removeGameObjects();
-
         std::set<GameObject*> objectToRemove;
+
+        void removeComponent(GameObject* go, Component*, const std::string& name);
+		void removeComponents();
+		struct ComponentRemovePack {
+			GameObject* go;
+			Component* component;
+			std::string name;
+		};
+		std::vector<ComponentRemovePack> componentToRemove;
+
+        /**
+         * @brief used when in engine is in Editor mode to update the mouse click location in Gameplay window,
+         * this is based on get window location, so it has to be called after the initialization of Gameplay window
+         */
+        void updateMouseInput();
+
+
+        void dragSprite();
     };
 }

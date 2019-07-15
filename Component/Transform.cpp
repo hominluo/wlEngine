@@ -10,11 +10,16 @@ namespace wlEngine {
     }
 
     Transform::Transform(GameObject* gm, void** args) : Component(gm), rotation(1.0f), positionMat4(1.0f), rotateArou(1.0f), scaleMat4(1.0f), scale(1.0f) {
-		float x = *static_cast<float*>(args[0]);
-		float y = *static_cast<float*>(args[1]);
-		float z = *static_cast<float*>(args[2]);
-        position = {x,y,z};
-        setLocalPosition({x,y,z});
+        if(args) {
+            float x = *static_cast<float*>(args[0]);
+            float y = *static_cast<float*>(args[1]);
+            float z = *static_cast<float*>(args[2]);
+            position = {x,y,z};
+            setLocalPosition({x,y,z});
+        }
+        else {
+            setPosition({0,0,0});
+        }
     }
 
     Transform::Transform(GameObject* gm, const float& x, const float& y, const float& z): Component(gm), position(x,y,z), rotation(1.0f), positionMat4(1.0f), rotateArou(1.0f), scaleMat4(1.0f), scale(1.0f) {

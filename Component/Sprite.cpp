@@ -21,11 +21,17 @@ namespace wlEngine {
     }
 
     Sprite::Sprite(GameObject* go, void** args) : Component(go) {
-        std::string path(*static_cast<std::string*>(args[0]));
-        std::string shader(*static_cast<std::string*>(args[1]));
-        auto resourceManager = ResourceManager::get();
-        texture = resourceManager->getTexture(path);
-        useShader(shader);
+        if(args) {
+            std::string path(*static_cast<std::string*>(args[0]));
+            std::string shader(*static_cast<std::string*>(args[1]));
+            auto resourceManager = ResourceManager::get();
+            texture = resourceManager->getTexture(path);
+            useShader(shader);
+        }
+        else {
+            texture = nullptr;
+            useShader("sprite_shader");
+        }
     }
 
     Sprite::Sprite(GameObject* go, const std::string& path): Component(go) {

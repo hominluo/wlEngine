@@ -6,11 +6,13 @@
 
 namespace wlEngine {
     struct Texture {
+
         unsigned int mTexture = 0;
         std::string sourcePath;
 
         int mWidth;
         int mHeight;
+        Rect rect;
 
         float normalizationPara;
 

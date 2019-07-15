@@ -26,7 +26,7 @@
 
 
 #define COMPONENT_DEFINATION(P, T, N) \
-    const std::size_t T::componentId = std::hash<std::string>()(#T); \
+    const std::size_t T::componentId = std::hash<std::string>()(#T);\
     bool T::isType(const std::size_t& typeId) const { \
         if ( typeId == T::componentId ) \
         return true; \
@@ -57,6 +57,9 @@ namespace wlEngine {
     class GameObject;
     struct Component {
     public:
+        static std::size_t genComponentId(const std::string&);
+		static std::map<std::size_t, std::string>* componentIdToName; // this now is only used for Script, leave it here for extensibility
+		static std::map<std::size_t, std::string>* getComponentIdToName();
         static std::map<std::size_t, std::function<void(GameObject*, void**)>>* componentFactoryList;
 		static std::map<std::size_t, std::function<void(GameObject*, void**)>>* getComponentFactoryList();
         Component(GameObject* go);

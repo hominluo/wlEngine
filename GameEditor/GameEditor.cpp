@@ -12,12 +12,12 @@
 #include "../Component/Sprite.hpp"
 
 #include "../System/RenderSystem.hpp"
+#include "../System/InputSystem.hpp"
 #include "../Settings.hpp"
 
 #include "../Utility/Utility.hpp"
 namespace wlEngine {
     GameEditor::GameEditor() : selectedGameObject(nullptr) {
-
     }
 
     GameEditor::~GameEditor(){
@@ -26,6 +26,7 @@ namespace wlEngine {
 
     void GameEditor::render(void** data) {
         scene = EngineManager::getwlEngine()->getCurrentScene();
+        ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 
         showGameWindow(data);
         showMenu();
@@ -33,8 +34,16 @@ namespace wlEngine {
         showResourceWindow();
 
         removeGameObjects();
+		removeComponents();
     }
     
+	void GameEditor::removeComponents() {
+		for (size_t i = 0; i < componentToRemove.size(); i++) {
+			removeComponent(componentToRemove[i].go, componentToRemove[i].component, componentToRemove[i].name);
+		}
+		componentToRemove.clear();
+	}
+
     void GameEditor::removeGameObjects() {
         for(auto iter : objectToRemove) {
             scene->destroyGameObject(iter);
@@ -51,10 +60,14 @@ namespace wlEngine {
         if (Settings::engineMode == Settings::EngineMode::Gameplay) windowName = "Game: GamePlay###";
         else windowName = "Game: Editor###";
         ImGui::Begin(windowName.data(),nullptr, ImGuiWindowFlags_NoResize);
+        updateMouseInput();
         float sceneWidth = *(int*)(data[1]);
         float sceneHeight = *(int*)(data[2]);
         ImGui::Image((void*)*(unsigned int*)(data[0]), {sceneWidth,sceneHeight}, {0,1}, {1,0});//one commnet from imgui.cpp: my_void_ptr = (void*)(intptr_t)my_tex;                  // cast a GLuint into a void* (we don't take its address! we literally store the value inside the pointer)
+        dragSprite();
         ImGui::End();
+        
+        //
         style.WindowPadding = windowPadding;
     }
 
@@ -75,9 +88,24 @@ namespace wlEngine {
                 selectedGameObject = *iter;
             }
 
-            //remove gameobject
             if (ImGui::BeginPopupContextItem())
             {
+                if(ImGui::TreeNodeEx("Add Script")) {
+					for (auto f : *Component::componentFactoryList) {
+						auto componentIter = Component::getComponentIdToName()->find(f.first); // only Scripts are in componentIdToName
+						if (componentIter != Component::getComponentIdToName()->end()) {
+							std::string componentName = (*Component::getComponentIdToName()).at(f.first);
+							if (ImGui::MenuItem(componentName.data())) {
+                                Json j;
+                                j[componentName] = Json::array();
+                                scene->addComponent(*iter, j);
+                                scene->sceneData.addComponent(*iter, j);
+							}
+						}
+					}
+                    ImGui::TreePop();
+                }
+            //remove gameobject
                 if(ImGui::MenuItem("Remove")) {
                     objectToRemove.insert(*iter);
                 }
@@ -93,6 +121,23 @@ namespace wlEngine {
         }
     }
 
+    void GameEditor::showComponent(GameObject* go, Component* c, const std::string& name, std::function<void(GameObject*)> f){
+
+        bool open = ImGui::TreeNodeEx(name.data());
+        if (ImGui::BeginPopupContextItem())
+        {
+            //remove component
+            if(ImGui::MenuItem("Remove")) {
+				componentToRemove.push_back(ComponentRemovePack{go, c, name});
+            }
+            ImGui::EndPopup();
+        }
+        if(open){
+			if(f) f(go);   
+            ImGui::TreePop();
+        }
+    }
+
     void GameEditor::showGameObjectInfo() {
         ImGui::Begin("GameObject");
         if(selectedGameObject) {
@@ -104,27 +149,19 @@ namespace wlEngine {
                 scene->sceneData.getData(go)["name"] = name;
             }
             for (auto& c : go->components) {
-                if (c->getId() == Transform::componentId) {
-                    bool open = ImGui::TreeNodeEx("Transform");
-                    if(open){
-                        showTransformInfo(go);   
+                if (c->getId() == Transform::componentId)showComponent(go, c.get(), "Transform", std::bind(&GameEditor::showTransformInfo, this, std::placeholders::_1));
+                //else if (c->getId() == Sprite::componentId)showComponent(go, c.get(), "Sprite", std::bind(&GameEditor::showSpriteInfo, this, std::placeholders::_1));
+                //else if (c->getId() == Animation::componentId)showComponent(go, c.get(), "Animation", std::bind(&GameEditor::showAnimationInfo, this, std::placeholders::_1));
+				else {
+					std::size_t t = c->getId();
+					auto* s = Component::getComponentIdToName();
+					auto iter = Component::getComponentIdToName()->find(t);
+					if (iter != Component::getComponentIdToName()->end()) {
+						ImGui::TreeNodeEx(iter->second.data(), ImGuiTreeNodeFlags_Leaf);
                         ImGui::TreePop();
-                    }
-                }
-                else if (c->getId() == Sprite::componentId) {
-                    bool open = ImGui::TreeNodeEx("Sprite");
-                    if (open) {
-                        showSpriteInfo(static_cast<Sprite*>(c.get()));
-                        ImGui::TreePop();
-                    }
-                }
-                else if (c->getId() == Animation::componentId) {
-                    bool open = ImGui::TreeNodeEx("Animation");
-                    if (open){
-                        showAnimationInfo(static_cast<Animation*>(c.get()));
-                        ImGui::TreePop();
-                    }
-                }
+					}
+					
+				}
             }
         }
         ImGui::End();
@@ -160,7 +197,10 @@ namespace wlEngine {
                     }
                     ofs.close();
                 }
-
+				ImGui::MenuItem("Reload", "CTRL+S");
+				if (ImGui::IsItemClicked()) {
+					scene->loadScene(scene->filePath);
+				}
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Edit"))
@@ -177,7 +217,8 @@ namespace wlEngine {
         }
     }
 
-    void GameEditor::showAnimationInfo(Animation* animation){
+    void GameEditor::showAnimationInfo(GameObject* go){
+        auto animation = go->getComponent<Animation>();
         std::string current_item = animation->getCurrentClipName();
         if (ImGui::BeginCombo("animation", current_item.data())) {
             for (auto iter : animation->clips) {
@@ -222,7 +263,8 @@ namespace wlEngine {
         ImGui::End();
     }
 
-    void GameEditor::showSpriteInfo(Sprite* sprite) {
+    void GameEditor::showSpriteInfo(GameObject* go) {
+        auto sprite = go->getComponent<Sprite>();
         ImGui::Image((void*)sprite->texture->mTexture, {(float)sprite->texture->mWidth, (float)sprite->texture->mHeight}, {0,1}, {1,0});
     }
     void GameEditor::showResourceInDirectory(const std::string& path) {
@@ -300,6 +342,33 @@ namespace wlEngine {
                 auto go = scene->createGameObject(go_json, parent);
             }
             ImGui::EndDragDropTarget();
+        }
+    }
+
+    void GameEditor::removeComponent(GameObject* go, Component* c, const std::string& name) {
+        go->removeComponent(c);
+        scene->sceneData.removeComponent(go, name);
+    }
+
+    void GameEditor::updateMouseInput() {
+        auto inputSystem = InputSystem::get();
+        
+        auto pos = ImGui::GetWindowPos();
+		inputSystem->setGameplayWindowOffset(pos.x, pos.y);
+    }
+
+    void GameEditor::dragSprite() {
+        if(ImGui::IsWindowFocused()) {
+            auto inputSystem = InputSystem::get();
+            int mouseX, mouseY;
+            if(inputSystem->mousePressingOnScene(mouseX, mouseY)) {
+				if (auto go = scene->findGameObjectNear(mouseX, mouseY)) {
+					if (auto transform = go->getComponent<Transform>()) {
+						transform->setPosition({ mouseX, mouseY, 0 });
+					}
+					selectedGameObject = go;
+				}
+            }
         }
     }
 }

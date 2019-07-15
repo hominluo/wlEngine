@@ -16,6 +16,7 @@ namespace wlEngine {
             void update();
             void setCamera(GameObject* camera);
 			void loadScene(const std::string& path);
+            void reloadScene();
             GameObject* getCamera() {return camera;};
             b2Body* createBody(b2BodyDef& def);
 			b2World* getWorld() {
@@ -26,6 +27,16 @@ namespace wlEngine {
             GameObject* createGameObject(const std::string& name, GameObject* parent);
 			GameObject* createGameObject(const Json&, GameObject* parent);
 			void addComponent(GameObject*, const Json& json);
+
+            /**
+             * @brief find the gameobject near mouse x, y
+             *
+             * @param mouseX
+             * @param mouseY
+             *
+             * @return the gameobject near the position x,y in the scene window
+             */
+            GameObject* findGameObjectNear(const int& mouseX, const int& mouseY);
             /**
              * @brief destroy allocated game object
              *
@@ -58,6 +69,7 @@ namespace wlEngine {
              * @return 
              */
             GameObject* loadGameObjectFromFile(const Json& json, const std::string& id, const Json& jsonFile, std::map<std::string, GameObject*>& loadedGameObjects);
+            GameObject* findGameObjectNearHelper(std::set<GameObject*>::iterator iter, const int&, const int&);
 
             FixedArrayAllocator<GameObject, 3000> gameObjectAllocator;
 

@@ -2,9 +2,9 @@
 #include "Component.hpp"
 
 #define SCRIPT_DECLARATION(P, T, N) \
-    static const std::string name; \
     static const std::size_t componentId; \
     virtual bool isType(const std::size_t& typeId) const override; \
+    virtual size_t getId() override;\
     static FixedArrayAllocator<T, N> fixedArrayAllocator; \
     static void destroy(T* ptr);\
     template<typename... Args> \
@@ -16,8 +16,10 @@
     friend FixedArrayAllocator<T, N>;
 
 #define SCRIPT_DEFINATION(P, T, N) \
-    const std::string T::name = #T; \
-    const std::size_t T::componentId = std::hash<std::string>()(#T); \
+    const std::size_t T::componentId = Component::genComponentId(#T);\
+    size_t T::getId() {\
+        return componentId;\
+    }\
     bool T::isType(const std::size_t& typeId) const { \
         if ( typeId == T::componentId ) \
         return true; \
@@ -33,6 +35,7 @@
 namespace wlEngine {
     struct Script : public Component {
         static const std::size_t componentId; 
+        virtual size_t getId() override;
         virtual bool isType(const std::size_t& typeId) const override; 
         static std::set<Script*> collection; 
         Script(GameObject* go) : Component(go){};

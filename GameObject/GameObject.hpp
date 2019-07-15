@@ -29,6 +29,8 @@ namespace wlEngine {
         template <typename ComponentType>
         ComponentType* getComponent();
 
+        void removeComponent(Component* c);
+
     private:
         GameObject* parent = nullptr;
         friend class Transform;

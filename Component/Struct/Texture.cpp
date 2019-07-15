@@ -56,6 +56,7 @@ namespace wlEngine {
     }
 
     void Texture::clip(Rect* rect, bool subData){
+        this->rect = *rect;
 #if SETTINGS_GAME_DIMENSION == 0
 		float width = rect->width;
         float height = rect->height;

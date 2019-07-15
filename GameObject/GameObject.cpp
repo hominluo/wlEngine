@@ -19,4 +19,16 @@ namespace wlEngine {
         }
     }
 
+    void GameObject::removeComponent(Component* component) {
+        for(auto c : components) {
+            if(c.get() == component) {
+                if(c->gameObjects) {
+                    c->gameObjects->erase(this);
+                }
+                components.erase(c);
+                return;
+            }
+        }
+    }
+
 }

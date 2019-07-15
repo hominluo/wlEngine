@@ -9,4 +9,7 @@ namespace wlEngine {
         return Component::isType(typeId);
     }
     std::set<Script*> Script::collection = std::set<Script*>();
+    size_t Script::getId() {
+        return componentId;
+    }
 }

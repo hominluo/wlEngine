@@ -32,6 +32,8 @@ namespace wlEngine {
 
         SDL_GLContext* getSDL_GLContext() {return &glContext;};
         SDL_Window* getSDL_Window() {return window;};
+        glm::vec2 getWindowSize() {return {windowWidth, windowHeight};};
+        glm::vec2 getSceneSize() {return {sceneWidth, sceneHeight};};
     private:
 #if SETTINGS_ENGINEMODE
         unsigned int sceneTexture;

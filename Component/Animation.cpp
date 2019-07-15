@@ -21,21 +21,20 @@ namespace wlEngine {
 		loadClips(path.data());
     }
 
-	Animation::Animation(GameObject* go, void** args) : Component(go) {
-		std::string* path = static_cast<std::string*>(args[0]);
-		this->width = *static_cast<float*>(args[1]);
-		this->height = *static_cast<float*>(args[2]);
-		auto initialAni = *static_cast<std::string*>(args[3]);
+	Animation::Animation(GameObject* go, void** args) : Component(go), currentAnimation(nullptr), timeStamp(0), currentFrame(0) {
+        if(args) {
+            std::string* path = static_cast<std::string*>(args[0]);
+            this->width = *static_cast<float*>(args[1]);
+            this->height = *static_cast<float*>(args[2]);
+            auto initialAni = *static_cast<std::string*>(args[3]);
 
-		currentAnimation = nullptr;
-		timeStamp = 0;
-		currentFrame = 0;
-		loadClips(path->data());
-		playAnimation(initialAni);
-	}
+            loadClips(path->data());
+            playAnimation(initialAni);
+        }
+    }
 
     Animation::Animation(GameObject* go, const std::string& path, const int& width, const int& height, const std::string& initialAni) : Animation(go, path,width, height){
-		playAnimation(initialAni);
+        playAnimation(initialAni);
     }
 
 

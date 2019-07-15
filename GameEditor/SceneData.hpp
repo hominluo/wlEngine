@@ -20,6 +20,8 @@ namespace wlEngine {
         void setCamera();
 		void clear();
 		void destroyGameObject(GameObject*);
+        void removeComponent(GameObject*, const std::string&);
+        void addComponent(GameObject*, const Json&);
 		Json& getData(GameObject*);
 		
     };

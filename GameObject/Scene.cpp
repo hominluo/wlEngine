@@ -4,6 +4,8 @@
 #include "../Physics/PhysicsDebugDraw.hpp"
 #include "../System/System.hpp"
 #include "../Utility/Utility.hpp"
+#include "../Component/Transform.hpp"
+#include "../Component/Sprite.hpp"
 #include <memory>
 #include <cassert>
 
@@ -38,41 +40,52 @@ namespace wlEngine {
         return mWorld->CreateBody(&def);
     }
 
+    void Scene::reloadScene() {
+        Json gameObjects_json = sceneData.data["gameObjects"];
+        clearScene();
+        sceneData.data = Json::object(); //the structure of data will be built using loadGameObjectFromJson, because createGameObject of SceneData will insert data into sceneData.data
+        sceneData.data["scene_path"] = filePath;
+
+        std::map<std::string, GameObject*> loadedGameObjects;
+        for (auto iter = gameObjects_json.begin(); iter != gameObjects_json.end(); ++iter){
+            loadGameObjectFromFile(iter.value(), iter.key(), gameObjects_json, loadedGameObjects);
+        }
+    }
     void Scene::loadScene(const std::string& filePath){
         clearScene();
 
         this->filePath = filePath;
-		std::ifstream ifs;
-		ifs.open(filePath);
-		std::ostringstream oss;
-		oss << ifs.rdbuf();
-		ifs.close();
-		sceneData.data = Json::object(); //the structure of data will be built using loadGameObjectFromJson, because createGameObject of SceneData will insert data into sceneData.data
-		sceneData.data["scene_path"] = filePath;
+        std::ifstream ifs;
+        ifs.open(filePath);
+        std::ostringstream oss;
+        oss << ifs.rdbuf();
+        ifs.close();
+        sceneData.data = Json::object(); //the structure of data will be built using loadGameObjectFromJson, because createGameObject of SceneData will insert data into sceneData.data
+        sceneData.data["scene_path"] = filePath;
 
         Json gameObjects_json = nlohmann::json::parse(oss.str())["gameObjects"];
-		std::map<std::string, GameObject*> loadedGameObjects;
+        std::map<std::string, GameObject*> loadedGameObjects;
         for (auto iter = gameObjects_json.begin(); iter != gameObjects_json.end(); ++iter){
             loadGameObjectFromFile(iter.value(), iter.key(), gameObjects_json, loadedGameObjects);
         }
     }
 
     GameObject* Scene::loadGameObjectFromFile(const Json& go_json, const std::string& id, const Json& jsonFile, std::map<std::string, GameObject*>& loadedGameObjects) {
-		//avoid recreation
-		if (loadedGameObjects.find(id) != loadedGameObjects.end()) return loadedGameObjects[id];
-		std::string name = go_json["name"];
-		auto& components = go_json["components"];
-		auto parent_id = go_json["parent"].get<std::string>();
+        //avoid recreation
+        if (loadedGameObjects.find(id) != loadedGameObjects.end()) return loadedGameObjects[id];
+        std::string name = go_json["name"];
+        auto& components = go_json["components"];
+        auto parent_id = go_json["parent"].get<std::string>();
 
         //allocate parent gameObject
         GameObject* parent = nullptr;
-		if(parent_id != Utility::toPointerString(parent)) parent = loadGameObjectFromFile(jsonFile[parent_id], parent_id, jsonFile, loadedGameObjects);
+        if(parent_id != Utility::toPointerString(parent)) parent = loadGameObjectFromFile(jsonFile[parent_id], parent_id, jsonFile, loadedGameObjects);
 
         //create gameObject with the parent
-		auto go = createGameObject(name, parent);
-		addComponent(go, components);
+        auto go = createGameObject(name, parent);
+        addComponent(go, components);
 
-		sceneData.createGameObject(go, parent, &go_json);
+        sceneData.createGameObject(go, parent, &go_json);
         loadedGameObjects[id] = go;
         return go;
     }
@@ -113,6 +126,7 @@ namespace wlEngine {
         }
     }
 
+
     GameObject* Scene::createGameObject(const Json& go_json, GameObject* parent) {
         std::string name = go_json["name"];
         auto& components = go_json["components"];
@@ -126,7 +140,7 @@ namespace wlEngine {
         for(Json::const_iterator iter = children.begin(); iter != children.end(); ++iter) {
             createGameObject(sceneData.data[iter->get<std::string>()], go);
         }
-		return go;
+        return go;
     }
 
     void Scene::clearScene() {
@@ -160,5 +174,35 @@ namespace wlEngine {
 
     void Scene::addGameObject(GameObject* go){
         sceneGraph.insert(go);       
+    }
+
+    GameObject* Scene::findGameObjectNear(const int& mouseX, const int& mouseY) {
+		return findGameObjectNearHelper(sceneGraph.begin(), mouseX, mouseY);
+    }
+
+    GameObject* Scene::findGameObjectNearHelper(std::set<GameObject*>::iterator iter, const int& x, const int& y) {
+        if(iter != sceneGraph.end()) {
+            auto transform = (*iter)->getComponent<Transform>();
+            auto sprite = (*iter)->getComponent<Sprite>();
+            if(transform && sprite) {
+                auto pos = transform->position;
+                auto sizeHalf = glm::vec2(sprite->texture->rect.width, sprite->texture->rect.height) / 2.0f;
+                int minX = pos.x - sizeHalf.x;
+                int minY = pos.y - sizeHalf.y;
+                int maxX = pos.x + sizeHalf.x;
+                int maxY = pos.y + sizeHalf.y;
+                if (x >= minX && x <=maxX && y >= minY && y<= maxY) {
+                    return *iter;
+                }
+            }
+			auto iter_copy = iter;
+            if(auto go_next = findGameObjectNearHelper(++iter_copy, x,y)) return go_next;
+
+			auto& children = (*iter)->children;
+			for (auto child_iter = children.begin(); child_iter != children.end(); child_iter++) {
+				if (auto child_next = findGameObjectNearHelper(child_iter, x, y)) return child_next;
+			}
+        }
+		return nullptr;
     }
 }

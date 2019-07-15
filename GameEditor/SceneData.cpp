@@ -68,4 +68,22 @@ namespace wlEngine {
 	Json& SceneData::getData(GameObject* go) {
 		return data["gameObjects"][Utility::toPointerString(go)];
 	}
+
+    void SceneData::removeComponent(GameObject* go, const std::string& c) {
+        std::string goId = Utility::toPointerString(go);
+        auto& components = data["gameObjects"][goId]["components"];
+        for (auto iter = components.begin(); iter != components.end(); ++iter) {
+            if (iter.key() == c) {
+                components.erase(iter.key());
+                break;
+            }
+        }
+    }
+
+    void SceneData::addComponent(GameObject* go, const Json& json) {
+        auto goId = Utility::toPointerString(go);
+        for (auto iter = json.begin(); iter != json.end(); ++iter){
+            data["gameObjects"][goId]["components"][iter.key()] = iter.value();
+        }
+    }
 }
