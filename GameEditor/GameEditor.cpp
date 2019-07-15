@@ -377,6 +377,7 @@ namespace wlEngine {
         if(goPack.dropped) {
             goPack.child->setParent(goPack.parent);
             goPack.dropped = false;
+            scene->sceneData.changeHierachy(goPack.parent, goPack.child);
         }
     }
 
@@ -409,7 +410,8 @@ namespace wlEngine {
                 target = nullptr;
             }
             if (target) {
-                target->setPosition({ mouseX, mouseY, 0 });
+                target->setPosition({ mouseX, mouseY, target->position.z });
+                scene->sceneData.editTransform(selectedGameObject, target->position.x, target->position.y, target->position.z);
             }
         }
     }

@@ -3,7 +3,7 @@
 #include "Scene.hpp"
 #include "../EngineManager.hpp"
 namespace wlEngine {
-    GameObject::GameObject(const std::string& name) : name(name) {}
+    GameObject::GameObject(const std::string& name) : name(name), transform(nullptr) {}
 
     void GameObject::setParent(GameObject* newParent) {
         //remove from previous hierachy
@@ -21,6 +21,7 @@ namespace wlEngine {
             EngineManager::getwlEngine()->getCurrentScene()->sceneGraph.insert(this);
             this->parent = nullptr;
         }
+
     }
 
     GameObject::~GameObject() {
@@ -30,6 +31,7 @@ namespace wlEngine {
     }
 
     void GameObject::removeComponent(Component* component) {
+		assert(component != transform && "remove transform component is not allowed");
         for(auto c : components) {
             if(c.get() == component) {
                 if(c->gameObjects) {

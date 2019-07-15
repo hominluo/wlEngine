@@ -79,11 +79,39 @@ namespace wlEngine {
             }
         }
     }
+    void SceneData::eraseGameObjectFromChildren(const std::string& parent, const std::string& child) {
+        auto& children = data["gameObjects"][parent]["children"];
+        for (auto iter = children.begin(); iter != children.end(); ++iter) {
+            if (*iter == child) {
+                children.erase(iter);
+                break;
+            }
+        }
+    }
 
     void SceneData::addComponent(GameObject* go, const Json& json) {
         auto goId = Utility::toPointerString(go);
         for (auto iter = json.begin(); iter != json.end(); ++iter){
             data["gameObjects"][goId]["components"][iter.key()] = iter.value();
         }
+    }
+
+    void SceneData::changeHierachy(GameObject* parent, GameObject* child) {
+        auto parentId = Utility::toPointerString(parent);
+        auto childId = Utility::toPointerString(child);
+        if(child->parent) {
+            eraseGameObjectFromChildren(Utility::toPointerString(child->parent), childId);
+        }
+
+        data["gameObjects"][childId]["parent"] = parentId;
+        data["gameObjects"][parentId]["children"].push_back(childId);
+    }
+
+    void SceneData::editTransform(GameObject* go, const int& x, const int& y, const int& z) {
+        auto goId = Utility::toPointerString(go);
+        auto& t = data["gameObjects"][goId]["components"]["Transform"];
+        t[0] = x;
+        t[1] = y;
+        t[2] = z;
     }
 }

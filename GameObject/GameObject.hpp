@@ -1,5 +1,6 @@
 #pragma once
 #include "../Component/Component.hpp"
+#include "../Component/Transform.hpp"
 #include <memory>
 #include "../Settings.hpp"
 namespace wlEngine {
@@ -30,11 +31,27 @@ namespace wlEngine {
 
         void removeComponent(Component* c);
 
+		template<>
+		Transform* getComponent<Transform>();
     private:
         GameObject* parent = nullptr;
+		Transform* transform;
         friend class Transform;
         friend class SceneData;
     };
+
+	template<>
+	Transform* GameObject::getComponent<Transform>() {
+		if(transform) return transform;
+		for (auto& c : components) {
+			if (c->isType(Transform::componentId)) {
+				transform = static_cast<Transform*>(c.get());
+				return transform;
+			}
+		}
+
+		return nullptr;
+	}
 
     template<typename ComponentType, typename... Args>
 	ComponentType* GameObject::addComponent(Args&&... params) {

@@ -22,7 +22,11 @@ namespace wlEngine {
 		void destroyGameObject(GameObject*);
         void removeComponent(GameObject*, const std::string&);
         void addComponent(GameObject*, const Json&);
+        void changeHierachy(GameObject* child, GameObject* parent);
+        void editTransform(GameObject*, const int& x, const int& y, const int& z);
 		Json& getData(GameObject*);
+    private:
+        void eraseGameObjectFromChildren(const std::string& parent, const std::string& child);
 		
     };
 }
