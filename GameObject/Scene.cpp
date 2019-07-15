@@ -155,8 +155,8 @@ namespace wlEngine {
     GameObject* Scene::createGameObject(const std::string& name, GameObject* parent) {
         auto ptr = gameObjectAllocator.allocate(name);
 
-        if (parent) ptr->setParent(parent);
-        else ptr->setParent(this);
+		if (parent) ptr->setParent(parent);
+		else addGameObject(ptr);
 
         allocatedGameObjects.insert(ptr);
         return ptr;
@@ -177,11 +177,11 @@ namespace wlEngine {
     }
 
     GameObject* Scene::findGameObjectNear(const int& mouseX, const int& mouseY) {
-		return findGameObjectNearHelper(sceneGraph.begin(), mouseX, mouseY);
+		return findGameObjectNearHelper(sceneGraph.begin(), &sceneGraph, mouseX, mouseY);
     }
 
-    GameObject* Scene::findGameObjectNearHelper(std::set<GameObject*>::iterator iter, const int& x, const int& y) {
-        if(iter != sceneGraph.end()) {
+    GameObject* Scene::findGameObjectNearHelper(std::set<GameObject*>::iterator iter, std::set<GameObject*>* set, const int& x, const int& y) {
+        if(iter != set->end()) {
             auto transform = (*iter)->getComponent<Transform>();
             auto sprite = (*iter)->getComponent<Sprite>();
             if(transform && sprite) {
@@ -196,11 +196,11 @@ namespace wlEngine {
                 }
             }
 			auto iter_copy = iter;
-            if(auto go_next = findGameObjectNearHelper(++iter_copy, x,y)) return go_next;
+            if(auto go_next = findGameObjectNearHelper(++iter_copy, set, x,y)) return go_next;
 
 			auto& children = (*iter)->children;
 			for (auto child_iter = children.begin(); child_iter != children.end(); child_iter++) {
-				if (auto child_next = findGameObjectNearHelper(child_iter, x, y)) return child_next;
+				if (auto child_next = findGameObjectNearHelper(child_iter, &children, x, y)) return child_next;
 			}
         }
 		return nullptr;

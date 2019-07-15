@@ -8,6 +8,11 @@ namespace wlEngine {
     class GameObject;
     class Sprite;
     class Animation;
+    struct GameObjectPack {
+        GameObject* child = nullptr;
+        GameObject* parent = nullptr;
+        bool dropped = false;
+    };
     class GameEditor {
     public:
         GameEditor();
@@ -27,6 +32,13 @@ namespace wlEngine {
         void showGameObjectInfo();
         void showAllGameObjects();
         void pushGameObject(std::set<GameObject*>::iterator iter, const std::set<GameObject*>* gameObjects);
+        /**
+         * @brief draw to change the scene hierachy
+         *
+         * @param parent
+         */
+        void dragDropGameObject();
+        GameObjectPack goPack;
 
         void showMenu();
 

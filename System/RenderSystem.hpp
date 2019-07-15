@@ -43,10 +43,10 @@ namespace wlEngine {
 #endif
 
         static RenderSystem* renderSystem;
-		int windowHeight = 768;
         int windowWidth = 1440;
-        int sceneHeight = 360;
+		int windowHeight = 768;
         int sceneWidth = 640;
+        int sceneHeight = 360;
         const int topMenuHeight = 20;
 
         RenderSystem();

@@ -69,7 +69,7 @@ namespace wlEngine {
              * @return 
              */
             GameObject* loadGameObjectFromFile(const Json& json, const std::string& id, const Json& jsonFile, std::map<std::string, GameObject*>& loadedGameObjects);
-            GameObject* findGameObjectNearHelper(std::set<GameObject*>::iterator iter, const int&, const int&);
+            GameObject* findGameObjectNearHelper(std::set<GameObject*>::iterator iter, std::set<GameObject*>* set, const int&, const int&);
 
             FixedArrayAllocator<GameObject, 3000> gameObjectAllocator;
 

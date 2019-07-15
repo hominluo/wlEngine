@@ -27,6 +27,12 @@ namespace wlEngine {
                         }
                     }
                     break;
+                case SDL_MOUSEBUTTONDOWN:
+                    if(event.button.button == SDL_BUTTON_LEFT) leftMouseClicked = true;
+                    else leftMouseClicked = false;
+                    if (event.button.button == SDL_BUTTON_RIGHT) rightMouseClicked = true;
+                    else rightMouseClicked = false;
+                    break;
             }        
             //mouse
         }
@@ -41,9 +47,10 @@ namespace wlEngine {
         gameplayWindowOffsetY = y + 20; // 20 is the title bar
     }
 
-    bool InputSystem::mousePressingOnScene(int& x, int& y) {
+    bool InputSystem::mouseClickedOnScene(int& x, int& y, Button button) {
         auto sceneSize = RenderSystem::get()->getSceneSize();
-        if(SDL_GetMouseState(&mouseX, &mouseY) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+        bool mouseClicked = button == Button::Left? leftMouseClicked : rightMouseClicked;
+        if((SDL_GetMouseState(&mouseX, &mouseY)) && mouseClicked) {
             int sceneHeight = RenderSystem::get()->getSceneSize().y;
             x = mouseX - gameplayWindowOffsetX;
             y = sceneHeight + gameplayWindowOffsetY - mouseY;

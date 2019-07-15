@@ -13,7 +13,6 @@ namespace wlEngine {
 
         GameObject* getParent() {return parent;}
         void setParent(GameObject*);
-        void setParent(Scene*);
 
         std::set<std::shared_ptr<Component>> components;
         

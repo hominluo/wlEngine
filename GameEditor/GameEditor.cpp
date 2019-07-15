@@ -35,6 +35,7 @@ namespace wlEngine {
 
         removeGameObjects();
 		removeComponents();
+        dragDropGameObject();
     }
     
 	void GameEditor::removeComponents() {
@@ -75,7 +76,15 @@ namespace wlEngine {
         ImGui::Begin("Scene Graph", nullptr, ImGuiWindowFlags_None);
         auto gameObjects = scene->getSceneGraph();
 		dropSprite(nullptr);
-		pushGameObject(gameObjects->begin(), gameObjects);
+        if(ImGui::BeginDragDropTarget()) {
+            if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject")) {
+                goPack.child = *static_cast<GameObject**>(payload->Data);
+                goPack.parent = nullptr;
+                goPack.dropped = true;
+            } 
+            ImGui::EndDragDropTarget();
+        }
+        pushGameObject(gameObjects->begin(), gameObjects);
         ImGui::End();
         showGameObjectInfo();
     }
@@ -83,29 +92,48 @@ namespace wlEngine {
     void GameEditor::pushGameObject(std::set<GameObject*>::iterator iter, const std::set<GameObject*>* gameObjects) {
         if(iter != gameObjects->end()) {
             bool open = ImGui::TreeNodeEx((*iter)->name.c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
+
+            //dragNdrop to change scene hierachy
+            if(ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)){
+                ImGui::SetDragDropPayload("GameObject", &*iter, sizeof(GameObject*));
+                ImGui::Text("%s", (*iter)->name.c_str());
+                ImGui::EndDragDropSource();
+            }
+            if(ImGui::BeginDragDropTarget()) {
+                if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject")) {
+                    goPack.child = *static_cast<GameObject**>(payload->Data);
+                    goPack.parent = *iter;
+                    goPack.dropped = true;
+                } 
+                ImGui::EndDragDropTarget();
+            }
+
             dropSprite(*iter); 
+
+            //select game object
             if(ImGui::IsItemClicked() && (ImGui::GetMousePos().x - ImGui::GetItemRectMin().x) > ImGui::GetTreeNodeToLabelSpacing()) {
                 selectedGameObject = *iter;
             }
 
+            //gameobject little menu
             if (ImGui::BeginPopupContextItem())
             {
                 if(ImGui::TreeNodeEx("Add Script")) {
-					for (auto f : *Component::componentFactoryList) {
-						auto componentIter = Component::getComponentIdToName()->find(f.first); // only Scripts are in componentIdToName
-						if (componentIter != Component::getComponentIdToName()->end()) {
-							std::string componentName = (*Component::getComponentIdToName()).at(f.first);
-							if (ImGui::MenuItem(componentName.data())) {
+                    for (auto f : *Component::componentFactoryList) {
+                        auto componentIter = Component::getComponentIdToName()->find(f.first); // only Scripts are in componentIdToName
+                        if (componentIter != Component::getComponentIdToName()->end()) {
+                            std::string componentName = (*Component::getComponentIdToName()).at(f.first);
+                            if (ImGui::MenuItem(componentName.data())) {
                                 Json j;
                                 j[componentName] = Json::array();
                                 scene->addComponent(*iter, j);
                                 scene->sceneData.addComponent(*iter, j);
-							}
-						}
-					}
+                            }
+                        }
+                    }
                     ImGui::TreePop();
                 }
-            //remove gameobject
+                //remove gameobject
                 if(ImGui::MenuItem("Remove")) {
                     objectToRemove.insert(*iter);
                 }
@@ -128,12 +156,12 @@ namespace wlEngine {
         {
             //remove component
             if(ImGui::MenuItem("Remove")) {
-				componentToRemove.push_back(ComponentRemovePack{go, c, name});
+                componentToRemove.push_back(ComponentRemovePack{go, c, name});
             }
             ImGui::EndPopup();
         }
         if(open){
-			if(f) f(go);   
+            if(f) f(go);   
             ImGui::TreePop();
         }
     }
@@ -152,16 +180,16 @@ namespace wlEngine {
                 if (c->getId() == Transform::componentId)showComponent(go, c.get(), "Transform", std::bind(&GameEditor::showTransformInfo, this, std::placeholders::_1));
                 //else if (c->getId() == Sprite::componentId)showComponent(go, c.get(), "Sprite", std::bind(&GameEditor::showSpriteInfo, this, std::placeholders::_1));
                 //else if (c->getId() == Animation::componentId)showComponent(go, c.get(), "Animation", std::bind(&GameEditor::showAnimationInfo, this, std::placeholders::_1));
-				else {
-					std::size_t t = c->getId();
-					auto* s = Component::getComponentIdToName();
-					auto iter = Component::getComponentIdToName()->find(t);
-					if (iter != Component::getComponentIdToName()->end()) {
-						ImGui::TreeNodeEx(iter->second.data(), ImGuiTreeNodeFlags_Leaf);
+                else {
+                    std::size_t t = c->getId();
+                    auto* s = Component::getComponentIdToName();
+                    auto iter = Component::getComponentIdToName()->find(t);
+                    if (iter != Component::getComponentIdToName()->end()) {
+                        ImGui::TreeNodeEx(iter->second.data(), ImGuiTreeNodeFlags_Leaf);
                         ImGui::TreePop();
-					}
-					
-				}
+                    }
+
+                }
             }
         }
         ImGui::End();
@@ -197,10 +225,10 @@ namespace wlEngine {
                     }
                     ofs.close();
                 }
-				ImGui::MenuItem("Reload", "CTRL+S");
-				if (ImGui::IsItemClicked()) {
-					scene->loadScene(scene->filePath);
-				}
+                ImGui::MenuItem("Reload", "CTRL+S");
+                if (ImGui::IsItemClicked()) {
+                    scene->loadScene(scene->filePath);
+                }
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Edit"))
@@ -339,9 +367,16 @@ namespace wlEngine {
                 go_json["components"]["Sprite"] = spriteParams;
                 go_json["components"]["Transform"] = transformParams;
 
-                auto go = scene->createGameObject(go_json, parent);
+                scene->createGameObject(go_json, parent);
             }
             ImGui::EndDragDropTarget();
+        }
+    }
+
+    void GameEditor::dragDropGameObject() {
+        if(goPack.dropped) {
+            goPack.child->setParent(goPack.parent);
+            goPack.dropped = false;
         }
     }
 
@@ -352,22 +387,29 @@ namespace wlEngine {
 
     void GameEditor::updateMouseInput() {
         auto inputSystem = InputSystem::get();
-        
+
         auto pos = ImGui::GetWindowPos();
-		inputSystem->setGameplayWindowOffset(pos.x, pos.y);
+        inputSystem->setGameplayWindowOffset(pos.x, pos.y);
     }
 
     void GameEditor::dragSprite() {
+        static Transform* target = nullptr;
         if(ImGui::IsWindowFocused()) {
             auto inputSystem = InputSystem::get();
             int mouseX, mouseY;
-            if(inputSystem->mousePressingOnScene(mouseX, mouseY)) {
-				if (auto go = scene->findGameObjectNear(mouseX, mouseY)) {
-					if (auto transform = go->getComponent<Transform>()) {
-						transform->setPosition({ mouseX, mouseY, 0 });
-					}
-					selectedGameObject = go;
-				}
+            if(inputSystem->mouseClickedOnScene(mouseX, mouseY, Button::Left)) {
+                auto go = scene->findGameObjectNear(mouseX, mouseY);
+                if(go && !target) {
+                    target = go->getComponent<Transform>();
+                    selectedGameObject = go;
+                }
+
+            }
+            else {
+                target = nullptr;
+            }
+            if (target) {
+                target->setPosition({ mouseX, mouseY, 0 });
             }
         }
     }
