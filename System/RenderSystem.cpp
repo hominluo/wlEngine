@@ -21,7 +21,6 @@ namespace wlEngine {
 #if SETTINGS_GAME_DIMENSION == 1
             projection = glm::perspective(glm::radians(45.0f), (float)sceneWidth / sceneHeight, 0.1f, 100000.0f);
 #else
-            projection = glm::ortho(0.0f, (float)sceneWidth , 0.0f, (float)sceneHeight, -1.0f, 1000.0f);
 #endif
 
         gameEditor = new GameEditor;
@@ -89,8 +88,8 @@ namespace wlEngine {
             glBindTexture(GL_TEXTURE_2D, t->texture->mTexture);
             
             t->shader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
-            t->shader->setMat4("view", camera2D->getViewMatrix());
-            t->shader->setMat4("projection", projection);
+            t->shader->setMat4("view", camera2D->getTransformMatrix().view);
+            t->shader->setMat4("projection", camera2D->getTransformMatrix().projection);
             glBindVertexArray(t->texture->VAO);
 
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -103,12 +102,12 @@ namespace wlEngine {
             auto shader = model->shader;
             auto transform = gameObject->getComponent<Transform>();
             auto modelMatrix = transform->getModel();
-            auto view = camera2D->getViewMatrix(); //shuold be 3D
+            auto maxtrix = camera2D->getTransformMatrix(); //shuold be 3D
 
             shader->use();
             shader->setMat4("model", modelMatrix);
-            shader->setMat4("view", view);
-            shader->setMat4("projection", projection); 
+            shader->setMat4("view", maxtrix.view);
+            shader->setMat4("projection", maxtrix.projection);
             shader->setVec3("viewPos", camera2D->transform->position); // should be 3D
 
             for (auto& mesh : model->meshes) {

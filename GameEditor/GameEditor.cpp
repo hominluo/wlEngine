@@ -395,14 +395,17 @@ namespace wlEngine {
 
     void GameEditor::dragSprite() {
         static Transform* target = nullptr;
+        static int lastX, lastY;
         if(ImGui::IsWindowFocused()) {
             auto inputSystem = InputSystem::get();
             int mouseX, mouseY;
-            if(inputSystem->mouseClickedOnScene(mouseX, mouseY, Button::Left)) {
+            if(inputSystem->mousePressingOnScene(mouseX, mouseY, Button::Left)) {
                 auto go = scene->findGameObjectNear(mouseX, mouseY);
                 if(go && !target) {
                     target = go->getComponent<Transform>();
                     selectedGameObject = go;
+                    lastX = mouseX;
+                    lastY = mouseY;
                 }
 
             }
@@ -410,7 +413,9 @@ namespace wlEngine {
                 target = nullptr;
             }
             if (target) {
-                target->setPosition({ mouseX, mouseY, target->position.z });
+                target->moveBy(mouseX - lastX, mouseY - lastY, 0);
+                lastX = mouseX;
+                lastY = mouseY;
                 scene->sceneData.editTransform(selectedGameObject, target->position.x, target->position.y, target->position.z);
             }
         }

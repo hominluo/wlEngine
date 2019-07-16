@@ -3,14 +3,23 @@
 #include <glm/matrix.hpp>
 #include "Transform.hpp"
 namespace wlEngine {
+    struct CoordTransform {
+        glm::mat4 view; 
+        glm::mat4 projection;// 
+    };
+
     struct Camera2D : Component {
         COMPONENT_DECLARATION(Component, Camera2D, 3);
         COMPONENT_EDITABLE_DEC();
     public:
         Camera2D(GameObject* go);
-		Camera2D(GameObject* go, void** args) : Component(go){};
-        glm::mat4 getViewMatrix();
+		Camera2D(GameObject* go, void**) : Camera2D(go){};
+        const CoordTransform& getTransformMatrix();
         float speed = 100.0;
         Transform* transform = nullptr;
+    private:
+        CoordTransform coordTransform;
+        glm::vec2 viewport;
+        float viewportScale;
     };
 }

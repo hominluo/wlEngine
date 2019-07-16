@@ -46,7 +46,7 @@ namespace wlEngine {
         glEnableVertexAttribArray(0);
 
         glm::mat4 proj = glm::mat4(1.0f);
-        glm::mat4 cameraView = camera->getViewMatrix();
+        auto cameraView = camera->getTransformMatrix();
 
 #if SETTINGS_GAME_DIMENSION == 0
             proj = glm::perspective(glm::radians(45.0f), (float)windowWidth / windowHeight, 0.1f, 100000.0f);
@@ -54,8 +54,8 @@ namespace wlEngine {
 #else
 			proj = glm::ortho(0.0f, (float)windowWidth, 0.0f, (float)windowHeight, -1.0f, 1000.0f);
 #endif
-        shader.setMat4("view", cameraView);
-        shader.setMat4("projection", proj);
+        shader.setMat4("view", cameraView.view);
+        shader.setMat4("projection", cameraView.projection);
         shader.setVec3("color", glm::vec3(color.r, color.g, color.b));
 
         glDrawArrays(GL_LINE_LOOP, 0, vertexCount);

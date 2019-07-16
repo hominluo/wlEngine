@@ -11,9 +11,13 @@ namespace wlEngine {
 
     void InputSystem::update() {
         SDL_Event event;
+		wheelX = 0;
+		wheelY = 0;
+        leftMouseClicked = false;
+        rightMouseClicked = false;
         while (SDL_PollEvent(&event)) {
-            if (Settings::engineMode == Settings::EngineMode::Editor)
-                RenderSystem::get()->inputHandler(event);
+            if (Settings::engineMode == Settings::EngineMode::Editor) RenderSystem::get()->inputHandler(event);
+			
             switch(event.type) {
                 case SDL_KEYDOWN:
                     if (event.key.keysym.scancode == SDL_SCANCODE_F5) {
@@ -29,12 +33,13 @@ namespace wlEngine {
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     if(event.button.button == SDL_BUTTON_LEFT) leftMouseClicked = true;
-                    else leftMouseClicked = false;
                     if (event.button.button == SDL_BUTTON_RIGHT) rightMouseClicked = true;
-                    else rightMouseClicked = false;
+                    break;
+                case SDL_MOUSEWHEEL:
+                    wheelX = event.wheel.x;
+                    wheelY = event.wheel.y;                   
                     break;
             }        
-            //mouse
         }
     }
 
@@ -47,10 +52,10 @@ namespace wlEngine {
         gameplayWindowOffsetY = y + 20; // 20 is the title bar
     }
 
-    bool InputSystem::mouseClickedOnScene(int& x, int& y, Button button) {
+    bool InputSystem::mousePressingOnScene(int& x, int& y, Button button) {
         auto sceneSize = RenderSystem::get()->getSceneSize();
-        bool mouseClicked = button == Button::Left? leftMouseClicked : rightMouseClicked;
-        if((SDL_GetMouseState(&mouseX, &mouseY)) && mouseClicked) {
+        uint8_t mask = button == Button::Left ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
+        if((SDL_GetMouseState(&mouseX, &mouseY)) & SDL_BUTTON(mask)) {
             int sceneHeight = RenderSystem::get()->getSceneSize().y;
             x = mouseX - gameplayWindowOffsetX;
             y = sceneHeight + gameplayWindowOffsetY - mouseY;
@@ -58,5 +63,10 @@ namespace wlEngine {
             return false;
         }
         return false;
+    }
+
+    void InputSystem::getMouseWheel(int& x, int& y) {
+        x = wheelX;
+        y = wheelY;
     }
 }

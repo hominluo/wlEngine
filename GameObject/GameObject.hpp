@@ -88,6 +88,7 @@ namespace wlEngine {
                     if (c->gameObjects) {
                         c->gameObjects->erase(this);
                     }
+					assert(c != transform && "remove transform component is not allowed");
                     components.erase(c);
                     return;
                 }
