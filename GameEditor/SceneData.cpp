@@ -16,6 +16,7 @@ namespace wlEngine {
 		
 		std::string goId = Utility::toPointerString(go);
         data["gameObjects"][goId] = *json_ptr;
+        data["gameObjects"][goId]["children"] = json::array();
 
 		std::string parentId = Utility::toPointerString(parent);
         data["gameObjects"][goId]["parent"] = parentId;

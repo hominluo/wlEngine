@@ -13,6 +13,11 @@ namespace wlEngine {
             s->update();
         }
     }
+    void ScriptSystem::postInit() {
+        for (auto& s : Script::collection) {
+            s->postInit();
+        }
+    }
 
 	void ScriptSystem::init() {
 		system = new ScriptSystem();

@@ -40,5 +40,6 @@ namespace wlEngine {
         static std::set<Script*> collection; 
         Script(GameObject* go) : Component(go){};
         virtual void update() = 0;
+        virtual void postInit() {};
     };
 }
