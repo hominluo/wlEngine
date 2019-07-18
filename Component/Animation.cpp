@@ -30,6 +30,7 @@ namespace wlEngine {
 
             loadClips(path->data());
             playAnimation(initialAni);
+			go->getComponent<Sprite>()->mainTexture->clip(getCurrentClip());
         }
     }
 

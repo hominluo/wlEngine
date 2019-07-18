@@ -11,7 +11,7 @@ namespace wlEngine {
     class RigidBody : public Component {
     public:
         COMPONENT_DECLARATION(Component, RigidBody, 100);
-        RigidBody(GameObject*);
+        RigidBody(GameObject*, b2BodyDef&);
         ~RigidBody();
 
         void setGravity(bool);
@@ -26,7 +26,6 @@ namespace wlEngine {
          * @param z zSpeed is only effected by gravity if it's greater than 0
          */
         void update(const float& z);
-        void setBody(b2Body* body);
         void createFixture(b2FixtureDef& def);
         glm::vec3 getPosition();
         glm::vec3 getLinearVelocity();
@@ -45,7 +44,7 @@ namespace wlEngine {
 
         float zSpeed;
 
-        b2Body* mBody; //body has to deallocated by world
+        b2Body* body; //body has to deallocated by world
     };
 }
 

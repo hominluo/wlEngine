@@ -26,6 +26,7 @@ namespace wlEngine {
         setLocalPosition({x,y,z});
 
     }
+    Transform::Transform(GameObject* go, const glm::vec3& coord) : Transform(go, coord.x, coord.y, coord.z){};
 
     void Transform::moveBy(const float& x, const float& y, const float& z) {
         position.x += x;

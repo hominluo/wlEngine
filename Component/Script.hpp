@@ -13,7 +13,9 @@
         collection.insert(ptr); \
         return std::shared_ptr<T>(ptr, &destroy); \
     } \
-    friend FixedArrayAllocator<T, N>;
+	T(GameObject* go, void**) : T(go) {};\
+    friend FixedArrayAllocator<T, N>;\
+    COMPONENT_EDITABLE_DEC();
 
 #define SCRIPT_DEFINATION(P, T, N) \
     const std::size_t T::componentId = Component::genComponentId(#T);\
@@ -31,6 +33,7 @@
         collection.erase(ptr); \
         fixedArrayAllocator.deallocate(ptr); \
     } \
+    COMPONENT_EDITABLE_DEF(T);
 
 namespace wlEngine {
     struct Script : public Component {

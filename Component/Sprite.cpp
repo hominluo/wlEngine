@@ -16,27 +16,23 @@ namespace wlEngine {
 
     Sprite::~Sprite(){};
 
-    Sprite::Sprite(GameObject* go, Texture* t) : Component(go) {
-        texture = t;
-    }
 
     Sprite::Sprite(GameObject* go, void** args) : Component(go) {
         if(args) {
             std::string path(*static_cast<std::string*>(args[0]));
             std::string shader(*static_cast<std::string*>(args[1]));
             auto resourceManager = ResourceManager::get();
-            texture = resourceManager->getTexture(path);
+            mainTexture = resourceManager->getTexture(path);
             useShader(shader);
         }
         else {
-            texture = nullptr;
             useShader("sprite_shader");
         }
     }
 
     Sprite::Sprite(GameObject* go, const std::string& path): Component(go) {
         auto resourceManager = ResourceManager::get();
-        texture = resourceManager->getTexture(path);
+        mainTexture = resourceManager->getTexture(path);
 
     }
     Sprite::Sprite(GameObject* go, const std::string& path, const std::string& shader) : Sprite(go, path) {
@@ -45,5 +41,13 @@ namespace wlEngine {
 
     void Sprite::useShader(const std::string& name){
         shader = Shader::collection[name];
+    }
+
+    void Sprite::addTexture(const std::string& id, const std::string& path) {
+        textures[id] = ResourceManager::get()->getTexture(path);
+    }
+
+    void Sprite::removeTexture(const std::string& id) {
+        textures.erase(id);
     }
 }

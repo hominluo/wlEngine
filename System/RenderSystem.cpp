@@ -62,6 +62,7 @@ namespace wlEngine {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         glViewport(0,0, sceneWidth, sceneHeight);
         renderGame();
+        EngineManager::getwlEngine()->getCurrentScene()->getWorld()->DrawDebugData(); //TODO: has to be removed
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -74,25 +75,38 @@ namespace wlEngine {
 #endif
         
 
-        EngineManager::getwlEngine()->getCurrentScene()->getWorld()->DrawDebugData(); //TODO: has to be removed
 
         SDL_GL_SwapWindow(window);
     }
 
     void RenderSystem::render(Sprite* t) {
-            auto animation = t->gameObject->getComponent<Animation>();
-            if (animation) t->texture->clip(animation->getCurrentClip(),true);
+        int i = 0;
+        t->shader->use();
+        if(t->beforeRenderFunc)t->beforeRenderFunc();
+        //
+        //main texture
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, t->mainTexture->mTexture);
+        t->shader->setInt("texture0", i);
+        auto animation = t->gameObject->getComponent<Animation>();
+        if (animation) t->mainTexture->clip(animation->getCurrentClip(),true);
 
-            t->shader->use();
+        //other textures
+        for(auto& texture : t->textures) {
+            i++;
+            glActiveTexture(GL_TEXTURE0  + i);
+            glBindTexture(GL_TEXTURE_2D, texture.second->mTexture);
+            if (animation) texture.second->clip(animation->getCurrentClip(),true);
+            t->shader->setInt(texture.first, i);
+        }
 
-            glBindTexture(GL_TEXTURE_2D, t->texture->mTexture);
-            
-            t->shader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
-            t->shader->setMat4("view", camera2D->getTransformMatrix().view);
-            t->shader->setMat4("projection", camera2D->getTransformMatrix().projection);
-            glBindVertexArray(t->texture->VAO);
+        t->shader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
+        t->shader->setMat4("view", camera2D->getTransformMatrix().view);
+        t->shader->setMat4("projection", camera2D->getTransformMatrix().projection);
+        glBindVertexArray(t->mainTexture->VAO);
 
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        if(t->afterRenderFunc)t->afterRenderFunc();
     }
 
     void RenderSystem::render(Model* model) {
@@ -263,14 +277,14 @@ namespace wlEngine {
 
     void RenderSystem::renderGame() {
 #if SETTINGS_GAME_DIMENSION == 1
-            for (auto c : Model::collection) {
-                render(c);
-            }
-        }
-#endif
-
-        for (auto c : Sprite::collection) {
+        for (auto c : Model::collection) {
             render(c);
         }
     }
+#endif
+
+    for (auto c : Sprite::collection) {
+        render(c);
+    }
+}
 }

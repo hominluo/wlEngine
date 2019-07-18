@@ -55,6 +55,7 @@ namespace wlEngine {
     bool InputSystem::mousePressingOnScene(int& x, int& y, Button button) {
         auto sceneSize = RenderSystem::get()->getSceneSize();
         uint8_t mask = button == Button::Left ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
+
         if((SDL_GetMouseState(&mouseX, &mouseY)) & SDL_BUTTON(mask)) {
             int sceneHeight = RenderSystem::get()->getSceneSize().y;
             x = mouseX - gameplayWindowOffsetX;
@@ -62,6 +63,9 @@ namespace wlEngine {
             if(x >=0 && y >= 0 && x <= sceneSize.x && y <= sceneSize.y) return true;
             return false;
         }
+        int sceneHeight = RenderSystem::get()->getSceneSize().y;
+        x = mouseX - gameplayWindowOffsetX;
+        y = sceneHeight + gameplayWindowOffsetY - mouseY;
         return false;
     }
 

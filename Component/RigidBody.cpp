@@ -1,13 +1,13 @@
 #include "RigidBody.hpp"
-
+#include "../EngineManager.hpp"
 namespace wlEngine {
     COMPONENT_DEFINATION(Component, RigidBody, 100);
 
-    RigidBody::RigidBody(GameObject* go) : Component(go) {
+    RigidBody::RigidBody(GameObject* go, b2BodyDef& bodyDef) : Component(go) {
         zSpeed = 0;
-        mBody = nullptr;
         contactBeginCallback = nullptr;
         contactEndCallback = nullptr;
+        body = EngineManager::getwlEngine()->getCurrentScene()->createBody(bodyDef);
     };
     RigidBody::~RigidBody() {};
 
@@ -16,9 +16,7 @@ namespace wlEngine {
     }
 
     void RigidBody::setVelocity(const float& x, const float& y, const float& z) {
-        if (mBody) {
-            mBody->SetLinearVelocity(b2Vec2(x,y));
-        }
+        body->SetLinearVelocity(b2Vec2(x,y));
         zSpeed = z;
     }
 
@@ -38,27 +36,23 @@ namespace wlEngine {
 
     }
 
-    void RigidBody::setBody(b2Body* body) {
-        this->mBody = body;
-    }
-
     void RigidBody::createFixture(b2FixtureDef& def) {
-        auto fixture = this->mBody->CreateFixture(&def);
+        auto fixture = this->body->CreateFixture(&def);
         fixture->SetUserData(this);
         
     }
 
     bool RigidBody::hasBody() {
-        return mBody != nullptr;
+        return body != nullptr;
     }
 
     glm::vec3 RigidBody::getPosition() {
-        auto position = mBody->GetPosition();
+        auto position = body->GetPosition();
         return glm::vec3(position.x, position.y, 0);
     }
 
     glm::vec3 RigidBody::getLinearVelocity() {
-        b2Vec2 linearVelocity = mBody ? mBody->GetLinearVelocity() : b2Vec2(0,0);
+        b2Vec2 linearVelocity = body->GetLinearVelocity();
         return glm::vec3(linearVelocity.x, linearVelocity.y, zSpeed);
     }
 }

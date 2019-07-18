@@ -51,6 +51,7 @@ namespace wlEngine {
             loadGameObjectFromFile(iter.value(), iter.key(), gameObjects_json, loadedGameObjects);
         }
     }
+
     void Scene::loadScene(const std::string& filePath){
         clearScene();
 
@@ -91,12 +92,12 @@ namespace wlEngine {
     }
 
     void Scene::addComponent(GameObject* go, const Json& components) {
-        for (nlohmann::json::const_iterator iter = components.begin(); iter != components.end(); ++iter) {
-            if (iter.key() == "Camera2D") setCamera(go);
-            auto componentGenerator = (*Component::getComponentFactoryList())[std::hash<std::string>()(iter.key())];
+        for (auto& iter : components) {
+            if (iter["name"] == "Camera2D") setCamera(go);
+            auto componentGenerator = (*Component::getComponentFactoryList())[std::hash<std::string>()(iter["name"])];
             assert(componentGenerator != nullptr && "component is not editable!");
 
-            auto args_json = iter.value();
+            auto args_json = iter["params"];
             std::vector<void*> args(args_json.size());
             std::vector<std::string> arg_string(args_json.size());
             std::vector<float> arg_float(args_json.size());
@@ -163,9 +164,6 @@ namespace wlEngine {
     }
 
     void Scene::destroyGameObject(GameObject* ptr) {
-#if SETTINGS_ENGINEMODE
-        sceneData.destroyGameObject(ptr);
-#endif
         if (auto parent = ptr->getParent()) parent->children.erase(ptr);
         else sceneGraph.erase(ptr);
         allocatedGameObjects.erase(ptr);
@@ -177,7 +175,8 @@ namespace wlEngine {
     }
 
     GameObject* Scene::findGameObjectNear(const int& mouseX, const int& mouseY) {
-		return findGameObjectNearHelper(sceneGraph.begin(), &sceneGraph, mouseX, mouseY);
+        auto cameraTransform = camera->getComponent<Transform>();
+		return findGameObjectNearHelper(sceneGraph.begin(), &sceneGraph, mouseX + cameraTransform->position.x, mouseY + cameraTransform->position.y);
     }
 
     GameObject* Scene::findGameObjectNearHelper(std::set<GameObject*>::iterator iter, std::set<GameObject*>* set, const int& x, const int& y) {
@@ -186,7 +185,7 @@ namespace wlEngine {
             auto sprite = (*iter)->getComponent<Sprite>();
             if(transform && sprite) {
                 auto pos = transform->position;
-                auto sizeHalf = glm::vec2(sprite->texture->rect.width, sprite->texture->rect.height) / 2.0f;
+                auto sizeHalf = glm::vec2(sprite->mainTexture->rect.width, sprite->mainTexture->rect.height) / 2.0f;
                 int minX = pos.x - sizeHalf.x;
                 int minY = pos.y - sizeHalf.y;
                 int maxX = pos.x + sizeHalf.x;
@@ -195,14 +194,35 @@ namespace wlEngine {
                     return *iter;
                 }
             }
-			auto iter_copy = iter;
+            auto iter_copy = iter;
             if(auto go_next = findGameObjectNearHelper(++iter_copy, set, x,y)) return go_next;
 
-			auto& children = (*iter)->children;
-			for (auto child_iter = children.begin(); child_iter != children.end(); child_iter++) {
-				if (auto child_next = findGameObjectNearHelper(child_iter, &children, x, y)) return child_next;
-			}
+            auto& children = (*iter)->children;
+            for (auto child_iter = children.begin(); child_iter != children.end(); child_iter++) {
+                if (auto child_next = findGameObjectNearHelper(child_iter, &children, x, y)) return child_next;
+            }
         }
-		return nullptr;
+        return nullptr;
+    }
+
+    GameObject* Scene::findGameObjectByName(const std::string& name) {
+        return findGameObjectByNameHelper(sceneGraph.begin(),&sceneGraph, name);
+    }
+
+    GameObject* Scene::findGameObjectByNameHelper(std::set<GameObject*>::iterator iter, std::set<GameObject*>* set, const std::string& name) {
+        if(iter != set->end()) {
+            if ((*iter)->name == name) {
+                return *iter;
+            }
+
+            auto iter_copy = iter;
+            if(auto go_next = findGameObjectByNameHelper(++iter_copy, set, name)) return go_next;
+
+            auto& children = (*iter)->children;
+            for (auto child_iter = children.begin(); child_iter != children.end(); child_iter++) {
+                if (auto child_next = findGameObjectByNameHelper(child_iter, &children, name)) return child_next;
+            }
+        }
+        return nullptr;
     }
 }

@@ -21,21 +21,20 @@ namespace wlEngine {
         COMPONENT_DECLARATION(Component, Sprite, 100);
         COMPONENT_EDITABLE_DEC();
 
-        Sprite(GameObject*, Texture*);
         Sprite(GameObject*, const std::string& path);
         Sprite(GameObject*, const std::string& path, const std::string& shader);
         Sprite(GameObject*, void** args);
         ~Sprite();
 
         void useShader(const std::string&);
-        void loadTexture(const std::string& path);
+        void addTexture(const std::string& name, const std::string& path);
+        void removeTexture(const std::string& name);
+        std::function<void()> beforeRenderFunc;
+        std::function<void()> afterRenderFunc;
 
-        Texture* texture;
-    private:
+        std::map<std::string, Texture*> textures;
+        Texture* mainTexture;
         Shader* shader;
-
-        friend class RenderSystem;
-        friend class GameEditor;
     };
 }
 #endif

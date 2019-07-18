@@ -36,7 +36,7 @@ namespace wlEngine {
     private:
         GameObject* parent = nullptr;
 		Transform* transform;
-        friend class Transform;
+        friend struct Transform;
         friend class SceneData;
     };
 

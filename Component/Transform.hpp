@@ -13,6 +13,7 @@ namespace wlEngine {
         COMPONENT_DECLARATION(Component, Transform, COMPONENT_ALLOCATION_SIZE);
         Transform(GameObject*);
         Transform(GameObject*, const float& x, const float& y, const float& z);
+        Transform(GameObject*, const glm::vec3&);
         Transform(GameObject*, void** data);
 
         glm::vec3 position;

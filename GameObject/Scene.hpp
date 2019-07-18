@@ -18,6 +18,7 @@ namespace wlEngine {
 			void loadScene(const std::string& path);
             void reloadScene();
             GameObject* getCamera() {return camera;};
+            GameObject* findGameObjectByName(const std::string& name);
             b2Body* createBody(b2BodyDef& def);
 			b2World* getWorld() {
 				return mWorld;
@@ -25,7 +26,6 @@ namespace wlEngine {
             const std::set<GameObject*>* getSceneGraph(){return &sceneGraph;};;
 
             GameObject* createGameObject(const std::string& name, GameObject* parent);
-			GameObject* createGameObject(const Json&, GameObject* parent);
 			void addComponent(GameObject*, const Json& json);
 
             /**
@@ -58,6 +58,7 @@ namespace wlEngine {
             //resonsible for converting z position to x and y
             void render();
             void clearScene();
+			GameObject* createGameObject(const Json&, GameObject* parent);
             
             /**
              * @brief load from child to parent
@@ -70,12 +71,14 @@ namespace wlEngine {
              */
             GameObject* loadGameObjectFromFile(const Json& json, const std::string& id, const Json& jsonFile, std::map<std::string, GameObject*>& loadedGameObjects);
             GameObject* findGameObjectNearHelper(std::set<GameObject*>::iterator iter, std::set<GameObject*>* set, const int&, const int&);
+            GameObject* findGameObjectByNameHelper(std::set<GameObject*>::iterator iter, std::set<GameObject*>* set, const std::string& name);
 
             FixedArrayAllocator<GameObject, 3000> gameObjectAllocator;
 
             friend FixedArrayAllocator<GameObject, 3000>;
             friend class EngineManager;
             friend class GameObject;
+            friend class GameEditor;
 
     };
 }

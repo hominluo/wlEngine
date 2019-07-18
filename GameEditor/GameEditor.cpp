@@ -48,6 +48,7 @@ namespace wlEngine {
     void GameEditor::removeGameObjects() {
         for(auto iter : objectToRemove) {
             scene->destroyGameObject(iter);
+			scene->sceneData.destroyGameObject(iter);
             if(iter == selectedGameObject) selectedGameObject = nullptr;
         }
         objectToRemove.clear();
@@ -211,7 +212,7 @@ namespace wlEngine {
                     ofs.open(filePath);
                     if (ofs.good()) {
                         GameObject* nil = nullptr;
-                        ofs << "{\"gameObjects\": {\"1\" : {\"children\": [] , \"components\" : {\"Camera2D\": [] , \"Transform\" : [0.0, 0.0, 1000] }, \"name\" : \"Camera\", \"parent\" :" + Utility::toPointerString(nil) + "}} }";
+                        ofs << "{\"gameObjects\": {\"1\" : {\"children\": [] , \"components\" : [{\"name\" : \"Camera2D\", \"params\" : []}, {\"name\" : \"Transform\", \"params\" : [0,0,0]}], \"name\" : \"Camera\", \"parent\" :" + Utility::toPointerString(nil) + "}} }";
                     }
                     ofs.close();
                 }
@@ -274,9 +275,10 @@ namespace wlEngine {
         if ( inputX|| inputY || inputZ) {
             transform->setLocalPosition(pos);
             Json& json = scene->sceneData.getData(go);
-            json["components"]["Transform"][0] = pos.x;
-            json["components"]["Transform"][1] = pos.y;
-            json["components"]["Transform"][2] = pos.z;
+			Json& transform = *Utility::findComponentWithName(json, "Transform");
+			transform[0] = pos.x;
+			transform[1] = pos.y;
+			transform[2] = pos.z;
         }
 
         float scale_f = transform->scale.x;
@@ -293,7 +295,7 @@ namespace wlEngine {
 
     void GameEditor::showSpriteInfo(GameObject* go) {
         auto sprite = go->getComponent<Sprite>();
-        ImGui::Image((void*)sprite->texture->mTexture, {(float)sprite->texture->mWidth, (float)sprite->texture->mHeight}, {0,1}, {1,0});
+        ImGui::Image((void*)sprite->mainTexture->mTexture, {(float)sprite->mainTexture->mWidth, (float)sprite->mainTexture->mHeight}, {0,1}, {1,0});
     }
     void GameEditor::showResourceInDirectory(const std::string& path) {
         DIR *dir;
@@ -360,12 +362,21 @@ namespace wlEngine {
                 Texture* texture_ptr = *static_cast<Texture**>(payload->Data);
                 Json go_json;
                 go_json["name"] = texture_ptr->sourcePath.substr(texture_ptr->sourcePath.find_last_of("/")+1, texture_ptr->sourcePath.size() - 4); // being lazy here, -4 becuase .jpg and .png all have 4 characters
-                go_json["components"] = Json::object();
+                go_json["components"] = Json::array();
                 go_json["children"] = json::array();
                 Json spriteParams = Json::array({ texture_ptr->sourcePath ,"sprite_shader"});
                 Json transformParams = Json::array({0,0,0});
-                go_json["components"]["Sprite"] = spriteParams;
-                go_json["components"]["Transform"] = transformParams;
+
+				Json spriteJson;
+				Json transformJson;
+				spriteJson["name"] = "Sprite";
+				spriteJson["params"] = spriteParams;
+				
+				transformJson["name"] = "Transform";
+				transformJson["params"] = transformParams;
+
+				go_json["components"].push_back(transformJson);
+                go_json["components"].push_back(spriteJson);
 
                 scene->createGameObject(go_json, parent);
             }

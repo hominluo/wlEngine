@@ -15,9 +15,6 @@ namespace wlEngine {
     public:
         Json data;
         void createGameObject(GameObject*, GameObject*, const Json*);
-        void addSprite(GameObject* go, const std::string& sourcePath, const std::string& shader);
-        void addTransform(GameObject* go);
-        void setCamera();
 		void clear();
 		void destroyGameObject(GameObject*);
         void removeComponent(GameObject*, const std::string&);
@@ -27,6 +24,7 @@ namespace wlEngine {
 		Json& getData(GameObject*);
     private:
         void eraseGameObjectFromChildren(const std::string& parent, const std::string& child);
+		
 		
     };
 }

@@ -9,35 +9,18 @@ namespace wlEngine {
 		
 		if (json_ptr == nullptr) {
 			j["name"] = go->name;
-			j["components"] = nlohmann::json();
-			j["children"] = json::array();
+			j["components"] = Json::array();
+			j["children"] = Json::array();
 			json_ptr = &j;
 		}
 		
 		std::string goId = Utility::toPointerString(go);
         data["gameObjects"][goId] = *json_ptr;
-        data["gameObjects"][goId]["children"] = json::array();
+        data["gameObjects"][goId]["children"] = Json::array();
 
 		std::string parentId = Utility::toPointerString(parent);
         data["gameObjects"][goId]["parent"] = parentId;
 		if(parent) data["gameObjects"][parentId]["children"].push_back(goId);
-    }
-
-    void SceneData::addSprite(GameObject* go, const std::string& sourcePath, const std::string& shader) {
-        Json& json = getData(go);
-        nlohmann::json sprite_json = nlohmann::json::array();
-        sprite_json.push_back(sourcePath);
-        sprite_json.push_back(shader);
-        json["components"]["Sprite"] = sprite_json;
-    }
-
-    void SceneData::addTransform(GameObject* go){
-        Json& json = getData(go);
-        nlohmann::json transforom_json = nlohmann::json::array();
-        transforom_json.push_back(0);
-        transforom_json.push_back(0);
-        transforom_json.push_back(0);
-        json["components"]["Transform"] = transforom_json;
     }
 
 	void SceneData::clear() {
@@ -74,8 +57,8 @@ namespace wlEngine {
         std::string goId = Utility::toPointerString(go);
         auto& components = data["gameObjects"][goId]["components"];
         for (auto iter = components.begin(); iter != components.end(); ++iter) {
-            if (iter.key() == c) {
-                components.erase(iter.key());
+            if ((*iter)["name"] == c) {
+                components.erase(iter);
                 break;
             }
         }
@@ -93,7 +76,7 @@ namespace wlEngine {
     void SceneData::addComponent(GameObject* go, const Json& json) {
         auto goId = Utility::toPointerString(go);
         for (auto iter = json.begin(); iter != json.end(); ++iter){
-            data["gameObjects"][goId]["components"][iter.key()] = iter.value();
+            *Utility::findComponentWithName(data["gameObjects"][goId],iter.key()) = iter.value();
         }
     }
 
@@ -108,9 +91,11 @@ namespace wlEngine {
         data["gameObjects"][parentId]["children"].push_back(childId);
     }
 
+
+
     void SceneData::editTransform(GameObject* go, const int& x, const int& y, const int& z) {
         auto goId = Utility::toPointerString(go);
-        auto& t = data["gameObjects"][goId]["components"]["Transform"];
+		auto& t = (*Utility::findComponentWithName(data["gameObjects"][goId], "Transform"))["params"];
         t[0] = x;
         t[1] = y;
         t[2] = z;
