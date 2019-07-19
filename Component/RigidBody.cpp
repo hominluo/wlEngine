@@ -8,7 +8,9 @@ namespace wlEngine {
         contactBeginCallback = nullptr;
         contactEndCallback = nullptr;
         body = EngineManager::getwlEngine()->getCurrentScene()->createBody(bodyDef);
+        body->SetUserData(this);
     };
+
     RigidBody::~RigidBody() {};
 
     void RigidBody::setGravity(bool has) {

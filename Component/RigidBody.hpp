@@ -9,8 +9,8 @@
 
 namespace wlEngine {
     class RigidBody : public Component {
-    public:
         COMPONENT_DECLARATION(Component, RigidBody, 100);
+    public:
         RigidBody(GameObject*, b2BodyDef&);
         ~RigidBody();
 
@@ -33,11 +33,11 @@ namespace wlEngine {
         /**
          * @brief called when fixtures contact begins
          */
-         std::function<void()> contactBeginCallback;
+         std::function<void(RigidBody*)> contactBeginCallback;
          /**
           * @brief called when fixtures contact ends
           */
-         std::function<void()> contactEndCallback;
+         std::function<void(RigidBody*)> contactEndCallback;
 
     private:
         bool hasGravity;

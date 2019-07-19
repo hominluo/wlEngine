@@ -4,6 +4,7 @@
 #include "System/PhysicsSystem.hpp"
 #include "System/AnimationSystem.hpp"
 #include "System/InputSystem.hpp"
+#include "System/StateMachineSystem.hpp"
 
 #include "Graphics/Shader.hpp"
 #include "Settings.hpp"
@@ -78,6 +79,7 @@ namespace wlEngine {
         ScriptSystem::init();
         PhysicsSystem::init();
         InputSystem::init();
+        StateMachineSystem::init();
 
     }
     

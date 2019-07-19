@@ -10,9 +10,9 @@
 #include "../Graphics/Mesh.hpp"
 
 namespace wlEngine {
-    struct Model : public Component{
-    public:
+    class Model : public Component{
         COMPONENT_DECLARATION(Component, Model, 50);
+	public:
         std::vector<Mesh> meshes;
         bool gammaCorrection;
         std::string directory;

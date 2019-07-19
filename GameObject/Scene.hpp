@@ -21,9 +21,9 @@ namespace wlEngine {
             GameObject* findGameObjectByName(const std::string& name);
             b2Body* createBody(b2BodyDef& def);
 			b2World* getWorld() {
-				return mWorld;
+				return physicsWorld;
 			}
-            const std::set<GameObject*>* getSceneGraph(){return &sceneGraph;};;
+            const std::set<GameObject*>* getSceneGraph(){return &sceneGraph;};
 
             GameObject* createGameObject(const std::string& name, GameObject* parent);
 			void addComponent(GameObject*, const Json& json);
@@ -53,7 +53,7 @@ namespace wlEngine {
 			std::set<GameObject*> allocatedGameObjects;
 			std::set<GameObject*> sceneGraph;
             GameObject* camera;
-			b2World* mWorld;
+			b2World* physicsWorld;
 
             //resonsible for converting z position to x and y
             void render();

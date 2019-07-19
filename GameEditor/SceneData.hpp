@@ -18,6 +18,8 @@ namespace wlEngine {
 		void clear();
 		void destroyGameObject(GameObject*);
         void removeComponent(GameObject*, const std::string&);
+
+		//json is an array of json object
         void addComponent(GameObject*, const Json&);
         void changeHierachy(GameObject* child, GameObject* parent);
         void editTransform(GameObject*, const int& x, const int& y, const int& z);

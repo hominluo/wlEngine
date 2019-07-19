@@ -12,6 +12,7 @@
 #include "Component/Animation.hpp"
 #include "Component/Model.hpp"
 #include "Component/Camera2D.hpp"
+#include "Component/StateMachine.hpp"
 
 #include "GameObject/Scene.hpp"
 #include "GameObject/GameObject.hpp"

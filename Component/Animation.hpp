@@ -15,9 +15,9 @@ namespace wlEngine {
     using ClipsMap = std::map<std::string , Clips>;
 
     class Animation : public Component{
-    public:
         COMPONENT_DECLARATION(Component, Animation, 100);
         COMPONENT_EDITABLE_DEC();
+    public:
         Animation(GameObject* go, const std::string& path, const int& width, const int& height);
         Animation(GameObject* go, const std::string& path, const int& width, const int& height, const std::string& initialAni);
 		Animation(GameObject* go, void** args);

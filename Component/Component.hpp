@@ -10,6 +10,7 @@
 #include "../Memory/FixedArrayAllocator.hpp"
 
 #define COMPONENT_DECLARATION(P, T, N) \
+    public:\
     static const std::size_t componentId; \
     virtual bool isType(const std::size_t& typeId) const override; \
     static std::set<T*> collection; \
@@ -22,6 +23,7 @@
         return std::shared_ptr<T>(ptr, &destroy); \
     } \
     virtual std::size_t getId() override;\
+    private:\
     friend FixedArrayAllocator<T, N>;
 
 
@@ -44,8 +46,10 @@
     std::set<T*> T::collection = std::set<T*>(); \
 
 #define COMPONENT_EDITABLE_DEC()\
+public:\
     static std::function<void(GameObject* go, void** arr)> addToGameObject; \
     static bool isComponentReg; \
+private:\
 
 #define COMPONENT_EDITABLE_DEF(T)\
     std::function<void(GameObject*, void**)> T::addToGameObject = [](GameObject* go, void** args) { \

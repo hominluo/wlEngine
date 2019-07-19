@@ -126,9 +126,12 @@ namespace wlEngine {
                             std::string componentName = (*Component::getComponentIdToName()).at(f.first);
                             if (ImGui::MenuItem(componentName.data())) {
                                 Json j;
-                                j[componentName] = Json::array();
-                                scene->addComponent(*iter, j);
-                                scene->sceneData.addComponent(*iter, j);
+								j["name"] = componentIter->second;
+								j["params"] = Json::array();
+								Json components = Json::array();
+								components.push_back(j);
+                                scene->addComponent(*iter, components);
+                                scene->sceneData.addComponent(*iter, components);
                             }
                         }
                     }

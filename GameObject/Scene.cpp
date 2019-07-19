@@ -3,6 +3,7 @@
 #include "../Physics/WorldContactListener.hpp"
 #include "../Physics/PhysicsDebugDraw.hpp"
 #include "../System/System.hpp"
+#include "../System/PhysicsSystem.hpp"
 #include "../Utility/Utility.hpp"
 #include "../Component/Transform.hpp"
 #include "../Component/Sprite.hpp"
@@ -11,23 +12,16 @@
 
 namespace wlEngine {
     void Scene::update() {
-        mWorld->Step(FIXED_DELTA_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+        physicsWorld->Step(FIXED_DELTA_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     }
 
-
-
-    Scene::Scene() : mWorld(new b2World(b2Vec2(0, 0))), sceneGraph(), gameObjectAllocator(){
-        //physics world
-        auto collisionListener = new WorldContactListener();
-        auto physicsDebugDraw = new PhysicsDebugDraw();
-
-        mWorld->SetContactListener(collisionListener);
-        mWorld->SetDebugDraw(physicsDebugDraw);
-
-        physicsDebugDraw->SetFlags(b2Draw::e_shapeBit);
+    Scene::Scene() : physicsWorld(new b2World(b2Vec2(0, 0))), sceneGraph(), gameObjectAllocator(){
+        physicsWorld->SetContactListener(&PhysicsSystem::get()->worldContactListener);
+        physicsWorld->SetDebugDraw(&PhysicsSystem::get()->physicsDebugDraw);
     }
 
     Scene::~Scene() {
+        delete physicsWorld;
         clearScene();
     }
 
@@ -37,7 +31,7 @@ namespace wlEngine {
     }
 
     b2Body* Scene::createBody(b2BodyDef& def) {
-        return mWorld->CreateBody(&def);
+        return physicsWorld->CreateBody(&def);
     }
 
     void Scene::reloadScene() {
@@ -148,6 +142,11 @@ namespace wlEngine {
         for (auto& k : allocatedGameObjects) {
             gameObjectAllocator.deallocate(k);
         }
+		auto bodies = physicsWorld->GetBodyList();
+		for (int i = 0; i < physicsWorld->GetBodyCount(); i++)
+		{
+			physicsWorld->DestroyBody(bodies + i);
+		}
         sceneGraph.clear();
         allocatedGameObjects.clear();
         sceneData.clear();

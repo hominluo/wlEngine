@@ -36,6 +36,7 @@ namespace wlEngine {
 
     Animation::Animation(GameObject* go, const std::string& path, const int& width, const int& height, const std::string& initialAni) : Animation(go, path,width, height){
         playAnimation(initialAni);
+		go->getComponent<Sprite>()->mainTexture->clip(getCurrentClip());
     }
 
 

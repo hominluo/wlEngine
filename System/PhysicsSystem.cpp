@@ -8,6 +8,7 @@ namespace wlEngine {
 
     PhysicsSystem::PhysicsSystem() : System() {
         registerSystem(this);
+        physicsDebugDraw.SetFlags(b2Draw::e_shapeBit);
     }
 
     void PhysicsSystem::init() {
@@ -22,4 +23,5 @@ namespace wlEngine {
             transform->setPosition(c->getPosition());
         }
     }
+
 }

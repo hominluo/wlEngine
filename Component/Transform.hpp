@@ -8,9 +8,10 @@
 #define COMPONENT_ALLOCATION_SIZE 1000
 namespace wlEngine {
     class GameObject;
-    struct Transform : public Component {
-        COMPONENT_EDITABLE_DEC();
+    class Transform : public Component {
         COMPONENT_DECLARATION(Component, Transform, COMPONENT_ALLOCATION_SIZE);
+        COMPONENT_EDITABLE_DEC();
+    public:
         Transform(GameObject*);
         Transform(GameObject*, const float& x, const float& y, const float& z);
         Transform(GameObject*, const glm::vec3&);
