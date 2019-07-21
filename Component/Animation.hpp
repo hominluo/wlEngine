@@ -22,12 +22,14 @@ namespace wlEngine {
         Animation(GameObject* go, const std::string& path, const int& width, const int& height, const std::string& initialAni);
 		Animation(GameObject* go, void** args);
 
-        void playAnimation(const std::string&);
+        void playAnimation(const std::string&, bool recursive=true);
         void loadClips(const char* path);
         Rect* getCurrentClip();
         std::string getCurrentClipName();
         void pause();
 		bool isPlaying(const std::string&);
+        bool hasEnded();
+		int getCurrentFrame();
     private:
         Clips* currentAnimation;
         ClipsMap clips;
@@ -38,6 +40,8 @@ namespace wlEngine {
         int gridY = 0;
         int width = 0;
         int height = 0;
+		bool recursive; 
+        bool animationHasEnded;
 
         friend class AnimationSystem;
         friend class GameEditor;

@@ -2,16 +2,20 @@
 
 namespace wlEngine {
     void WorldContactListener::BeginContact(b2Contact* contact) {
-        auto rigidBodyA = static_cast<RigidBody*>(contact->GetFixtureA()->GetBody()->GetUserData());
-        auto rigidBodyB = static_cast<RigidBody*>(contact->GetFixtureB()->GetBody()->GetUserData());
-        if(rigidBodyA->contactBeginCallback)rigidBodyA->contactBeginCallback(rigidBodyB);
-        if(rigidBodyB->contactBeginCallback)rigidBodyB->contactBeginCallback(rigidBodyA);
+        auto fixtureA = contact->GetFixtureA();
+        auto fixtureB = contact->GetFixtureB();
+        auto rigidBodyA = static_cast<RigidBody*>(fixtureA->GetBody()->GetUserData());
+        auto rigidBodyB = static_cast<RigidBody*>(fixtureB->GetBody()->GetUserData());
+        if(rigidBodyA->contactBeginCallback)rigidBodyA->contactBeginCallback(fixtureA, fixtureB);
+        if(rigidBodyB->contactBeginCallback)rigidBodyB->contactBeginCallback(fixtureB, fixtureA);
     }
 
     void WorldContactListener::EndContact(b2Contact* contact) {
-        auto rigidBodyA = static_cast<RigidBody*>(contact->GetFixtureA()->GetBody()->GetUserData());
-        auto rigidBodyB = static_cast<RigidBody*>(contact->GetFixtureB()->GetBody()->GetUserData());
-        if(rigidBodyA->contactEndCallback)rigidBodyA->contactEndCallback(rigidBodyB);
-        if(rigidBodyB->contactEndCallback)rigidBodyB->contactEndCallback(rigidBodyA);
+        auto fixtureA = contact->GetFixtureA();
+        auto fixtureB = contact->GetFixtureB();
+        auto rigidBodyA = static_cast<RigidBody*>(fixtureA->GetBody()->GetUserData());
+        auto rigidBodyB = static_cast<RigidBody*>(fixtureB->GetBody()->GetUserData());
+        if(rigidBodyA->contactEndCallback)rigidBodyA->contactEndCallback(fixtureA, fixtureB);
+        if(rigidBodyB->contactEndCallback)rigidBodyB->contactEndCallback(fixtureB, fixtureA);
     }
 }

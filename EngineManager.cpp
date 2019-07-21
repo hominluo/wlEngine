@@ -38,16 +38,12 @@ namespace wlEngine {
         currentScene = scene;
     }
 
-    void EngineManager::update() {
-        systemUpdate();
-        currentScene->update();
-    }
-
     void EngineManager::loop() {
 #if SETTINGS_ENGINEMODE
         while (!quit) {
             if (Settings::engineMode == Settings::EngineMode::Gameplay) {
-                update();
+                systemUpdate();
+                currentScene->update();
                 Time::update();
             }
             else {
@@ -68,9 +64,12 @@ namespace wlEngine {
     }
 
     void EngineManager::systemUpdate(){
-        for (auto& i : System::collection) {
-            i->update();
-        }
+        InputSystem::get()->update();
+        StateMachineSystem::get()->update();
+        PhysicsSystem::get()->update();
+        ScriptSystem::get()->update();
+        AnimationSystem::get()->update();
+        RenderSystem::get()->update();
     }
 
     void EngineManager::initializeSystems() {
@@ -82,7 +81,7 @@ namespace wlEngine {
         StateMachineSystem::init();
 
     }
-    
+
     void EngineManager::initializeManagers() {
         ResourceManager::init();
     }

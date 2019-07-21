@@ -5,10 +5,13 @@ namespace wlEngine {
 
     }
 
-    void StateMachine::addState(const StateType& from, const StateType& to, StateConditionType condition) {
+    void StateMachine::addTransition(const StateType& from, const StateType& to, StateConditionType condition) {
         states[from][to] = condition;
     }
 
+    StateActionGroup* StateMachine::getActionGroup(const std::string& stateName) {
+        return &stateActions[stateName];
+    }
     const StateType& StateMachine::getCurrentState() {
         return currentState;
     }

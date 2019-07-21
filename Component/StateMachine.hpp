@@ -3,11 +3,14 @@
 #include <map>
 #include <string>
 #include <functional>
+#include <array>
 namespace wlEngine {
     using StateType = std::string;
     using StatePriority = uint8_t;
-    using StateConditionType = std::function<StatePriority(void)>;
+    using StateConditionType = std::function<StatePriority()>;
+    using StateActionType = std::function<void()>;
     using StateMachineType = std::map<StateType, std::map<StateType, StateConditionType>>;
+    using StateActionGroup = std::array<StateActionType, 3>;
 
     class StateMachine : public Component {
         COMPONENT_DECLARATION(Component, StateMachine, 8);
@@ -18,13 +21,19 @@ namespace wlEngine {
          *
          * @param from
          * @param to
-         * @param condition
+         * @param condition, a function returns a unsigned int that indicates the priority of the condition
          */
-        void addState(const StateType& from, const StateType& to, StateConditionType condition);
+        void addTransition(const StateType& from, const StateType& to, StateConditionType condition);
+        StateActionGroup* getActionGroup(const std::string& stateName);
         const StateType& getCurrentState();
     private:
         StateType currentState;
         StateMachineType states;   
+
+#define StateActionEnterFuncIndex 0
+#define StateActionUpdateFuncIndex 1
+#define StateActionExitFuncIndex 2
+        std::map<StateType, StateActionGroup> stateActions;
 
         friend class StateMachineSystem;
     };

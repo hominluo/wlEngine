@@ -12,7 +12,7 @@ namespace wlEngine {
     COMPONENT_DEFINATION(Component, Animation, 100);
 	COMPONENT_EDITABLE_DEF(Animation);
 
-    Animation::Animation(GameObject* go, const std::string& path, const int& width, const int& height): Component(go) {
+    Animation::Animation(GameObject* go, const std::string& path, const int& width, const int& height): Component(go), recursive(false), animationHasEnded(true) {
         currentAnimation = nullptr;
         timeStamp = 0;
 		currentFrame = 0;
@@ -21,7 +21,7 @@ namespace wlEngine {
 		loadClips(path.data());
     }
 
-	Animation::Animation(GameObject* go, void** args) : Component(go), currentAnimation(nullptr), timeStamp(0), currentFrame(0) {
+	Animation::Animation(GameObject* go, void** args) : Component(go), currentAnimation(nullptr), timeStamp(0), currentFrame(0), recursive(false), animationHasEnded(true) {
         if(args) {
             std::string* path = static_cast<std::string*>(args[0]);
             this->width = *static_cast<float*>(args[1]);
@@ -80,7 +80,9 @@ namespace wlEngine {
         jsonInput.close();
 
     }
-    void Animation::playAnimation(const std::string& name) {
+    void Animation::playAnimation(const std::string& name, bool recursive) {
+        animationHasEnded = false;
+		this->recursive = recursive;
         currentAnimation = &clips[name];
         currentFrame = 0;
     }
@@ -102,4 +104,13 @@ namespace wlEngine {
     std::string Animation::getCurrentClipName() {
         return currentAnimation->first;
     }
+
+    bool Animation::hasEnded() {
+        return animationHasEnded;
+    }
+
+	int Animation::getCurrentFrame() {
+		return currentFrame;
+	}
+
 }

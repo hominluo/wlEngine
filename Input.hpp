@@ -7,6 +7,10 @@ namespace wlEngine {
      */
     class Input {
     public:
-        static Uint8 getKeyStatus(SDL_Scancode); 
+        static uint8_t getKeyStatus(SDL_Scancode); 
+        static const std::vector<SDL_Scancode>& getKeypressSequence();
+        static bool mousePressingOnScene(int& x, int& y, Button);
+        static void getMouseWheel(int& x, int& y);
+        static void getJoystick(float& x, float& y);
     };
 }

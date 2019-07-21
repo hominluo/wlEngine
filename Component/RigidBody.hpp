@@ -8,6 +8,8 @@
 #include "Component.hpp"
 
 namespace wlEngine {
+    using ContactCallbackType = std::function<void(b2Fixture* self, b2Fixture* other)>;
+
     class RigidBody : public Component {
         COMPONENT_DECLARATION(Component, RigidBody, 100);
     public:
@@ -26,18 +28,26 @@ namespace wlEngine {
          * @param z zSpeed is only effected by gravity if it's greater than 0
          */
         void update(const float& z);
-        void createFixture(b2FixtureDef& def);
+        /**
+         * @brief note: the fixture user data is used to point to the Rigidbody(this) by the engine internally
+         *
+         * @param def
+         *
+         * @return 
+         */
+        b2Fixture* createFixture(b2FixtureDef& def);
         glm::vec3 getPosition();
         glm::vec3 getLinearVelocity();
+        b2Body* getBody();
 
         /**
          * @brief called when fixtures contact begins
          */
-         std::function<void(RigidBody*)> contactBeginCallback;
+         ContactCallbackType contactBeginCallback;
          /**
           * @brief called when fixtures contact ends
           */
-         std::function<void(RigidBody*)> contactEndCallback;
+         ContactCallbackType contactEndCallback;
 
     private:
         bool hasGravity;

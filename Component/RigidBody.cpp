@@ -38,10 +38,14 @@ namespace wlEngine {
 
     }
 
-    void RigidBody::createFixture(b2FixtureDef& def) {
+    b2Fixture* RigidBody::createFixture(b2FixtureDef& def) {
         auto fixture = this->body->CreateFixture(&def);
         fixture->SetUserData(this);
-        
+        return fixture;
+    }
+
+    b2Body* RigidBody::getBody() {
+        return body;
     }
 
     bool RigidBody::hasBody() {

@@ -11,11 +11,11 @@ namespace wlEngine {
         PhysicsDebugDraw physicsDebugDraw;
         static PhysicsSystem* get() {return system;}
         static void init();
+        void update() override;
     private:
         PhysicsSystem();
         static PhysicsSystem* system;
 
-        void update() override;
 
 
     };
