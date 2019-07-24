@@ -17,8 +17,8 @@
     static FixedArrayAllocator<T, N> fixedArrayAllocator; \
     static void destroy(T* ptr);\
     template<typename... Args> \
-    static auto createComponent(Args&& ... params){\
-        auto ptr = fixedArrayAllocator.allocate(std::forward<Args>(params)...); \
+    static auto createComponent(GameObject* go, Args&& ... params){\
+        auto ptr = fixedArrayAllocator.allocate(go, std::forward<Args>(params)...); \
         collection.insert(ptr); \
         return std::shared_ptr<T>(ptr, &destroy); \
     } \

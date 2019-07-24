@@ -156,6 +156,8 @@ namespace wlEngine {
     GameObject* Scene::createGameObject(const std::string& name, GameObject* parent) {
         auto ptr = gameObjectAllocator.allocate(name);
 
+		ptr->scene = this;
+
 		if (parent) ptr->setParent(parent);
 		else addGameObject(ptr);
 

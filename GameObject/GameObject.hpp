@@ -33,11 +33,15 @@ namespace wlEngine {
 
 		template<>
 		Transform* getComponent<Transform>();
+
+		Scene* getScene() { return scene; }
     private:
         GameObject* parent = nullptr;
+		Scene* scene = nullptr;
 		Transform* transform;
         friend struct Transform;
         friend class SceneData;
+		friend class Scene;
     };
 
 	template<>
