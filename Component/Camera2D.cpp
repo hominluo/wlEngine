@@ -10,25 +10,10 @@ namespace wlEngine {
     Camera2D::Camera2D(GameObject* go) : Component(go) {
         viewport = RenderSystem::get()->getSceneSize();
         viewportScale = viewport.x / viewport.y;
+		transform = go->getComponent<Transform>();
     }
 
     const CoordTransform& Camera2D::getTransformMatrix() {
-        if (!transform) transform=gameObject->getComponent<Transform>();
-
-        float speedDelta = speed * Time::deltaTime;
-        if (Input::getKeyStatus(SDL_SCANCODE_LEFT)) {
-            transform->position.x -= speedDelta;
-        }
-        if (Input::getKeyStatus(SDL_SCANCODE_RIGHT)) {
-            transform->position.x +=  speedDelta;
-        }
-        if (Input::getKeyStatus(SDL_SCANCODE_UP)) {
-            transform->position.y += speedDelta;
-        }
-        if (Input::getKeyStatus(SDL_SCANCODE_DOWN)) {
-            transform->position.y -= speedDelta;
-        }
-       
 //#if SETTINGS_ENGINEMODE 
 //        int wheelY;
 //        int wheelX;

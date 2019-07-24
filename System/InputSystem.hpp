@@ -2,19 +2,42 @@
 #include "System.hpp"
 #include <SDL_scancode.h>
 #include <SDL_mouse.h>
+#include <SDL_joystick.h>
+#include <SDL_events.h>
 namespace wlEngine {
     class RenderSystem;
     enum class Button {
         Left = SDL_BUTTON_LEFT, Right = SDL_BUTTON_RIGHT
     };
+
     enum class InputType : uint8_t{
         ButtonUp = 0, ButtonRight = 1, ButtonDown = 2, ButtonLeft = 3, R1 = 4, R2 = 5, L1 = 6, L2 = 7,
+    };
+
+    struct GameControllerInput{
+        Sint16 leftAxisX = 0;
+        Sint16 leftAxisY = 0;
+        Sint16 rightAxisX = 0;
+        Sint16 rightAxisY = 0;
+        Uint8 buttonLeft = 0;
+        Uint8 buttonUp = 0;
+        Uint8 buttonRight = 0;
+        Uint8 buttonDown = 0;
     };
 
     class InputSystem : System {
         SYSTEM_DECLARATION(InputSystem);
     public:
         void setGameplayWindowOffset(const int& x, const int& y);
+        /**
+         * @brief this function calculate the mouse click on scene (bottom-left being (0,0))
+         *
+         * @param x
+         * @param y
+         * @param Button right or left click
+         *
+         * @return 
+         */
         bool mousePressingOnScene(int& x, int& y, Button);
         void getMouseWheel(int& x, int& y);
         Uint8 getKeyStatus(SDL_Scancode&);
@@ -34,9 +57,7 @@ namespace wlEngine {
         int wheelX = 0;
         int wheelY = 0;
 
-        float joystickX;
-        float joystickY;
-
+        GameControllerInput gameControllerInput;
         /**
          * @brief record if a button has pressed, this is a once event
          *
@@ -48,8 +69,11 @@ namespace wlEngine {
          */
         std::vector<SDL_Scancode> keypressSequence;
 
-        void joyStickUpdate();
         void reset();
+        void keyDown(const SDL_Event&);
+        void controllerAxisEvent(const SDL_ControllerAxisEvent& axisEvent);
+		SDL_GameController* gameController;
+		const int GAMECONTROLLER_AXIS_DEADZONE = 8000;
 
         friend class Input;
     };

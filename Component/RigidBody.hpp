@@ -18,6 +18,7 @@ namespace wlEngine {
 
         void setGravity(bool);
         void setVelocity(const float& x, const float& y, const float& z);
+        void destroyFixture(b2Fixture*);
         float getZMovement();
 
         bool getGravity();

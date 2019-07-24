@@ -5,39 +5,22 @@
 namespace wlEngine {
     SYSTEM_DEFINATION(InputSystem);
 
-    InputSystem::InputSystem() : buttonPressed(8), joystickX(0), joystickY(0) {
+    InputSystem::InputSystem() : buttonPressed(8), gameController(nullptr){
+		SDL_GameControllerEventState(SDL_ENABLE);
+		if (SDL_NumJoysticks() > 0) {
+			gameController = SDL_GameControllerOpen(0);
+		}
         registerSystem(this);
     }   
 
     void InputSystem::update() {
         SDL_Event event;
         reset();
-        joyStickUpdate();
         while (SDL_PollEvent(&event)) {
-            if (Settings::engineMode == Settings::EngineMode::Editor) RenderSystem::get()->inputHandler(event);			
+            if (Settings::engineMode == Settings::EngineMode::Editor) RenderSystem::get()->inputHandler(event); //imgui's mouse should be processed by imgui input system
             switch(event.type) {
                 case SDL_KEYDOWN:
-                    switch (event.key.keysym.scancode) {
-                        case SDL_SCANCODE_J:
-                            buttonPressed[static_cast<uint8_t>(InputType::ButtonLeft)] = true;
-                            break;
-                        case SDL_SCANCODE_K:
-                            buttonPressed[static_cast<uint8_t>(InputType::ButtonDown)] = true;
-                            break;
-                        case SDL_SCANCODE_F5:
-                            if (Settings::engineMode == Settings::EngineMode::Gameplay){
-                                Settings::engineMode = Settings::EngineMode::Editor;
-                                auto currentScene = EngineManager::getwlEngine()->getCurrentScene();
-                                currentScene->reloadScene();
-                            }
-                            else {
-                                Settings::engineMode = Settings::EngineMode::Gameplay;
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                    keypressSequence.push_back(event.key.keysym.scancode);
+                    keyDown(event);
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     if(event.button.button == SDL_BUTTON_LEFT) leftMouseClicked = true;
@@ -53,6 +36,32 @@ namespace wlEngine {
 
     Uint8 InputSystem::getKeyStatus(SDL_Scancode& scancode) {
         return SDL_GetKeyboardState(nullptr)[scancode];
+    }
+
+    void InputSystem::keyDown(const SDL_Event& event) {
+        switch (event.key.keysym.scancode) {
+            case SDL_SCANCODE_J:
+                buttonPressed[static_cast<uint8_t>(InputType::ButtonLeft)] = true;
+                break;
+            case SDL_SCANCODE_K:
+                buttonPressed[static_cast<uint8_t>(InputType::ButtonDown)] = true;
+                break;
+#if SETTINGS_ENGINEMODE
+            case SDL_SCANCODE_F5:
+                if (Settings::engineMode == Settings::EngineMode::Gameplay){
+                    Settings::engineMode = Settings::EngineMode::Editor;
+                    auto currentScene = EngineManager::getwlEngine()->getCurrentScene();
+                    currentScene->reloadScene();
+                }
+                else {
+                    Settings::engineMode = Settings::EngineMode::Gameplay;
+                }
+                break;
+#endif
+            default:
+                break;
+        }
+        keypressSequence.push_back(event.key.keysym.scancode);
     }
 
     void InputSystem::setGameplayWindowOffset(const int& x, const int& y) {
@@ -95,15 +104,31 @@ namespace wlEngine {
         return keypressSequence;
     }
 
-    void InputSystem::joyStickUpdate() {
-        auto keyboardState = SDL_GetKeyboardState(nullptr);
-        joystickX = 0;
-        joystickY = 0;
-        if (keyboardState[SDL_SCANCODE_W]) joystickY = 1;
-        if (keyboardState[SDL_SCANCODE_S]) joystickY = -1;
-        if (keyboardState[SDL_SCANCODE_W] && keyboardState[SDL_SCANCODE_S]) joystickY = 0;
-        if (keyboardState[SDL_SCANCODE_D]) joystickX = 1;
-        if (keyboardState[SDL_SCANCODE_A]) joystickX = -1;
-        if (keyboardState[SDL_SCANCODE_D] && keyboardState[SDL_SCANCODE_A]) joystickX = 0;
+    void InputSystem::controllerAxisEvent(const SDL_ControllerAxisEvent& axisEvent) {
+        if (axisEvent.which == 0) { //only support one controller right now
+			Sint16 axisValue = axisEvent.value;
+			if (-GAMECONTROLLER_AXIS_DEADZONE < axisValue && axisValue < GAMECONTROLLER_AXIS_DEADZONE)
+				axisValue = 0;
+			switch (axisEvent.axis)
+			{
+			case SDL_CONTROLLER_AXIS_LEFTX:
+                gameControllerInput.leftAxisX = axisValue;
+				break;
+			case SDL_CONTROLLER_AXIS_LEFTY:
+                gameControllerInput.leftAxisY = -axisValue; // y axis is flipped
+				break;
+			case SDL_CONTROLLER_AXIS_RIGHTX:
+                gameControllerInput.rightAxisX = axisValue;
+				break;
+			case SDL_CONTROLLER_AXIS_RIGHTY:
+                gameControllerInput.rightAxisY = -axisValue;  // y axis is flipped
+				break;
+            case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
+                std::cout << axisValue << std::endl;
+			default:
+				break;
+			}
+            
+        }
     }
 }

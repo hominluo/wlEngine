@@ -45,9 +45,7 @@ namespace wlEngine {
             void destroyGameObject(GameObject*);
 
             void addGameObject(GameObject*);
-#if SETTINGS_ENGINEMODE
             SceneData sceneData;
-#endif
             std::string filePath;
         private:
 			std::set<GameObject*> allocatedGameObjects;

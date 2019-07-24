@@ -1,7 +1,6 @@
 #pragma once
 #include "../Settings.hpp"
 
-#if SETTINGS_ENGINEMODE
 #include<map>
 #include<json.hpp>
 #include"../GameObject/GameObject.hpp"
@@ -30,5 +29,3 @@ namespace wlEngine {
 		
     };
 }
-#endif
-

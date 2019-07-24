@@ -2,6 +2,7 @@
 #include "Component.hpp"
 
 #define SCRIPT_DECLARATION(P, T, N) \
+    public:\
     static const std::size_t componentId; \
     virtual bool isType(const std::size_t& typeId) const override; \
     virtual size_t getId() override;\

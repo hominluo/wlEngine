@@ -4,6 +4,7 @@ namespace wlEngine {
     COMPONENT_DEFINATION(Component, RigidBody, 100);
 
     RigidBody::RigidBody(GameObject* go, b2BodyDef& bodyDef) : Component(go) {
+		assert(bodyDef.userData == nullptr && "body shouldn't carry user defined data, it's used by the engine. Try using fixture's user data instead");
         zSpeed = 0;
         contactBeginCallback = nullptr;
         contactEndCallback = nullptr;
@@ -39,9 +40,7 @@ namespace wlEngine {
     }
 
     b2Fixture* RigidBody::createFixture(b2FixtureDef& def) {
-        auto fixture = this->body->CreateFixture(&def);
-        fixture->SetUserData(this);
-        return fixture;
+        return this->body->CreateFixture(&def);
     }
 
     b2Body* RigidBody::getBody() {
@@ -60,5 +59,9 @@ namespace wlEngine {
     glm::vec3 RigidBody::getLinearVelocity() {
         b2Vec2 linearVelocity = body->GetLinearVelocity();
         return glm::vec3(linearVelocity.x, linearVelocity.y, zSpeed);
+    }
+
+    void RigidBody::destroyFixture(b2Fixture* fixture) {
+        body->DestroyFixture(fixture);
     }
 }

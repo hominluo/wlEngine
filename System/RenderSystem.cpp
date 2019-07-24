@@ -19,7 +19,7 @@ namespace wlEngine {
     RenderSystem::RenderSystem() {
         //settings
 #if SETTINGS_GAME_DIMENSION == 1
-            projection = glm::perspective(glm::radians(45.0f), (float)sceneWidth / sceneHeight, 0.1f, 100000.0f);
+        projection = glm::perspective(glm::radians(45.0f), (float)sceneWidth / sceneHeight, 0.1f, 100000.0f);
 #else
 #endif
 
@@ -27,7 +27,7 @@ namespace wlEngine {
         //SDL and OpenGL init
         SDLInit();
         ImGuiInit();   
-        
+
         registerSystem(this);
     }
 
@@ -73,7 +73,7 @@ namespace wlEngine {
         glViewport(0, 0, windowWidth, windowHeight);
         renderGame();
 #endif
-        
+
 
 
         SDL_GL_SwapWindow(window);
@@ -192,10 +192,6 @@ namespace wlEngine {
     }
 
     void RenderSystem::SDLInit() {
-        if (SDL_Init( SDL_INIT_VIDEO ) < 0) {
-            std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
-            exit(-1);
-        }
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -208,7 +204,7 @@ namespace wlEngine {
         windowWidth = sceneWidth;
         windowHeight = sceneHeight;
 #endif
-        window = SDL_CreateWindow("OpenGL Test", 50, 50, windowWidth, windowHeight, SDL_Flags);
+        window = SDL_CreateWindow("OpenGL Test", 400, 100, windowWidth, windowHeight, SDL_Flags);
         glContext = SDL_GL_CreateContext(window);
         SDL_AddEventWatch(windowResizeCallbackWrapper, window);
         gladLoadGLLoader(SDL_GL_GetProcAddress);
@@ -280,11 +276,10 @@ namespace wlEngine {
         for (auto c : Model::collection) {
             render(c);
         }
-    }
 #endif
 
-    for (auto c : Sprite::collection) {
-        render(c);
+        for (auto c : Sprite::collection) {
+            render(c);
+        }
     }
-}
 }

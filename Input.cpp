@@ -1,7 +1,7 @@
 #include "Input.hpp"
-
+#include <iostream>
 namespace wlEngine {
-
+	
     uint8_t Input::getKeyStatus(SDL_Scancode scancode) {
         return InputSystem::get()->getKeyStatus(scancode);
     }
@@ -18,8 +18,11 @@ namespace wlEngine {
         return InputSystem::get()->getMouseWheel(x,y);
     }
 
-    void Input::getJoystick(float& x, float& y) {
-        x = InputSystem::get()->joystickX;
-        y = InputSystem::get()->joystickY;
+    ControllerAxisType Input::getControllerAxis(const ControllerAxis& axis) {
+		return SDL_GameControllerGetAxis(InputSystem::get()->gameController, static_cast<SDL_GameControllerAxis>(axis));
     }
+
+	ControllerButtonType Input::getControllerButton(const ControllerButton& button) {
+		return SDL_GameControllerGetButton(InputSystem::get()->gameController, static_cast<SDL_GameControllerButton>(button));
+	}
 }

@@ -87,7 +87,8 @@ namespace wlEngine {
 
     void Scene::addComponent(GameObject* go, const Json& components) {
         for (auto& iter : components) {
-            if (iter["name"] == "Camera2D") setCamera(go);
+            if (iter["name"] == "Camera2D") 
+				setCamera(go);
             auto componentGenerator = (*Component::getComponentFactoryList())[std::hash<std::string>()(iter["name"])];
             assert(componentGenerator != nullptr && "component is not editable!");
 

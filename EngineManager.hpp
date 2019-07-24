@@ -38,6 +38,7 @@ namespace wlEngine {
             void postInitialization();
 
             void systemUpdate();
+            void SDLinit();
     };
 }
 

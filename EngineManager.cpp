@@ -16,10 +16,18 @@ namespace wlEngine {
 
     EngineManager::EngineManager(){
         quit = false;
+        SDLinit();
 		initializeSystems();
         initializeManagers();
         postInitialization();
     };
+
+    void EngineManager::SDLinit() {
+        if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER ) < 0) {
+            std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
+            exit(-1);
+        }
+    }
 
     EngineManager::~EngineManager(){};
 
@@ -48,19 +56,20 @@ namespace wlEngine {
             }
             else {
                 AnimationSystem::get()->update();
-				if(currentScene->camera)
-                RenderSystem::get()->update();
+                if(currentScene->camera)
+                    RenderSystem::get()->update();
                 InputSystem::get()->update();
                 currentScene->update();
                 Time::update();
             }
-#else
-            while(!quit) {
-                update();
-                Time::update();
-            }
-#endif
         }
+#else
+        while(!quit) {
+            systemUpdate();
+            currentScene->update();
+            Time::update();
+        }
+#endif
     }
 
     void EngineManager::systemUpdate(){
