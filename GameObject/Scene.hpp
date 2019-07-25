@@ -53,6 +53,12 @@ namespace wlEngine {
             GameObject* camera;
 			b2World* physicsWorld;
 
+			const float FIXED_DELTA_TIME = 1.0 / 60.0;
+			const float GRAVITY = 10;
+
+			const int32 VELOCITY_ITERATIONS = 6;
+			const int32 POSITION_ITERATIONS = 2;
+
             //resonsible for converting z position to x and y
             void render();
             void clearScene();

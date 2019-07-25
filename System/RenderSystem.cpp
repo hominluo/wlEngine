@@ -1,3 +1,4 @@
+#define GL_GLEXT_PROTOTYPES
 #include "RenderSystem.hpp"
 
 #include "../EngineManager.hpp"
@@ -13,6 +14,7 @@
 #include "../imgui/imgui_impl_sdl.h"
 #include "../imgui/imgui_impl_opengl3.h"
 
+#include <glad/glad.h>
 namespace wlEngine {
     RenderSystem* RenderSystem::renderSystem = nullptr;
 

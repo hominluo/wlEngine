@@ -1,9 +1,9 @@
 #pragma once
-#define GL_GLEXT_PROTOTYPES
+
 #include <SDL.h>
 #include <string>
 #include <glm/glm.hpp>
-#include <glad/glad.h>
+
 #include <stb_image.hpp>
 
 #include "System.hpp"
