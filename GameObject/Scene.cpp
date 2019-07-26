@@ -143,11 +143,7 @@ namespace wlEngine {
         for (auto& k : allocatedGameObjects) {
             gameObjectAllocator.deallocate(k);
         }
-		auto bodies = physicsWorld->GetBodyList();
-		for (int i = 0; i < physicsWorld->GetBodyCount(); i++)
-		{
-			physicsWorld->DestroyBody(bodies + i);
-		}
+
         sceneGraph.clear();
         allocatedGameObjects.clear();
         sceneData.clear();

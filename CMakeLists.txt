@@ -5,14 +5,12 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DRELEASE")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DRELEASE")
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/Box2D/)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/)
-
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/assimp/assimp-4.0.1)
 
 set(SDL2_INCLUDE_DIR third_party/SDL2/include)
 set(glm_INCLUDE_DIR third_party/glm/) #header only
@@ -22,11 +20,7 @@ set(glad_INCLUDE_DIR third_party/glad/include)
 set(assimp_INCLUDE_DIR third_party/assimp/include)
 set(dirent_INCLUDE_DIR third_party/dirent/include)
 
-#set(CMAKE_CXX_FLAGS -Wno-deprecated)
 find_package(OpenGL REQUIRED)
-#find_library(glm_LIBRARY glm HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm/lib/windows)
-#find_library(SDL2_LIBRARY SDL2 HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/lib/windows)
-#find_library(SDL2_image_LIBRARY SDL2_image HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/lib/windows)
 find_library(assimp_LIBRARY assimp HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/assimp/lib/windows)
 
 SET(SDL2_LIBRARY_DIRECTORIES
@@ -45,22 +39,38 @@ include_directories(
 )
 
 file(GLOB source_file
-    "${CMAKE_CURRENT_SOURCE_DIR}/Math/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Math/*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Component/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Component*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Component/Struct/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Component/Struct/*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/System/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/System/*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Graphics/*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Memory/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Memory/*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Event/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Event/*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Physics/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Physics/*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/GameEditor/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/GameEditor/*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Manager/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Manager/*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Utility/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Utility/*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/imgui/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/imgui/*.h"
-    #"${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/src/glad.cpp"
+    "Math/*.cpp" "Math/*.hpp"
+    "GameObject/*.cpp" "GameObject/*.hpp"
+    "Component/*.cpp" "Component*.hpp"
+    "Component/Struct/*.cpp" "Component/Struct/*.hpp"
+    "System/*.cpp" "System/*.hpp"
+    "Graphics/*.cpp" "Graphics/*.hpp"
+    "Memory/*.cpp" "Memory/*.hpp"
+    "Event/*.cpp" "Event/*.hpp"
+    "Physics/*.cpp" "Physics/*.hpp"
+    "GameEditor/*.cpp" "GameEditor/*.hpp"
+    "Manager/*.cpp" "Manager/*.hpp"
+    "Utility/*.cpp" "Utility/*.hpp"
+    "*.cpp" "*.hpp"
+    "imgui/*.cpp" "imgui/*.h"
 )
+
+foreach(FILE ${source_file})
+    get_filename_component(Dir ${FILE} DIRECTORY)
+    get_filename_component(Exten ${FILE} EXT)
+
+    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" GROUP "${Dir}")
+    string(REPLACE "/" "\\" GROUP "${GROUP}")
+    string(REPLACE "/" "\\" FILE "${FILE}")
+
+    if ("${Exten}" STREQUAL ".cpp" OR "${Exten}" STREQUAL ".c")
+       set(GROUP "Source Files${GROUP}")
+    elseif("${Exten}" STREQUAL ".hpp" OR "${Exten}" STREQUAL ".h")
+       set(GROUP "Header Files${GROUP}")
+    endif()
+
+    source_group("${GROUP}" FILES "${FILE}")
+endforeach()
 
 add_library(wlEngine STATIC
     ${source_file}

@@ -11,7 +11,9 @@ namespace wlEngine {
         body->SetUserData(this);
     };
 
-    RigidBody::~RigidBody() {};
+    RigidBody::~RigidBody() {
+        body->GetWorld()->DestroyBody(body);
+    };
 
     void RigidBody::setGravity(bool has) {
         hasGravity = has;
