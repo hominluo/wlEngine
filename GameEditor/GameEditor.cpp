@@ -80,7 +80,7 @@ namespace wlEngine {
 		dropSprite(nullptr);
         if(ImGui::BeginDragDropTarget()) {
             if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject")) {
-                goPack.child = *static_cast<GameObject**>(payload->Data);
+                goPack.child = *static_cast<Entity**>(payload->Data);
                 goPack.parent = nullptr;
                 goPack.dropped = true;
             } 
@@ -91,19 +91,19 @@ namespace wlEngine {
         showGameObjectInfo();
     }
 
-    void GameEditor::pushGameObject(std::set<GameObject*>::iterator iter, const std::set<GameObject*>* gameObjects) {
+    void GameEditor::pushGameObject(std::set<Entity*>::iterator iter, const std::set<Entity*>* gameObjects) {
         if(iter != gameObjects->end()) {
             bool open = ImGui::TreeNodeEx((*iter)->name.c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
 
             //dragNdrop to change scene hierachy
             if(ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)){
-                ImGui::SetDragDropPayload("GameObject", &*iter, sizeof(GameObject*));
+                ImGui::SetDragDropPayload("GameObject", &*iter, sizeof(Entity*));
                 ImGui::Text("%s", (*iter)->name.c_str());
                 ImGui::EndDragDropSource();
             }
             if(ImGui::BeginDragDropTarget()) {
                 if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject")) {
-                    goPack.child = *static_cast<GameObject**>(payload->Data);
+                    goPack.child = *static_cast<Entity**>(payload->Data);
                     goPack.parent = *iter;
                     goPack.dropped = true;
                 } 
@@ -154,7 +154,7 @@ namespace wlEngine {
         }
     }
 
-    void GameEditor::showComponent(GameObject* go, Component* c, const std::string& name, std::function<void(GameObject*)> f){
+    void GameEditor::showComponent(Entity* go, Component* c, const std::string& name, std::function<void(Entity*)> f){
 
         bool open = ImGui::TreeNodeEx(name.data());
         if (ImGui::BeginPopupContextItem())
@@ -174,7 +174,7 @@ namespace wlEngine {
     void GameEditor::showGameObjectInfo() {
         ImGui::Begin("GameObject");
         if(selectedGameObject) {
-            GameObject* go = selectedGameObject;
+            Entity* go = selectedGameObject;
             char name[512];
             strcpy(name, go->name.data());
             if(ImGui::InputText("Object Name", name, 512)) {
@@ -214,7 +214,7 @@ namespace wlEngine {
                     std::ofstream ofs;
                     ofs.open(filePath);
                     if (ofs.good()) {
-                        GameObject* nil = nullptr;
+                        Entity* nil = nullptr;
                         ofs << "{\"gameObjects\": {\"1\" : {\"children\": [] , \"components\" : [{\"name\" : \"Camera2D\", \"params\" : []}, {\"name\" : \"Transform\", \"params\" : [0,0,0]}], \"name\" : \"Camera\", \"parent\" :" + Utility::toPointerString(nil) + "}} }";
                     }
                     ofs.close();
@@ -249,7 +249,7 @@ namespace wlEngine {
         }
     }
 
-    void GameEditor::showAnimationInfo(GameObject* go){
+    void GameEditor::showAnimationInfo(Entity* go){
         auto animation = go->getComponent<Animation>();
         std::string current_item = animation->getCurrentClipName();
         if (ImGui::BeginCombo("animation", current_item.data())) {
@@ -269,7 +269,7 @@ namespace wlEngine {
         ImGui::Text("height: %d", clip->height);
     }
 
-    void GameEditor::showTransformInfo(GameObject* go) {
+    void GameEditor::showTransformInfo(Entity* go) {
         auto transform = go->getComponent<Transform>();
         auto pos = transform->getLocalPosition();
         bool inputX = ImGui::InputFloat("local x", &pos.x);
@@ -296,7 +296,7 @@ namespace wlEngine {
         ImGui::End();
     }
 
-    void GameEditor::showSpriteInfo(GameObject* go) {
+    void GameEditor::showSpriteInfo(Entity* go) {
         auto sprite = go->getComponent<Sprite>();
         ImGui::Image((void*)sprite->mainTexture->mTexture, {(float)sprite->mainTexture->mWidth, (float)sprite->mainTexture->mHeight}, {0,1}, {1,0});
     }
@@ -359,7 +359,7 @@ namespace wlEngine {
         }
     }
 
-    void GameEditor::dropSprite(GameObject* parent) {
+    void GameEditor::dropSprite(Entity* parent) {
         if (ImGui::BeginDragDropTarget()){
             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Sprite")){
                 Texture* texture_ptr = *static_cast<Texture**>(payload->Data);
@@ -395,7 +395,7 @@ namespace wlEngine {
         }
     }
 
-    void GameEditor::removeComponent(GameObject* go, Component* c, const std::string& name) {
+    void GameEditor::removeComponent(Entity* go, Component* c, const std::string& name) {
         go->removeComponent(c);
         scene->sceneData.removeComponent(go, name);
     }

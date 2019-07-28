@@ -3,7 +3,7 @@
 namespace wlEngine {
     COMPONENT_DEFINATION(Component, RigidBody, 100);
 
-    RigidBody::RigidBody(GameObject* go, b2BodyDef& bodyDef) : Component(go) {
+    RigidBody::RigidBody(Entity* go, b2BodyDef& bodyDef) : Component(go) {
 		assert(bodyDef.userData == nullptr && "body shouldn't carry user defined data, it's used by the engine. Try using fixture's user data instead");
         contactBeginCallback = nullptr;
         contactEndCallback = nullptr;

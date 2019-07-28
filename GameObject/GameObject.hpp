@@ -5,15 +5,15 @@
 #include "../Settings.hpp"
 namespace wlEngine {
     class Scene;
-    class GameObject {
+    class Entity {
     public:
-        GameObject(const std::string& name);
-        ~GameObject();
+        Entity(const std::string& name);
+        ~Entity();
         std::string name;
-		std::set<GameObject*> children;
+		std::set<Entity*> children;
 
-        GameObject* getParent() {return parent;}
-        void setParent(GameObject*);
+        Entity* getParent() {return parent;}
+        void setParent(Entity*);
 
         std::set<std::shared_ptr<Component>> components;
         
@@ -36,7 +36,7 @@ namespace wlEngine {
 
 		Scene* getScene() { return scene; }
     private:
-        GameObject* parent = nullptr;
+        Entity* parent = nullptr;
 		Scene* scene = nullptr;
 		Transform* transform;
         friend struct Transform;
@@ -45,7 +45,7 @@ namespace wlEngine {
     };
 
 	template<>
-	Transform* GameObject::getComponent<Transform>() {
+	Transform* Entity::getComponent<Transform>() {
 		if(transform) return transform;
 		for (auto& c : components) {
 			if (c->isType(Transform::componentId)) {
@@ -58,7 +58,7 @@ namespace wlEngine {
 	}
 
     template<typename ComponentType, typename... Args>
-	ComponentType* GameObject::addComponent(Args&&... params) {
+	ComponentType* Entity::addComponent(Args&&... params) {
 		auto p = ComponentType::createComponent(this, params...);
 		auto raw = p.get();
         components.insert(p);
@@ -66,7 +66,7 @@ namespace wlEngine {
     }
 
     template <typename ComponentType>
-    ComponentType* GameObject::getComponent() {
+    ComponentType* Entity::getComponent() {
         for (auto& c : components) {
             if (c->isType(ComponentType::componentId)) {
                 return static_cast<ComponentType*>(c.get());
@@ -78,7 +78,7 @@ namespace wlEngine {
     }
 
     template <typename ComponentType>
-    void GameObject::addComponent(std::shared_ptr<ComponentType>& c) {
+    void Entity::addComponent(std::shared_ptr<ComponentType>& c) {
         if (c->gameObjects == nullptr) c->gameObject = this;
         else c->gameObjects.insert(this);
 
@@ -86,11 +86,11 @@ namespace wlEngine {
     }
 
     template <typename ComponentType>
-        void GameObject::removeComponent() {
+        void Entity::removeComponent() {
             for (auto& c : components) {
                 if (c->isType(ComponentType::componentId)) {
-                    if (c->gameObjects) {
-                        c->gameObjects->erase(this);
+                    if (c->entities) {
+                        c->entities->erase(this);
                     }
 					assert(c != transform && "remove transform component is not allowed");
                     components.erase(c);

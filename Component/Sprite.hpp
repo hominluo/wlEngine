@@ -15,14 +15,14 @@ namespace wlEngine {
     /* class Texture
      * @description: use initialized GraphicsManager to draw picture on windowRenderer
      */
-	class GameObject;
+	class Entity;
     class Sprite : public Component {
         COMPONENT_DECLARATION(Component, Sprite, 100);
         COMPONENT_EDITABLE_DEC();
 	public:
-        Sprite(GameObject*, const std::string& path);
-        Sprite(GameObject*, const std::string& path, const std::string& shader);
-        Sprite(GameObject*, void** args);
+        Sprite(Entity*, const std::string& path);
+        Sprite(Entity*, const std::string& path, const std::string& shader);
+        Sprite(Entity*, void** args);
         ~Sprite();
 
         void useShader(const std::string&);

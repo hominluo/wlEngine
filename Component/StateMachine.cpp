@@ -1,7 +1,7 @@
 #include "StateMachine.hpp"
 namespace wlEngine {
 	COMPONENT_DEFINATION(Component, StateMachine,8);
-    StateMachine::StateMachine(GameObject* go, const StateType& initialState) : Component(go), currentState(initialState){
+    StateMachine::StateMachine(Entity* go, const StateType& initialState) : Component(go), currentState(initialState){
 
     }
 

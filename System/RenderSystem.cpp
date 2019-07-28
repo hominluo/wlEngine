@@ -210,7 +210,7 @@ namespace wlEngine {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, t->texture.mTexture);
 
-        t->shader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
+        t->shader->setMat4("model", t->entity->getComponent<Transform>()->getModel());
         t->shader->setMat4("view", camera2D->getTransformMatrix().view);
         t->shader->setMat4("projection", camera2D->getTransformMatrix().projection);
         glBindVertexArray(t->texture.VAO);
@@ -229,7 +229,7 @@ namespace wlEngine {
         //main texture
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, t->mainTexture->mTexture);
-        auto animation = t->gameObject->getComponent<Animation>();
+        auto animation = t->entity->getComponent<Animation>();
         if (animation) t->mainTexture->clip(animation->getCurrentClip(),true);
 
         //other textures
@@ -241,7 +241,7 @@ namespace wlEngine {
             t->shader->setInt(texture.first, i);
         }
 
-        t->shader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
+        t->shader->setMat4("model", t->entity->getComponent<Transform>()->getModel());
         t->shader->setMat4("view", camera2D->getTransformMatrix().view);
         t->shader->setMat4("projection", camera2D->getTransformMatrix().projection);
         glBindVertexArray(t->mainTexture->VAO);
@@ -255,7 +255,7 @@ namespace wlEngine {
     }
 
     void RenderSystem::render(Model* model) {
-        for (auto& gameObject : *model->gameObjects) {
+        for (auto& gameObject : *model->entities) {
 
             if (model->beforeRenderFunc) model->beforeRenderFunc();
             auto shader = model->shader;

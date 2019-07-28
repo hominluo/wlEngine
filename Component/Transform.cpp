@@ -5,11 +5,11 @@ namespace wlEngine {
     COMPONENT_DEFINATION(Component, Transform, COMPONENT_ALLOCATION_SIZE);
 	COMPONENT_EDITABLE_DEF(Transform);
     
-    Transform::Transform(GameObject* gm) : Component(gm), position(0.0, 0.0, 0.0), rotation(1.0f), positionMat4(1.0), rotateArou(1.0), scaleMat4(1.0), scale(1.0) {
+    Transform::Transform(Entity* gm) : Component(gm), position(0.0, 0.0, 0.0), rotation(1.0f), positionMat4(1.0), rotateArou(1.0), scaleMat4(1.0), scale(1.0) {
         
     }
 
-    Transform::Transform(GameObject* gm, void** args) : Component(gm), rotation(1.0f), positionMat4(1.0f), rotateArou(1.0f), scaleMat4(1.0f), scale(1.0f) {
+    Transform::Transform(Entity* gm, void** args) : Component(gm), rotation(1.0f), positionMat4(1.0f), rotateArou(1.0f), scaleMat4(1.0f), scale(1.0f) {
         if(args) {
             float x = *static_cast<float*>(args[0]);
             float y = *static_cast<float*>(args[1]);
@@ -22,11 +22,11 @@ namespace wlEngine {
         }
     }
 
-    Transform::Transform(GameObject* gm, const float& x, const float& y, const float& z): Component(gm), position(x,y,z), rotation(1.0f), positionMat4(1.0f), rotateArou(1.0f), scaleMat4(1.0f), scale(1.0f) {
+    Transform::Transform(Entity* gm, const float& x, const float& y, const float& z): Component(gm), position(x,y,z), rotation(1.0f), positionMat4(1.0f), rotateArou(1.0f), scaleMat4(1.0f), scale(1.0f) {
         setLocalPosition({x,y,z});
 
     }
-    Transform::Transform(GameObject* go, const glm::vec3& coord) : Transform(go, coord.x, coord.y, coord.z){};
+    Transform::Transform(Entity* go, const glm::vec3& coord) : Transform(go, coord.x, coord.y, coord.z){};
 
     void Transform::moveBy(const float& x, const float& y, const float& z) {
         position.x += x;
@@ -35,7 +35,7 @@ namespace wlEngine {
 
         positionMat4 = glm::translate(glm::mat4(1.0), position);
 
-        for (auto iter = gameObject->children.begin(); iter != gameObject->children.end(); iter++) {
+        for (auto iter = entity->children.begin(); iter != entity->children.end(); iter++) {
             auto t = (*iter)->getComponent<Transform>();
             t->moveBy(x, y, z);
         }
@@ -67,28 +67,28 @@ namespace wlEngine {
 
         positionMat4 = glm::translate(glm::mat4(1.0), position);
 
-        for (auto iter = gameObject->children.begin(); iter != gameObject->children.end(); iter++) {
+        for (auto iter = entity->children.begin(); iter != entity->children.end(); iter++) {
             auto t = (*iter)->getComponent<Transform>();
             if (t) t->moveBy(moveVector.x, moveVector.y, moveVector.z);
         }
     }
 
     void Transform::setLocalPosition(const glm::vec3& pos) {
-        glm::vec3 newPosition = (gameObject->parent ? gameObject->parent->getComponent<Transform>()->getLocalPosition() : glm::vec3(0.0)) + pos;
+        glm::vec3 newPosition = (entity->parent ? entity->parent->getComponent<Transform>()->getLocalPosition() : glm::vec3(0.0)) + pos;
         glm::vec3 moveVector = newPosition - position;
 
         position = newPosition;
 
         positionMat4 = glm::translate(glm::mat4(1.0), position);
 
-        for (auto iter = gameObject->children.begin(); iter != gameObject->children.end(); iter++) {
+        for (auto iter = entity->children.begin(); iter != entity->children.end(); iter++) {
             auto t= (*iter)->getComponent<Transform>();
             if(t)t->moveBy(moveVector.x, moveVector.y, moveVector.z);
         }
     }
 
     glm::vec3 Transform::getLocalPosition() {
-        if (gameObject->parent) return position - gameObject->parent->getComponent<Transform>()->position;
+        if (entity->parent) return position - entity->parent->getComponent<Transform>()->position;
         else return position;
     }
 

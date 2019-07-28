@@ -17,7 +17,7 @@ namespace wlEngine {
     Sprite::~Sprite(){};
 
 
-    Sprite::Sprite(GameObject* go, void** args) : Component(go) {
+    Sprite::Sprite(Entity* go, void** args) : Component(go) {
         if(args) {
             std::string path(*static_cast<std::string*>(args[0]));
             std::string shader(*static_cast<std::string*>(args[1]));
@@ -30,12 +30,12 @@ namespace wlEngine {
         }
     }
 
-    Sprite::Sprite(GameObject* go, const std::string& path): Component(go) {
+    Sprite::Sprite(Entity* go, const std::string& path): Component(go) {
         auto resourceManager = ResourceManager::get();
         mainTexture = resourceManager->getTexture(path);
 
     }
-    Sprite::Sprite(GameObject* go, const std::string& path, const std::string& shader) : Sprite(go, path) {
+    Sprite::Sprite(Entity* go, const std::string& path, const std::string& shader) : Sprite(go, path) {
         useShader(shader);
     }
 

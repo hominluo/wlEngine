@@ -19,7 +19,7 @@ namespace wlEngine {
 
     void PhysicsSystem::update() {
         for (auto& c : RigidBody::collection) {
-            auto transform = c->gameObject->getComponent<Transform>();
+            auto transform = c->entity->getComponent<Transform>();
             transform->setPosition(c->getPosition());
         }
     }

@@ -4,7 +4,7 @@
 
 namespace wlEngine {
 
-    void SceneData::createGameObject(GameObject* go, GameObject* parent, const Json* json_ptr){
+    void SceneData::createGameObject(Entity* go, Entity* parent, const Json* json_ptr){
 		nlohmann::json j;
 		
 		if (json_ptr == nullptr) {
@@ -27,7 +27,7 @@ namespace wlEngine {
 		data.clear();
 	}
 
-	void SceneData::destroyGameObject(GameObject* go) {
+	void SceneData::destroyGameObject(Entity* go) {
 		std::string goId = Utility::toPointerString(go);
 
 		if (go->parent) {
@@ -49,11 +49,11 @@ namespace wlEngine {
 		data["gameObjects"].erase(goId);
 	}
 
-	Json& SceneData::getData(GameObject* go) {
+	Json& SceneData::getData(Entity* go) {
 		return data["gameObjects"][Utility::toPointerString(go)];
 	}
 
-    void SceneData::removeComponent(GameObject* go, const std::string& c) {
+    void SceneData::removeComponent(Entity* go, const std::string& c) {
         std::string goId = Utility::toPointerString(go);
         auto& components = data["gameObjects"][goId]["components"];
         for (auto iter = components.begin(); iter != components.end(); ++iter) {
@@ -73,14 +73,14 @@ namespace wlEngine {
         }
     }
 
-    void SceneData::addComponent(GameObject* go, const Json& components) {
+    void SceneData::addComponent(Entity* go, const Json& components) {
         auto goId = Utility::toPointerString(go);
         for (auto& iter : components){
 			data["gameObjects"][goId]["components"].push_back(iter);
         }
     }
 
-    void SceneData::changeHierachy(GameObject* parent, GameObject* child) {
+    void SceneData::changeHierachy(Entity* parent, Entity* child) {
         auto parentId = Utility::toPointerString(parent);
         auto childId = Utility::toPointerString(child);
         if(child->parent) {
@@ -93,7 +93,7 @@ namespace wlEngine {
 
 
 
-    void SceneData::editTransform(GameObject* go, const int& x, const int& y, const int& z) {
+    void SceneData::editTransform(Entity* go, const int& x, const int& y, const int& z) {
         auto goId = Utility::toPointerString(go);
 		auto& t = (*Utility::findComponentWithName(data["gameObjects"][goId], "Transform"))["params"];
         t[0] = x;

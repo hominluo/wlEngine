@@ -7,7 +7,7 @@ namespace wlEngine {
     COMPONENT_DEFINATION(Component, Camera2D, 3);
 	COMPONENT_EDITABLE_DEF(Camera2D);
 
-    Camera2D::Camera2D(GameObject* go) : Component(go) {
+    Camera2D::Camera2D(Entity* go) : Component(go) {
         viewport = RenderSystem::get()->getSceneSize();
         viewportScale = viewport.x / viewport.y;
 		transform = go->getComponent<Transform>();

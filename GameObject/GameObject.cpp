@@ -3,9 +3,9 @@
 #include "Scene.hpp"
 #include "../EngineManager.hpp"
 namespace wlEngine {
-    GameObject::GameObject(const std::string& name) : name(name), transform(nullptr) {}
+    Entity::Entity(const std::string& name) : name(name), transform(nullptr) {}
 
-    void GameObject::setParent(GameObject* newParent) {
+    void Entity::setParent(Entity* newParent) {
         //remove from previous hierachy
         if (auto preParent = this->parent) preParent->children.erase(this);
         else {
@@ -24,18 +24,18 @@ namespace wlEngine {
 
     }
 
-    GameObject::~GameObject() {
+    Entity::~Entity() {
         for(auto& c : components) {
             c->destruct(this);
         }
     }
 
-    void GameObject::removeComponent(Component* component) {
+    void Entity::removeComponent(Component* component) {
 		assert(component != transform && "remove transform component is not allowed");
         for(auto c : components) {
             if(c.get() == component) {
-                if(c->gameObjects) {
-                    c->gameObjects->erase(this);
+                if(c->entities) {
+                    c->entities->erase(this);
                 }
                 components.erase(c);
                 return;

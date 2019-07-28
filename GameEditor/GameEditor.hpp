@@ -5,12 +5,12 @@
 #include "../GameObject/Scene.hpp"
 using json = nlohmann::json;
 namespace wlEngine {
-    class GameObject;
+    class Entity;
     class Sprite;
     class Animation;
     struct GameObjectPack {
-        GameObject* child = nullptr;
-        GameObject* parent = nullptr;
+        Entity* child = nullptr;
+        Entity* parent = nullptr;
         bool dropped = false;
     };
     class GameEditor {
@@ -27,14 +27,14 @@ namespace wlEngine {
 
     private:
 		/********************** Data ***************************/
-        GameObject* selectedGameObject;
+        Entity* selectedGameObject;
         Scene* scene;
         float gameplayWindowOffsetX;
         float gameplayWindowOffsetY;
 
         void showGameObjectInfo();
         void showAllGameObjects();
-        void pushGameObject(std::set<GameObject*>::iterator iter, const std::set<GameObject*>* gameObjects);
+        void pushGameObject(std::set<Entity*>::iterator iter, const std::set<Entity*>* gameObjects);
         /**
          * @brief draw to change the scene hierachy
          *
@@ -45,28 +45,28 @@ namespace wlEngine {
 
         void showMenu();
 
-        void showComponent(GameObject*, Component*, const std::string& name, std::function<void(GameObject*)>);
-        void showAnimationInfo(GameObject*);
-        void showTransformInfo(GameObject*);
-        void showSpriteInfo(GameObject*);
+        void showComponent(Entity*, Component*, const std::string& name, std::function<void(Entity*)>);
+        void showAnimationInfo(Entity*);
+        void showTransformInfo(Entity*);
+        void showSpriteInfo(Entity*);
 
         void showGameWindow(void** data);
 
         void showResourceWindow();
         void showResourceInDirectory(const std::string& path);
-        void dropSprite(GameObject* parent);
+        void dropSprite(Entity* parent);
 
         /**
          * @brief we can't remove game object when they are being iterating, this function is called
          * after all the rendering and operation
          */
         void removeGameObjects();
-        std::set<GameObject*> objectToRemove;
+        std::set<Entity*> objectToRemove;
 
-        void removeComponent(GameObject* go, Component*, const std::string& name);
+        void removeComponent(Entity* go, Component*, const std::string& name);
 		void removeComponents();
 		struct ComponentRemovePack {
-			GameObject* go;
+			Entity* go;
 			Component* component;
 			std::string name;
 		};

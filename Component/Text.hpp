@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -13,7 +13,7 @@ namespace wlEngine {
 	class Text : public Component{
 		COMPONENT_DECLARATION(Component, Text, 32);
 	public:
-		Text(GameObject* go) : Component(go), library() {
+		Text(Entity* go) : Component(go), library() {
             shader = Shader::collection["text_shader"]; //text_shader can't do
 			FT_Error error = FT_Init_FreeType(&library);
 			if (error) {
@@ -26,14 +26,11 @@ namespace wlEngine {
 				std::cerr << "FT Face Init Error\n";
 			}
 
-			error = FT_Set_Char_Size(
+			error = FT_Set_Pixel_Sizes(
 				face,
-				0,
-				16 * 64,
-				300,
-				300);
-
-			FT_UInt glyph_index = FT_Get_Char_Index(face, 'A');
+				32, 32);
+			
+			FT_UInt glyph_index = FT_Get_Char_Index(face, 19982);
 			
 			error = FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT);
 

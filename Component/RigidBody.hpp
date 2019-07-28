@@ -13,7 +13,7 @@ namespace wlEngine {
     class RigidBody : public Component {
         COMPONENT_DECLARATION(Component, RigidBody, 100);
     public:
-        RigidBody(GameObject*, b2BodyDef&);
+        RigidBody(Entity*, b2BodyDef&);
         ~RigidBody();
 
         void setGravity(bool);

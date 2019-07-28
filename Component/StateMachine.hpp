@@ -15,7 +15,7 @@ namespace wlEngine {
     class StateMachine : public Component {
         COMPONENT_DECLARATION(Component, StateMachine, 8);
     public:
-        StateMachine(GameObject*, const StateType& initialState);
+        StateMachine(Entity*, const StateType& initialState);
         /**
          * @brief set the states from state to state with their condition
          *

@@ -2,10 +2,10 @@
 
 namespace wlEngine {
 	std::map<std::size_t, std::string>* Component::componentIdToName = getComponentIdToName();
-    std::map<std::size_t, std::function<void(GameObject*, void**)>>* Component::componentFactoryList = getComponentFactoryList();
-    Component::Component(GameObject* go): gameObject(go) {
-        if (go == nullptr) {
-            gameObjects = new std::set<GameObject*>;
+    std::map<std::size_t, std::function<void(Entity*, void**)>>* Component::componentFactoryList = getComponentFactoryList();
+    Component::Component(Entity* entity): entity(entity) {
+        if (entity == nullptr) {
+            entities = new std::set<Entity*>;
         }
     }
     const std::size_t Component::componentId = std::hash<std::string>()("Component");
@@ -13,9 +13,9 @@ namespace wlEngine {
         return Component::componentId == typeId;
     }
 
-    std::map<std::size_t, std::function<void(GameObject*, void**)>>* Component::getComponentFactoryList() {
+    std::map<std::size_t, std::function<void(Entity*, void**)>>* Component::getComponentFactoryList() {
         if (componentFactoryList == nullptr) {
-            componentFactoryList = new std::map<std::size_t, std::function<void(GameObject*, void**)>>();
+            componentFactoryList = new std::map<std::size_t, std::function<void(Entity*, void**)>>();
         }
         return componentFactoryList;
     }

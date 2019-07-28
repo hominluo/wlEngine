@@ -14,7 +14,7 @@
         collection.insert(ptr); \
         return std::shared_ptr<T>(ptr, &destroy); \
     } \
-	T(GameObject* go, void**) : T(go) {};\
+	T(Entity* entity, void**) : T(entity) {};\
     friend FixedArrayAllocator<T, N>;\
     COMPONENT_EDITABLE_DEC();
 
@@ -42,7 +42,7 @@ namespace wlEngine {
         virtual size_t getId() override;
         virtual bool isType(const std::size_t& typeId) const override; 
         static std::set<Script*> collection; 
-        Script(GameObject* go) : Component(go){};
+        Script(Entity* entity) : Component(entity){};
         virtual void update() = 0;
         virtual void postInit() {};
     };

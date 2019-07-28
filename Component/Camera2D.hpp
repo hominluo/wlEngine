@@ -12,8 +12,8 @@ namespace wlEngine {
         COMPONENT_DECLARATION(Component, Camera2D, 3);
         COMPONENT_EDITABLE_DEC();
     public:
-        Camera2D(GameObject* go);
-		Camera2D(GameObject* go, void**) : Camera2D(go){};
+        Camera2D(Entity* go);
+		Camera2D(Entity* go, void**) : Camera2D(go){};
         const CoordTransform& getTransformMatrix();
         float speed = 100.0;
         Transform* transform = nullptr;

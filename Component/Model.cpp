@@ -164,7 +164,7 @@ namespace wlEngine {
         return textureID;
     }
 
-    void Model::destruct(GameObject* go) {
-        if (gameObjects) gameObjects->erase(go);
+    void Model::destruct(Entity* go) {
+        if (entities) entities->erase(go);
     }
 }

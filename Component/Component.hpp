@@ -17,7 +17,7 @@
     static FixedArrayAllocator<T, N> fixedArrayAllocator; \
     static void destroy(T* ptr);\
     template<typename... Args> \
-    static auto createComponent(GameObject* go, Args&& ... params){\
+    static auto createComponent(Entity* go, Args&& ... params){\
         auto ptr = fixedArrayAllocator.allocate(go, std::forward<Args>(params)...); \
         collection.insert(ptr); \
         return std::shared_ptr<T>(ptr, &destroy); \
@@ -47,33 +47,33 @@
 
 #define COMPONENT_EDITABLE_DEC()\
 public:\
-    static std::function<void(GameObject* go, void** arr)> addToGameObject; \
+    static std::function<void(Entity* go, void** arr)> addToEntity; \
     static bool isComponentReg; \
 private:\
 
 #define COMPONENT_EDITABLE_DEF(T)\
-    std::function<void(GameObject*, void**)> T::addToGameObject = [](GameObject* go, void** args) { \
+    std::function<void(Entity*, void**)> T::addToEntity = [](Entity* go, void** args) { \
         go->addComponent<T>(args);\
     };\
     bool T::isComponentReg = registerComponent<T>();
 
 namespace wlEngine {
-    class GameObject;
+    class Entity;
     struct Component {
     public:
         static std::size_t genComponentId(const std::string&);
 		static std::map<std::size_t, std::string>* componentIdToName; // this now is only used for Script, leave it here for extensibility
 		static std::map<std::size_t, std::string>* getComponentIdToName();
-        static std::map<std::size_t, std::function<void(GameObject*, void**)>>* componentFactoryList;
-		static std::map<std::size_t, std::function<void(GameObject*, void**)>>* getComponentFactoryList();
-        Component(GameObject* go);
-        GameObject* gameObject = nullptr;
-        std::set<GameObject*>* gameObjects = nullptr;
+        static std::map<std::size_t, std::function<void(Entity*, void**)>>* componentFactoryList;
+		static std::map<std::size_t, std::function<void(Entity*, void**)>>* getComponentFactoryList();
+        Component(Entity* go);
+        Entity* entity = nullptr;
+        std::set<Entity*>* entities = nullptr;
 
         static const std::size_t componentId;
         virtual bool isType(const std::size_t& typeId) const;
 
-        virtual void destruct(GameObject* go){};
+        virtual void destruct(Entity* go){};
         virtual std::size_t getId();
         virtual ~Component(){};
         template<class T>
@@ -82,7 +82,7 @@ namespace wlEngine {
 
     template<class T>
         bool Component::registerComponent() {
-            (*getComponentFactoryList())[T::componentId] = T::addToGameObject;
+            (*getComponentFactoryList())[T::componentId] = T::addToEntity;
             return true;
         }
 }

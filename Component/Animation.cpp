@@ -12,7 +12,7 @@ namespace wlEngine {
     COMPONENT_DEFINATION(Component, Animation, 100);
 	COMPONENT_EDITABLE_DEF(Animation);
 
-    Animation::Animation(GameObject* go, const std::string& path, const int& width, const int& height): Component(go), recursive(false), animationHasEnded(true) {
+    Animation::Animation(Entity* go, const std::string& path, const int& width, const int& height): Component(go), recursive(false), animationHasEnded(true) {
         currentAnimation = nullptr;
         timeStamp = 0;
 		currentFrame = 0;
@@ -21,7 +21,7 @@ namespace wlEngine {
 		loadClips(path.data());
     }
 
-	Animation::Animation(GameObject* go, void** args) : Component(go), currentAnimation(nullptr), timeStamp(0), currentFrame(0), recursive(false), animationHasEnded(true) {
+	Animation::Animation(Entity* go, void** args) : Component(go), currentAnimation(nullptr), timeStamp(0), currentFrame(0), recursive(false), animationHasEnded(true) {
         if(args) {
             std::string* path = static_cast<std::string*>(args[0]);
             this->width = *static_cast<float*>(args[1]);
@@ -34,7 +34,7 @@ namespace wlEngine {
         }
     }
 
-    Animation::Animation(GameObject* go, const std::string& path, const int& width, const int& height, const std::string& initialAni) : Animation(go, path,width, height){
+    Animation::Animation(Entity* go, const std::string& path, const int& width, const int& height, const std::string& initialAni) : Animation(go, path,width, height){
         playAnimation(initialAni);
 		go->getComponent<Sprite>()->mainTexture->clip(getCurrentClip());
     }

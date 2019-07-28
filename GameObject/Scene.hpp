@@ -14,19 +14,19 @@ namespace wlEngine {
             Scene();
             ~Scene();
             void update();
-            void setCamera(GameObject* camera);
+            void setCamera(Entity* camera);
 			void loadScene(const std::string& path);
             void reloadScene();
-            GameObject* getCamera() {return camera;};
-            GameObject* findGameObjectByName(const std::string& name);
+            Entity* getCamera() {return camera;};
+            Entity* findGameObjectByName(const std::string& name);
             b2Body* createBody(b2BodyDef& def);
 			b2World* getWorld() {
 				return physicsWorld;
 			}
-            const std::set<GameObject*>* getSceneGraph(){return &sceneGraph;};
+            const std::set<Entity*>* getSceneGraph(){return &sceneGraph;};
 
-            GameObject* createGameObject(const std::string& name, GameObject* parent);
-			void addComponent(GameObject*, const Json& json);
+            Entity* createGameObject(const std::string& name, Entity* parent);
+			void addComponent(Entity*, const Json& json);
 
             /**
              * @brief find the gameobject near mouse x, y
@@ -36,21 +36,21 @@ namespace wlEngine {
              *
              * @return the gameobject near the position x,y in the scene window
              */
-            GameObject* findGameObjectNear(const int& mouseX, const int& mouseY);
+            Entity* findGameObjectNear(const int& mouseX, const int& mouseY);
             /**
              * @brief destroy allocated game object
              *
              * @param GameObject
              */
-            void destroyGameObject(GameObject*);
+            void destroyGameObject(Entity*);
 
-            void addGameObject(GameObject*);
+            void addGameObject(Entity*);
             SceneData sceneData;
             std::string filePath;
         private:
-			std::set<GameObject*> allocatedGameObjects;
-			std::set<GameObject*> sceneGraph;
-            GameObject* camera;
+			std::set<Entity*> allocatedGameObjects;
+			std::set<Entity*> sceneGraph;
+            Entity* camera;
 			b2World* physicsWorld;
 
 			const float FIXED_DELTA_TIME = 1.0 / 60.0;
@@ -62,7 +62,7 @@ namespace wlEngine {
             //resonsible for converting z position to x and y
             void render();
             void clearScene();
-			GameObject* createGameObjectByJson(const Json&, GameObject* parent);
+			Entity* createGameObjectByJson(const Json&, Entity* parent);
             
             /**
              * @brief load from child to parent
@@ -73,15 +73,15 @@ namespace wlEngine {
              *
              * @return 
              */
-            GameObject* loadGameObjectFromFile(const Json& json, const std::string& id, const Json& jsonFile, std::map<std::string, GameObject*>& loadedGameObjects);
-            GameObject* findGameObjectNearHelper(std::set<GameObject*>::iterator iter, std::set<GameObject*>* set, const int&, const int&);
-            GameObject* findGameObjectByNameHelper(std::set<GameObject*>::iterator iter, std::set<GameObject*>* set, const std::string& name);
+            Entity* loadGameObjectFromFile(const Json& json, const std::string& id, const Json& jsonFile, std::map<std::string, Entity*>& loadedGameObjects);
+            Entity* findGameObjectNearHelper(std::set<Entity*>::iterator iter, std::set<Entity*>* set, const int&, const int&);
+            Entity* findGameObjectByNameHelper(std::set<Entity*>::iterator iter, std::set<Entity*>* set, const std::string& name);
 
-            FixedArrayAllocator<GameObject, 3000> gameObjectAllocator;
+            FixedArrayAllocator<Entity, 3000> gameObjectAllocator;
 
-            friend FixedArrayAllocator<GameObject, 3000>;
+            friend FixedArrayAllocator<Entity, 3000>;
             friend class EngineManager;
-            friend class GameObject;
+            friend class Entity;
             friend class GameEditor;
 
     };
