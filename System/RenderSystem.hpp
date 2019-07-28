@@ -12,8 +12,9 @@
 //NOTE: The G-Syn is limiting the frame rate to 60!
 class b2World;
 namespace wlEngine {
-    struct Sprite;
-    struct Model;
+    class Sprite;
+    class Model;
+    class Text;
     class GameEditor;
     class Camera3D;
     class RenderSystem : public System {
@@ -23,8 +24,6 @@ namespace wlEngine {
         ~RenderSystem();
 
         void render();
-        
-        void inputHandler(SDL_Event& event);
         
         void update() override;
 
@@ -43,10 +42,10 @@ namespace wlEngine {
 #endif
 
         static RenderSystem* renderSystem;
-        int windowWidth = 1440;
-		int windowHeight = 768;
-        int sceneWidth = 640;
-        int sceneHeight = 360;
+        int windowWidth = 1760;
+		int windowHeight = 860;
+        int sceneWidth = 1280; //640;
+        int sceneHeight = 720; // 360;
         const int topMenuHeight = 20;
 
         RenderSystem();
@@ -57,6 +56,7 @@ namespace wlEngine {
         void renderGame();
         void render(Sprite*);
         void render(Model*);
+        void render(Text*);
 
         SDL_GLContext glContext;
         SDL_Window* window;

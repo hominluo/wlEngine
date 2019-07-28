@@ -11,6 +11,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DRELEASE")
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/Box2D/)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/freetype/)
 
 set(SDL2_INCLUDE_DIR third_party/SDL2/include)
 set(glm_INCLUDE_DIR third_party/glm/) #header only
@@ -19,16 +20,12 @@ set(stb_image_INCLUDE_DIR third_party/stb/include) #header only
 set(glad_INCLUDE_DIR third_party/glad/include)
 set(assimp_INCLUDE_DIR third_party/assimp/include)
 set(dirent_INCLUDE_DIR third_party/dirent/include)
+set(freetype_INCLUDE_DIR third_party/freetype/include)
 
 find_package(OpenGL REQUIRED)
 find_library(assimp_LIBRARY assimp HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/assimp/lib/windows)
 
-SET(SDL2_LIBRARY_DIRECTORIES
-  debug ${SDL2_LIBRARY_DEBUG}
-  optimized ${SDL2_LIBRARY_RELEASE}
-)
-
-include_directories(
+SET(INCLUDE_DIR 
     ${glm_INCLUDE_DIR}
     ${json_INCLUDE_DIR}
     ${stb_image_INCLUDE_DIR}
@@ -36,12 +33,16 @@ include_directories(
     ${assimp_INCLUDE_DIR} 
     ${dirent_INCLUDE_DIR}
     ${SDL2_INCLUDE_DIR}
+    ${freetype_INCLUDE_DIR}
+)
+include_directories(
+    ${INCLUDE_DIR}
 )
 
 file(GLOB source_file
     "Math/*.cpp" "Math/*.hpp"
     "GameObject/*.cpp" "GameObject/*.hpp"
-    "Component/*.cpp" "Component*.hpp"
+    "Component/*.cpp" "Component/*.hpp"
     "Component/Struct/*.cpp" "Component/Struct/*.hpp"
     "System/*.cpp" "System/*.hpp"
     "Graphics/*.cpp" "Graphics/*.hpp"
@@ -80,17 +81,12 @@ TARGET_LINK_LIBRARIES(wlEngine
     Box2D
     glad
     SDL2-static
+    freetype
     ${OPENGL_LIBRARIES}
     ${assimp_LIBRARY}
 )
 
 TARGET_INCLUDE_DIRECTORIES(wlEngine PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${glm_INCLUDE_DIR}
-    ${json_INCLUDE_DIR}
-    ${stb_image_INCLUDE_DIR}
-    ${glad_INCLUDE_DIR}
-    ${assimp_INCLUDE_DIR} 
-    ${dirent_INCLUDE_DIR}
-    ${SDL2_INCLUDE_DIR}
+    ${INCLUDE_DIR}
 )

@@ -6,9 +6,6 @@
 #include <SDL_events.h>
 namespace wlEngine {
     class RenderSystem;
-    enum class Button {
-        Left = SDL_BUTTON_LEFT, Right = SDL_BUTTON_RIGHT
-    };
 
     enum class InputType : uint8_t{
         ButtonUp = 0, ButtonRight = 1, ButtonDown = 2, ButtonLeft = 3, R1 = 4, R2 = 5, L1 = 6, L2 = 7,
@@ -28,26 +25,12 @@ namespace wlEngine {
     class InputSystem : System {
         SYSTEM_DECLARATION(InputSystem);
     public:
-        void setGameplayWindowOffset(const int& x, const int& y);
-        /**
-         * @brief this function calculate the mouse click on scene (bottom-left being (0,0))
-         *
-         * @param x
-         * @param y
-         * @param Button right or left click
-         *
-         * @return 
-         */
-        bool mousePressingOnScene(int& x, int& y, Button);
         void getMouseWheel(int& x, int& y);
         Uint8 getKeyStatus(SDL_Scancode&);
         const std::vector<SDL_Scancode>& getKeypressSequence();
     private:
         int mouseX = 0;
         int mouseY = 0;
-
-        int gameplayWindowOffsetX = 0;
-        int gameplayWindowOffsetY = 0;
 
         bool leftMouseClicked = false;
         bool leftMousePressing = false;

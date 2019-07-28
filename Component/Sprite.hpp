@@ -10,7 +10,7 @@
 #include "Component.hpp"
 #include "Struct/Clip.hpp"
 #include "../Graphics/Shader.hpp"
-#include "Struct/Texture.hpp"
+#include "../Graphics/Texture.hpp"
 namespace wlEngine {
     /* class Texture
      * @description: use initialized GraphicsManager to draw picture on windowRenderer

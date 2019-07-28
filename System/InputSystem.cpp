@@ -2,6 +2,8 @@
 #include "RenderSystem.hpp"
 #include "../EngineManager.hpp"
 #include "../Settings.hpp"
+#include "../imgui/imgui.h"
+#include "../imgui/imgui_impl_sdl.h"
 namespace wlEngine {
     SYSTEM_DEFINATION(InputSystem);
 
@@ -17,7 +19,7 @@ namespace wlEngine {
         SDL_Event event;
         reset();
         while (SDL_PollEvent(&event)) {
-            if (Settings::engineMode == Settings::EngineMode::Editor) RenderSystem::get()->inputHandler(event); //imgui's mouse should be processed by imgui input system
+            if (Settings::engineMode == Settings::EngineMode::Editor) ImGui_ImplSDL2_ProcessEvent(&event);
             switch(event.type) {
                 case SDL_KEYDOWN:
                     keyDown(event);
@@ -62,28 +64,6 @@ namespace wlEngine {
                 break;
         }
         keypressSequence.push_back(event.key.keysym.scancode);
-    }
-
-    void InputSystem::setGameplayWindowOffset(const int& x, const int& y) {
-        gameplayWindowOffsetX = x;
-        gameplayWindowOffsetY = y + 20; // 20 is the title bar
-    }
-
-    bool InputSystem::mousePressingOnScene(int& x, int& y, Button button) {
-        auto sceneSize = RenderSystem::get()->getSceneSize();
-        uint8_t mask = button == Button::Left ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
-
-        if((SDL_GetMouseState(&mouseX, &mouseY)) & SDL_BUTTON(mask)) {
-            int sceneHeight = RenderSystem::get()->getSceneSize().y;
-            x = mouseX - gameplayWindowOffsetX;
-            y = sceneHeight + gameplayWindowOffsetY - mouseY;
-            if(x >=0 && y >= 0 && x <= sceneSize.x && y <= sceneSize.y) return true;
-            return false;
-        }
-        int sceneHeight = RenderSystem::get()->getSceneSize().y;
-        x = mouseX - gameplayWindowOffsetX;
-        y = sceneHeight + gameplayWindowOffsetY - mouseY;
-        return false;
     }
 
     void InputSystem::getMouseWheel(int& x, int& y) {

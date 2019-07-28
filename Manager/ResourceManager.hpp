@@ -1,7 +1,7 @@
 #pragma once
 #include <map>
 #include <string>
-#include "../Component/Struct/Texture.hpp"
+#include "../Graphics/Texture.hpp"
 
 namespace wlEngine {
     using TextureMap = std::map<std::string, Texture>;

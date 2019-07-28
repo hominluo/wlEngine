@@ -10,10 +10,6 @@ namespace wlEngine {
         return InputSystem::get()->getKeypressSequence();
     }
 
-    bool Input::mousePressingOnScene(int& x, int& y, Button button) {
-        return InputSystem::get()->mousePressingOnScene(x,y, button);
-    }
-
     void Input::getMouseWheel(int& x, int& y) {
         return InputSystem::get()->getMouseWheel(x,y);
     }

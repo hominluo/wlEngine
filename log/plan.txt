@@ -1,1 +1,0 @@
-Transform is a very special component, it should come with the gameobject as a member variable

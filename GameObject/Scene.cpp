@@ -123,7 +123,7 @@ namespace wlEngine {
     }
 
 
-    GameObject* Scene::createGameObject(const Json& go_json, GameObject* parent) {
+    GameObject* Scene::createGameObjectByJson(const Json& go_json, GameObject* parent) {
         std::string name = go_json["name"];
         auto& components = go_json["components"];
         auto& children = go_json["children"];

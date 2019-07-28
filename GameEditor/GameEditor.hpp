@@ -26,8 +26,11 @@ namespace wlEngine {
         void loadScene(const std::string&);
 
     private:
+		/********************** Data ***************************/
         GameObject* selectedGameObject;
         Scene* scene;
+        float gameplayWindowOffsetX;
+        float gameplayWindowOffsetY;
 
         void showGameObjectInfo();
         void showAllGameObjects();
@@ -69,13 +72,18 @@ namespace wlEngine {
 		};
 		std::vector<ComponentRemovePack> componentToRemove;
 
-        /**
-         * @brief used when in engine is in Editor mode to update the mouse click location in Gameplay window,
-         * this is based on get window location, so it has to be called after the initialization of Gameplay window
-         */
-        void updateMouseInput();
-
-
         void dragSprite();
+
+		/*************************** Helper **********************************/
+		/**
+		 * @brief this function calculate the mouse click on scene (bottom-left being (0,0))
+		 *
+		 * @param x
+		 * @param y
+		 * @param Button right or left click
+		 *
+		 * @return
+		 */
+		bool mousePressingOnScene(int& x, int& y);
     };
 }

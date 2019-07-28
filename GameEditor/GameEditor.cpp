@@ -27,7 +27,7 @@ namespace wlEngine {
     void GameEditor::render(void** data) {
         scene = EngineManager::getwlEngine()->getCurrentScene();
         ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
-
+		
         showGameWindow(data);
         showMenu();
         showAllGameObjects();
@@ -61,8 +61,9 @@ namespace wlEngine {
         std::string windowName;
         if (Settings::engineMode == Settings::EngineMode::Gameplay) windowName = "Game: GamePlay###";
         else windowName = "Game: Editor###";
-        ImGui::Begin(windowName.data(),nullptr, ImGuiWindowFlags_NoResize);
-        updateMouseInput();
+        ImGui::Begin(windowName.data(),nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize);
+		gameplayWindowOffsetX = ImGui::GetWindowPos().x;
+		gameplayWindowOffsetY = ImGui::GetWindowPos().y + 20;
         float sceneWidth = *(int*)(data[1]);
         float sceneHeight = *(int*)(data[2]);
         ImGui::Image((void*)*(unsigned int*)(data[0]), {sceneWidth,sceneHeight}, {0,1}, {1,0});//one commnet from imgui.cpp: my_void_ptr = (void*)(intptr_t)my_tex;                  // cast a GLuint into a void* (we don't take its address! we literally store the value inside the pointer)
@@ -186,7 +187,6 @@ namespace wlEngine {
                 //else if (c->getId() == Animation::componentId)showComponent(go, c.get(), "Animation", std::bind(&GameEditor::showAnimationInfo, this, std::placeholders::_1));
                 else {
                     std::size_t t = c->getId();
-                    auto* s = Component::getComponentIdToName();
                     auto iter = Component::getComponentIdToName()->find(t);
                     if (iter != Component::getComponentIdToName()->end()) {
                         ImGui::TreeNodeEx(iter->second.data(), ImGuiTreeNodeFlags_Leaf);
@@ -381,7 +381,7 @@ namespace wlEngine {
 				go_json["components"].push_back(transformJson);
                 go_json["components"].push_back(spriteJson);
 
-                scene->createGameObject(go_json, parent);
+                scene->createGameObjectByJson(go_json, parent);
             }
             ImGui::EndDragDropTarget();
         }
@@ -400,20 +400,12 @@ namespace wlEngine {
         scene->sceneData.removeComponent(go, name);
     }
 
-    void GameEditor::updateMouseInput() {
-        auto inputSystem = InputSystem::get();
-
-        auto pos = ImGui::GetWindowPos();
-        inputSystem->setGameplayWindowOffset(pos.x, pos.y);
-    }
-
     void GameEditor::dragSprite() {
         static Transform* target = nullptr;
         static int lastX, lastY;
         if(ImGui::IsWindowFocused()) {
-            auto inputSystem = InputSystem::get();
             int mouseX, mouseY;
-            if(inputSystem->mousePressingOnScene(mouseX, mouseY, Button::Left)) {
+            if(mousePressingOnScene(mouseX, mouseY)) {
                 auto go = scene->findGameObjectNear(mouseX, mouseY);
                 if(go && !target) {
                     target = go->getComponent<Transform>();
@@ -434,4 +426,24 @@ namespace wlEngine {
             }
         }
     }
+
+	/********************** Helper ****************************/
+	bool GameEditor::mousePressingOnScene(int& x, int& y) {
+		auto sceneSize = RenderSystem::get()->getSceneSize();
+
+		auto mousePos = ImGui::GetMousePos();
+		
+		if (ImGui::IsMouseDown(0)) { //0 for left
+			int sceneHeight = RenderSystem::get()->getSceneSize().y;
+			
+			x = mousePos.x - gameplayWindowOffsetX;
+			y = sceneHeight + gameplayWindowOffsetY - mousePos.y;
+			if (x >= 0 && y >= 0 && x <= sceneSize.x && y <= sceneSize.y) return true;
+			return false;
+		}
+		int sceneHeight = RenderSystem::get()->getSceneSize().y;
+		x = mousePos.x - gameplayWindowOffsetX;
+		y = sceneHeight + gameplayWindowOffsetY - mousePos.y; //20 is the menu height
+		return false;
+	}
 }

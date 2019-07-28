@@ -36,10 +36,13 @@ namespace wlEngine {
     class Input {
     public:
         static const ControllerAxisType AXIS_MAX = 0x7fff;
+
+		/* Keyboard ********************************************/
         static uint8_t getKeyStatus(SDL_Scancode); 
         static const std::vector<SDL_Scancode>& getKeypressSequence();
-        static bool mousePressingOnScene(int& x, int& y, Button);
         static void getMouseWheel(int& x, int& y);
+
+		/* Controller ********************************************/
         static ControllerAxisType getControllerAxis(const ControllerAxis& axis);
 		static ControllerButtonType getControllerButton(const ControllerButton& button);
     };

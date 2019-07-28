@@ -62,7 +62,7 @@ namespace wlEngine {
             //resonsible for converting z position to x and y
             void render();
             void clearScene();
-			GameObject* createGameObject(const Json&, GameObject* parent);
+			GameObject* createGameObjectByJson(const Json&, GameObject* parent);
             
             /**
              * @brief load from child to parent

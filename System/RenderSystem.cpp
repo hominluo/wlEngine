@@ -7,6 +7,7 @@
 #include "../Component/Transform.hpp"
 #include "../Component/Animation.hpp"
 #include "../Component/Model.hpp"
+#include "../Component/Text.hpp"
 
 #include "../GameEditor/GameEditor.hpp"
 
@@ -76,95 +77,10 @@ namespace wlEngine {
         renderGame();
 #endif
 
-
-
         SDL_GL_SwapWindow(window);
     }
 
-    void RenderSystem::render(Sprite* t) {
-        int i = 0;
-        t->shader->use();
-        if(t->beforeRenderFunc)t->beforeRenderFunc();
-        //
-        //main texture
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, t->mainTexture->mTexture);
-        t->shader->setInt("texture0", i);
-        auto animation = t->gameObject->getComponent<Animation>();
-        if (animation) t->mainTexture->clip(animation->getCurrentClip(),true);
 
-        //other textures
-        for(auto& texture : t->textures) {
-            i++;
-            glActiveTexture(GL_TEXTURE0  + i);
-            glBindTexture(GL_TEXTURE_2D, texture.second->mTexture);
-            if (animation) texture.second->clip(animation->getCurrentClip(),true);
-            t->shader->setInt(texture.first, i);
-        }
-
-        t->shader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
-        t->shader->setMat4("view", camera2D->getTransformMatrix().view);
-        t->shader->setMat4("projection", camera2D->getTransformMatrix().projection);
-        glBindVertexArray(t->mainTexture->VAO);
-
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        if(t->afterRenderFunc)t->afterRenderFunc();
-    }
-
-    void RenderSystem::render(Model* model) {
-        for (auto& gameObject : *model->gameObjects) {
-
-            if (model->beforeRenderFunc) model->beforeRenderFunc();
-            auto shader = model->shader;
-            auto transform = gameObject->getComponent<Transform>();
-            auto modelMatrix = transform->getModel();
-            auto maxtrix = camera2D->getTransformMatrix(); //shuold be 3D
-
-            shader->use();
-            shader->setMat4("model", modelMatrix);
-            shader->setMat4("view", maxtrix.view);
-            shader->setMat4("projection", maxtrix.projection);
-            shader->setVec3("viewPos", camera2D->transform->position); // should be 3D
-
-            for (auto& mesh : model->meshes) {
-                // bind appropriate textures
-                unsigned int diffuseNr  = 1;
-                unsigned int specularNr = 1;
-                unsigned int normalNr   = 1;
-                unsigned int heightNr   = 1;
-                for(unsigned int i = 0; i < mesh.textures.size(); i++)
-                {
-                    glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
-                    // retrieve texture number (the N in diffuse_textureN)
-                    std::string number;
-                    std::string name = mesh.textures[i].type;
-                    if(name == "texture_diffuse")
-                        number = std::to_string(diffuseNr++);
-                    else if(name == "texture_specular")
-                        number = std::to_string(specularNr++); // transfer unsigned int to stream
-                    else if(name == "texture_normal")
-                        number = std::to_string(normalNr++); // transfer unsigned int to stream
-                    else if(name == "texture_height")
-                        number = std::to_string(heightNr++); // transfer unsigned int to stream
-
-                    // now set the sampler to the correct texture unit
-                    glUniform1i(glGetUniformLocation(model->shader->ID, (name + number).c_str()), i);
-                    // and finally bind the texture
-                    glBindTexture(GL_TEXTURE_2D, mesh.textures[i].id);
-                }
-                //
-                // draw mesh
-                glBindVertexArray(mesh.VAO);
-                glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
-                glBindVertexArray(0);
-
-                // always good practice to set everything back to defaults once configured.
-                glActiveTexture(GL_TEXTURE0);
-                if (model->afterRenderFunc) model->afterRenderFunc();
-            }
-        }
-
-    }
 
 
     void RenderSystem::update() {
@@ -193,6 +109,7 @@ namespace wlEngine {
         glViewport(x,y,width,height);
     }
 
+
     void RenderSystem::SDLInit() {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
@@ -206,7 +123,7 @@ namespace wlEngine {
         windowWidth = sceneWidth;
         windowHeight = sceneHeight;
 #endif
-        window = SDL_CreateWindow("OpenGL Test", 400, 100, windowWidth, windowHeight, SDL_Flags);
+        window = SDL_CreateWindow("OpenGL Test", 150, 50, windowWidth, windowHeight, SDL_Flags);
         glContext = SDL_GL_CreateContext(window);
         SDL_AddEventWatch(windowResizeCallbackWrapper, window);
         gladLoadGLLoader(SDL_GL_GetProcAddress);
@@ -269,10 +186,7 @@ namespace wlEngine {
     }
 #endif
 
-    void RenderSystem::inputHandler(SDL_Event& event){
-        ImGui_ImplSDL2_ProcessEvent(&event);
-    }
-
+    /* Render *************/
     void RenderSystem::renderGame() {
 #if SETTINGS_GAME_DIMENSION == 1
         for (auto c : Model::collection) {
@@ -283,5 +197,115 @@ namespace wlEngine {
         for (auto c : Sprite::collection) {
             render(c);
         }
+
+        for (auto text : Text::collection) {
+            render(text);
+        }
+    }
+
+    void RenderSystem::render(Text* t) {
+        t->shader->use();
+        //
+        //main texture
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, t->texture.mTexture);
+
+        t->shader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
+        t->shader->setMat4("view", camera2D->getTransformMatrix().view);
+        t->shader->setMat4("projection", camera2D->getTransformMatrix().projection);
+        glBindVertexArray(t->texture.VAO);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        //glBindTexture(GL_TEXTURE_2D, 0);
+        //glBindVertexArray(0);
+    }
+
+    void RenderSystem::render(Sprite* t) {
+        int i = 0;
+        t->shader->use();
+        if(t->beforeRenderFunc)t->beforeRenderFunc();
+        //
+        //main texture
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, t->mainTexture->mTexture);
+        auto animation = t->gameObject->getComponent<Animation>();
+        if (animation) t->mainTexture->clip(animation->getCurrentClip(),true);
+
+        //other textures
+        for(auto& texture : t->textures) {
+            i++;
+            glActiveTexture(GL_TEXTURE0  + i);
+            glBindTexture(GL_TEXTURE_2D, texture.second->mTexture);
+            if (animation) texture.second->clip(animation->getCurrentClip(),true);
+            t->shader->setInt(texture.first, i);
+        }
+
+        t->shader->setMat4("model", t->gameObject->getComponent<Transform>()->getModel());
+        t->shader->setMat4("view", camera2D->getTransformMatrix().view);
+        t->shader->setMat4("projection", camera2D->getTransformMatrix().projection);
+        glBindVertexArray(t->mainTexture->VAO);
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        if(t->afterRenderFunc)t->afterRenderFunc();
+        //glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D, 0);
+        //glBindVertexArray(0);
+    }
+
+    void RenderSystem::render(Model* model) {
+        for (auto& gameObject : *model->gameObjects) {
+
+            if (model->beforeRenderFunc) model->beforeRenderFunc();
+            auto shader = model->shader;
+            auto transform = gameObject->getComponent<Transform>();
+            auto modelMatrix = transform->getModel();
+            auto maxtrix = camera2D->getTransformMatrix(); //shuold be 3D
+
+            shader->use();
+            shader->setMat4("model", modelMatrix);
+            shader->setMat4("view", maxtrix.view);
+            shader->setMat4("projection", maxtrix.projection);
+            shader->setVec3("viewPos", camera2D->transform->position); // should be 3D
+
+            for (auto& mesh : model->meshes) {
+                // bind appropriate textures
+                unsigned int diffuseNr  = 1;
+                unsigned int specularNr = 1;
+                unsigned int normalNr   = 1;
+                unsigned int heightNr   = 1;
+                for(unsigned int i = 0; i < mesh.textures.size(); i++)
+                {
+                    glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
+                    // retrieve texture number (the N in diffuse_textureN)
+                    std::string number;
+                    std::string name = mesh.textures[i].type;
+                    if(name == "texture_diffuse")
+                        number = std::to_string(diffuseNr++);
+                    else if(name == "texture_specular")
+                        number = std::to_string(specularNr++); // transfer unsigned int to stream
+                    else if(name == "texture_normal")
+                        number = std::to_string(normalNr++); // transfer unsigned int to stream
+                    else if(name == "texture_height")
+                        number = std::to_string(heightNr++); // transfer unsigned int to stream
+
+                    // now set the sampler to the correct texture unit
+                    glUniform1i(glGetUniformLocation(model->shader->ID, (name + number).c_str()), i);
+                    // and finally bind the texture
+                    glBindTexture(GL_TEXTURE_2D, mesh.textures[i].id);
+                }
+                //
+                // draw mesh
+                glBindVertexArray(mesh.VAO);
+                glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
+                glBindVertexArray(0);
+
+                // always good practice to set everything back to defaults once configured.
+                glActiveTexture(GL_TEXTURE0);
+                if (model->afterRenderFunc) model->afterRenderFunc();
+            }
+        }
+
     }
 }
