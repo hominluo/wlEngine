@@ -208,14 +208,19 @@ namespace wlEngine {
         //
         //main texture
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, t->texture.mTexture);
+		auto model = t->entity->getComponent<Transform>()->getModel();
+		auto cameraMatrix = camera2D->getTransformMatrix();
+		for (auto& character : t->text) {
+			glBindTexture(GL_TEXTURE_2D, character.texture->mTexture);
 
-        t->shader->setMat4("model", t->entity->getComponent<Transform>()->getModel());
-        t->shader->setMat4("view", camera2D->getTransformMatrix().view);
-        t->shader->setMat4("projection", camera2D->getTransformMatrix().projection);
-        glBindVertexArray(t->texture.VAO);
+			t->shader->setMat4("model", model * character.getTextTransform());
+			t->shader->setMat4("view", cameraMatrix.view);
+			t->shader->setMat4("projection", cameraMatrix.projection);
+			glBindVertexArray(character.texture->VAO);
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		}
+       
 
         //glBindTexture(GL_TEXTURE_2D, 0);
         //glBindVertexArray(0);

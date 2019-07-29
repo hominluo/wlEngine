@@ -5,7 +5,7 @@
 namespace wlEngine {
     namespace Settings {
 #if SETTINGS_ENGINEMODE
-        EngineMode engineMode = EngineMode::Gameplay;
+        EngineMode engineMode = EngineMode::Editor;
 #else
         EngineMode engineMode = EngineMode::Gameplay;
 #endif

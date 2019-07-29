@@ -1,13 +1,46 @@
 #include "Texture.hpp"
 #include "../../Settings.hpp"
 namespace wlEngine {
-    Texture* Texture::loadFromFTBitmap(unsigned char* data, int width, int rows){
+    Texture* Texture::loadFromFTBitmap(const FT_GlyphSlot& glyph){
         free();
-        sourcePath = "load from memory"; 
-		mWidth = width;
-		mHeight = rows;
-        Rect rect(0, 0, mWidth, mHeight);
-		clipAndScaleFreeTypeBitmap(&rect);
+        sourcePath = "load from FTBitmap"; 
+		mWidth = glyph->bitmap.width;
+		mHeight = glyph->bitmap.rows;
+
+#if SETTINGS_GAME_DIMENSION == 0
+		float width = mWidth;
+		float height = mHeight;
+#else
+        assert(0 && "no 3d considered");
+		float width = rect->width / noralizationPara;
+		float height = rect->height / normalizationPara;
+#endif
+
+		vertices[0] = glyph->bitmap_left + glyph->bitmap.width;
+		vertices[1] = glyph->bitmap_top;
+		vertices[5] = glyph->bitmap_left + glyph->bitmap.width;
+		vertices[6] = -int(glyph->bitmap.rows - glyph->bitmap_top);
+		vertices[10] = glyph->bitmap_left;
+		vertices[11] = -int(glyph->bitmap.rows - glyph->bitmap_top);
+		vertices[15] = glyph->bitmap_left;
+		vertices[16] = glyph->bitmap_top;
+
+		//top right
+		vertices[8] = 1;
+		vertices[9] = 1;
+
+		//bottom right
+		vertices[3] = 1;
+		vertices[4] = 0;
+
+		//bottom left
+		vertices[18] = 0;
+		vertices[19] = 0;
+
+		//top left
+		vertices[13] = 0;
+		vertices[14] = 1;
+
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		// Generate texture
 		glGenTextures(1, &mTexture);
@@ -17,11 +50,11 @@ namespace wlEngine {
 			0,
 			GL_RED,
 			width,
-			rows,
+			height,
 			0,
 			GL_RED,
 			GL_UNSIGNED_BYTE,
-			data
+			glyph->bitmap.buffer
 		);
 		// Set texture options
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -158,38 +191,6 @@ namespace wlEngine {
     }
 
 	void Texture::clipAndScaleFreeTypeBitmap(Rect* rect) {
-		this->rect = *rect;
-#if SETTINGS_GAME_DIMENSION == 0
-		float width = rect->width;
-		float height = rect->height;
-#else
-		float width = rect->width / noralizationPara;
-		float height = rect->height / normalizationPara;
-#endif
-
-		vertices[0] = width / 2;
-		vertices[1] = height / 2;
-		vertices[5] = width / 2;
-		vertices[6] = -height / 2;
-		vertices[10] = -width / 2;
-		vertices[11] = -height / 2;
-		vertices[15] = -width / 2;
-		vertices[16] = height / 2;
-
-		//top right
-		vertices[8] = (float)(rect->x + rect->width) / mWidth;
-		vertices[9] = (float)(rect->y + rect->height) / mHeight;
-
-		//bottom right
-		vertices[3] = (float)(rect->x + rect->width) / mWidth;
-		vertices[4] = (float)(rect->y) / mHeight;
-
-		//bottom left
-		vertices[18] = (float)(rect->x) / mWidth;
-		vertices[19] = (float)(rect->y) / mHeight;
-
-		//top left
-		vertices[13] = (float)(rect->x) / mWidth;
-		vertices[14] = (float)(rect->y + rect->height) / mHeight;
+		
 	}
 }

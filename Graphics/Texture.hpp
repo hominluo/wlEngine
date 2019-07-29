@@ -3,6 +3,8 @@
 #include <stb_image.hpp>
 #include "../../Graphics/Shader.hpp"
 #include "../Component/Struct/Clip.hpp"
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 namespace wlEngine {
     struct Texture {
@@ -29,7 +31,7 @@ namespace wlEngine {
         };
 
         Texture* loadFromFile(const std::string& path);
-        Texture* loadFromFTBitmap(unsigned char* data, int width, int rows);
+        Texture* loadFromFTBitmap(const FT_GlyphSlot& bitmap_FT);
 		void free();
 
         void clip(Rect*, bool subData=true);

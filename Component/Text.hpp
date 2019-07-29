@@ -1,52 +1,43 @@
 ﻿#pragma once
-#include <ft2build.h>
-#include FT_FREETYPE_H
 
 #include <iostream>
-
+#include <fstream>
 #include "Component.hpp"
 #include "../Graphics/Texture.hpp"
 #include "../Graphics/Shader.hpp"
-
+#include "../Utility/Utility.hpp"
 
 namespace wlEngine {
+	struct TextSettings{
+		std::string fontPath;
+		float pixelSizeWidth;
+		float pixelSizeHeight;
+	};
+	
 	class Text : public Component{
 		COMPONENT_DECLARATION(Component, Text, 32);
 	public:
-		Text(Entity* go) : Component(go), library() {
-            shader = Shader::collection["text_shader"]; //text_shader can't do
-			FT_Error error = FT_Init_FreeType(&library);
-			if (error) {
-				std::cerr << "FT Library Init Error\n";
-			}
-			
-			error = FT_New_Face(library, "../wlEngine/etc/fonts/wts11.ttf", 0, &face);
-			//FT_Select_Charmap(face, ft_encoding_unicode);
-			if (error) {
-				std::cerr << "FT Face Init Error\n";
-			}
+		Text(Entity* go);
 
-			error = FT_Set_Pixel_Sizes(
-				face,
-				32, 32);
-			
-			FT_UInt glyph_index = FT_Get_Char_Index(face, 19982);
-			
-			error = FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT);
+		/* functions ************************************/
+		void loadFromFile(const std::string& fileName);
+		void loadText(const std::wstring& text);
+		void setSettings(const TextSettings& settings);
 
-			error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
-
-			texture.loadFromFTBitmap(face->glyph->bitmap.buffer, face->glyph->bitmap.width, face->glyph->bitmap.rows);
-
-			FT_Done_Face(face);
-			FT_Done_FreeType(library);
-		}
+		/* structs *************************************/
+		struct Character {
+            Character(Texture* t, const int& x, const int& rows);
+			Texture* texture;
+			int x;
+			int offsetY;
+            glm::mat4 getTextTransform();
+		};
 	private:
         Shader* shader;
-		Texture texture;
-		FT_Library library;
-		FT_Face face;
-
+		
+		TextSettings settings;
+		std::vector<Character> text;
+		
         friend class RenderSystem;
 	};
 }
