@@ -22,7 +22,7 @@ namespace wlEngine {
 			std::cerr << "FT Library Init Error\n";
 		}
 
-		error = FT_New_Face(freeTypeLibrary, "../wlEngine/etc/fonts/wts11.ttf", 0, &face);
+		error = FT_New_Face(freeTypeLibrary, "../wlEngine/etc/fonts/Zpix.ttf", 0, &face);
 
 		if (error) {
 			std::cerr << "FT Face Init Error\n";
@@ -52,19 +52,21 @@ namespace wlEngine {
         return textures;
     }
 
-    Texture* ResourceManager::getTextTexture(const wchar_t& wildCharacter) {
-        FT_UInt glyph_index = FT_Get_Char_Index(face, (FT_ULong)wildCharacter);
+    TextInfo* ResourceManager::getTextTexture(const wchar_t& wideCharacter, const int& pixelSizeWidth, const int& pixelSizeHeight) {
+        std::wstring id = std::wstring(1, wideCharacter) + L"_" + std::to_wstring(pixelSizeWidth) + L"_" + std::to_wstring(pixelSizeHeight); // IMPROVE: we can write this as a struct to improve performance
+        auto iter = textTextures.find(id);
+        if (iter != textTextures.end()) return &textTextures[id];
+
+        FT_UInt glyph_index = FT_Get_Char_Index(face, (FT_ULong)wideCharacter);
 		FT_Error error = FT_Set_Pixel_Sizes(
 			face,
-			32, 32);
+			pixelSizeWidth, pixelSizeHeight);
         error = FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT);
-
         error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
 
-        return textTextures[wildCharacter].loadFromFTBitmap(face->glyph);
+        auto& t = textTextures[id];
+        t.text.loadFromFTBitmap(face->glyph);
+        t.face = face;
+        return &t;
     }
-
-	FT_Face& ResourceManager::getFreeTypeFace() {
-		return face;
-	}
 }

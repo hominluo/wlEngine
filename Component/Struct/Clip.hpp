@@ -20,8 +20,10 @@ namespace wlEngine {
 		}
 	};
     /* Animation stores information that a gamobject will use to clip the sprint sheet*/
-    struct Clip {
-        const float duration;
-        Rect clip;
+    struct Frame {
+        float duration;
+        Rect rect;
+        Frame(const Rect& rect, const float& d) : duration(d), rect(rect){}
+        Frame() : duration(), rect(){}
     };
 }

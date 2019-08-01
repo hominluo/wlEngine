@@ -33,7 +33,6 @@ namespace wlEngine {
     Sprite::Sprite(Entity* go, const std::string& path): Component(go) {
         auto resourceManager = ResourceManager::get();
         mainTexture = resourceManager->getTexture(path);
-
     }
     Sprite::Sprite(Entity* go, const std::string& path, const std::string& shader) : Sprite(go, path) {
         useShader(shader);

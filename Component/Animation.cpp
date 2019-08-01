@@ -3,87 +3,57 @@
 #include "Animation.hpp"
 #include "Sprite.hpp"
 #include "../GameObject/GameObject.hpp"
+#include "../Manager/ResourceManager.hpp"
 
 #include <fstream>
 #include <iostream>
 namespace wlEngine {
-    using json = nlohmann::json;
+    using Json = nlohmann::json;
 
     COMPONENT_DEFINATION(Component, Animation, 100);
 	COMPONENT_EDITABLE_DEF(Animation);
 
-    Animation::Animation(Entity* go, const std::string& path, const int& width, const int& height): Component(go), recursive(false), animationHasEnded(true) {
+    Animation::Animation(Entity* go): Component(go), recursive(false), animationHasEnded(true) {
         currentAnimation = nullptr;
         timeStamp = 0;
 		currentFrame = 0;
-        this->width = width;
-        this->height = height;
-		loadClips(path.data());
     }
 
 	Animation::Animation(Entity* go, void** args) : Component(go), currentAnimation(nullptr), timeStamp(0), currentFrame(0), recursive(false), animationHasEnded(true) {
         if(args) {
-            std::string* path = static_cast<std::string*>(args[0]);
-            this->width = *static_cast<float*>(args[1]);
-            this->height = *static_cast<float*>(args[2]);
-            auto initialAni = *static_cast<std::string*>(args[3]);
-
-            loadClips(path->data());
-            playAnimation(initialAni);
 			go->getComponent<Sprite>()->mainTexture->clip(getCurrentClip());
         }
     }
 
-    Animation::Animation(Entity* go, const std::string& path, const int& width, const int& height, const std::string& initialAni) : Animation(go, path,width, height){
-        playAnimation(initialAni);
-		go->getComponent<Sprite>()->mainTexture->clip(getCurrentClip());
-    }
-
-
-    void Animation::loadClips(const char* path) {
-        std::ifstream jsonInput(path);
-
-        if (jsonInput.good()) {
-            std::string jsonStr (
-                    (std::istreambuf_iterator<char>(jsonInput)), 
-                    (std::istreambuf_iterator<char>()        ));
-            auto animation = json::parse(jsonStr);
-            auto clipsJson = animation["clips"]; // key is the name of the animation
-            std::vector<int> grid = animation["grid"];
-
-            gridX = grid[0];
-            gridY = grid[1];
-
-            int clipWidth = width / gridX;
-            int clipHeight = height / gridY;
-
-            for (json::iterator iter = clipsJson.begin(); iter != clipsJson.end(); ++iter) {
-                auto clipsData = iter.value();
-
-                std::vector<std::vector<int>> clipArr = clipsData["clip"];
-                std::vector<float> duration = clipsData["duration"];
-
-
-                for (size_t i = 0 ; i < clipArr.size(); i++) {
-                    clips[iter.key()].first = iter.key();
-                    clips[iter.key()].second.push_back(Clip{duration[i] , Rect{
-                            clipArr[i][0] * clipWidth, 
-                            clipArr[i][1] * clipHeight, 
-                            clipWidth, 
-                            clipHeight}});
-                }
+	void Animation::addAnimationFromAseprite(const std::string& name, const FilePath& animationJson, const FilePath& texturePath) {
+		std::ifstream jsonInput(animationJson);
+        animations[name].atlas = ResourceManager::get()->getTexture(texturePath);
+		if (jsonInput.good()) {
+			std::string jsonStr(
+				(std::istreambuf_iterator<char>(jsonInput)),
+				(std::istreambuf_iterator<char>()));
+			Json animation = json::parse(jsonStr);
+			Json& frames = animation["frames"];
+            int sizeOfFrames = frames.size();
+			
+            for (int i = 0; i < sizeOfFrames; i++) {
+                Frame frame;
+                frame.duration = frames[i]["duration"].get<float>()/1000; //ms to s
+                frame.rect.x = frames[i]["frame"]["x"];
+                frame.rect.y = frames[i]["frame"]["y"];
+                frame.rect.width = frames[i]["frame"]["w"];
+                frame.rect.height = frames[i]["frame"]["h"];
+                animations[name].frames.push_back(frame);
             }
-        }
-        else {
-            std::cerr << "wlEngine::Animation: fail to load json at " << path; 
-        }
-        jsonInput.close();
-
-    }
+		}
+	}
     void Animation::playAnimation(const std::string& name, bool recursive) {
         animationHasEnded = false;
 		this->recursive = recursive;
-        currentAnimation = &clips[name];
+        currentAnimation = &animations[name];
+
+        auto sprite = entity->getComponent<Sprite>();
+        sprite->mainTexture = currentAnimation->atlas;
         currentFrame = 0;
     }
 
@@ -94,15 +64,15 @@ namespace wlEngine {
     Rect* Animation::getCurrentClip() {
         if (currentAnimation == nullptr) return nullptr;
 
-        return &currentAnimation->second.at(currentFrame).clip;
+        return &currentAnimation->frames.at(currentFrame).rect;
     }
 
     bool Animation::isPlaying(const std::string& name) {
-        return currentAnimation == &clips[name];
+        return currentAnimation == &animations[name];
     }
 
     std::string Animation::getCurrentClipName() {
-        return currentAnimation->first;
+        return currentAnimation->name;
     }
 
     bool Animation::hasEnded() {

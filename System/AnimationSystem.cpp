@@ -19,13 +19,13 @@ namespace wlEngine {
     void AnimationSystem::updateClip(Animation* a) {
         if(a->animationHasEnded) return;
         a->timeStamp += Time::deltaTime;
-        if (a->timeStamp >= a->currentAnimation->second.at(a->currentFrame).duration) {
+        if (a->timeStamp >= a->currentAnimation->frames.at(a->currentFrame).duration) {
             a->timeStamp = 0;
             a->currentFrame++;
-            if(a->currentFrame == (int)a->currentAnimation->second.size() - 1 && !a->recursive) { // AnimationSystem's update is called before RenderSystem (in the same frame, the last frame of the animation is rendered after the animation is set to true)
+            if(a->currentFrame == (int)a->currentAnimation->frames.size() - 1 && !a->recursive) { // AnimationSystem's update is called before RenderSystem (in the same frame, the last frame of the animation is rendered after the animation is set to true)
                 a->animationHasEnded = true;
             }
-            a->currentFrame %= a->currentAnimation->second.size();
+            a->currentFrame %= a->currentAnimation->frames.size();
         }
     }
 }

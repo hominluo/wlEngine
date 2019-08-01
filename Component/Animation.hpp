@@ -10,20 +10,25 @@
 #include "Struct/Clip.hpp"
 
 namespace wlEngine {
-
-    using Clips = std::pair<std::string, std::vector<Clip>>;
-    using ClipsMap = std::map<std::string , Clips>;
+    class Texture;
+    struct OneAnimationInfo {
+        std::string name;
+        Texture* atlas;
+        std::vector<Frame> frames;
+    };
+    using FilePath = std::string;
 
     class Animation : public Component{
         COMPONENT_DECLARATION(Component, Animation, 100);
         COMPONENT_EDITABLE_DEC();
     public:
-        Animation(Entity* go, const std::string& path, const int& width, const int& height);
-        Animation(Entity* go, const std::string& path, const int& width, const int& height, const std::string& initialAni);
+        Animation(Entity* go);
 		Animation(Entity* go, void** args);
 
         void playAnimation(const std::string&, bool recursive=true);
-        void loadClips(const char* path);
+
+        /* Animation loading **************************************/
+		void addAnimationFromAseprite(const std::string& name, const FilePath& animationPath, const FilePath& texturePath);
         Rect* getCurrentClip();
         std::string getCurrentClipName();
         void pause();
@@ -31,15 +36,11 @@ namespace wlEngine {
         bool hasEnded();
 		int getCurrentFrame();
     private:
-        Clips* currentAnimation;
-        ClipsMap clips;
+        OneAnimationInfo* currentAnimation;
+        std::map<std::string, OneAnimationInfo> animations; 
 
         int currentFrame = 0;
         float timeStamp = 0;
-        int gridX = 0;
-        int gridY = 0;
-        int width = 0;
-        int height = 0;
 		bool recursive; 
         bool animationHasEnded;
 

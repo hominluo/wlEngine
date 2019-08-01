@@ -8,12 +8,10 @@
 #include "../Utility/Utility.hpp"
 
 namespace wlEngine {
-	struct TextSettings{
-		std::string fontPath;
-		float pixelSizeWidth;
-		float pixelSizeHeight;
-	};
 	
+	enum class Language {
+		Chinese, Japanese, Korean, English
+	};
 	class Text : public Component{
 		COMPONENT_DECLARATION(Component, Text, 32);
 	public:
@@ -22,8 +20,19 @@ namespace wlEngine {
 		/* functions ************************************/
 		void loadFromFile(const std::string& fileName);
 		void loadText(const std::wstring& text);
-		void setSettings(const TextSettings& settings);
-
+        /**
+         * @brief load text and calculate the Y offset using maxLineWidth and lineSpce
+         *
+         * @param textStr
+         * @param maxLineWidth
+         * @param lineSpace
+         * @param charWidth
+         * @param charHeight
+         */
+		void loadText(const std::wstring& textStr, const int& maxLineWidth, const int& lineSpace, const int& charWidth, const int& charHeight);
+		
+		/** Configure Text*/
+		void setLanguage(const Language& choice);
 		/* structs *************************************/
 		struct Character {
             Character(Texture* t, const int& x, const int& rows);
@@ -35,9 +44,13 @@ namespace wlEngine {
 	private:
         Shader* shader;
 		
-		TextSettings settings;
 		std::vector<Character> text;
-		
+		std::wstring textString;
+		Language language;
         friend class RenderSystem;
+
+		/* Functions ********************************/
+		void loadEnglish(const std::wstring& textStr, const int& maxLineWidth, const int& lineSpace, const int& charWidth, const int& charHeight);
+		void loadChinese(const std::wstring& textStr, const int& maxLineWidth, const int& lineSpace, const int& charWidth, const int& charHeight);
 	};
 }

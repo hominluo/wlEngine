@@ -253,7 +253,7 @@ namespace wlEngine {
         auto animation = go->getComponent<Animation>();
         std::string current_item = animation->getCurrentClipName();
         if (ImGui::BeginCombo("animation", current_item.data())) {
-            for (auto iter : animation->clips) {
+            for (auto iter : animation->animations) {
                 bool isSelected = (current_item == iter.first); // You can store your selection however you want, outside or inside your objects
                 if(ImGui::Selectable(iter.first.data(), &isSelected)){
                     animation->playAnimation(iter.first);

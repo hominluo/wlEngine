@@ -6,8 +6,12 @@
 #include FT_FREETYPE_H
 
 namespace wlEngine {
+    struct TextInfo {
+        Texture text;
+        FT_Face face;
+    };
     using TextureMap = std::map<std::string, Texture>;
-	using TextTextureMap = std::map<wchar_t, Texture>;
+	using TextTextureMap = std::map<std::wstring, TextInfo>;
     class ResourceManager {
     public:
         static void init();
@@ -17,9 +21,8 @@ namespace wlEngine {
         Texture* getTexture(const std::string& path);
         
         const TextureMap& getTextures();
-		FT_Face& getFreeTypeFace();
 		/* FreeType *************************************/
-		Texture* getTextTexture(const wchar_t& wildCharacter);
+		TextInfo* getTextTexture(const wchar_t& wildCharacter, const int& pixelSizeWidth, const int& pixelSizeHeight);
     private:
         static ResourceManager* resourceManager;
         ResourceManager();
