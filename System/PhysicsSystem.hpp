@@ -12,11 +12,12 @@ namespace wlEngine {
         static PhysicsSystem* get() {return system;}
         static void init();
         void update() override;
+        void setUpdateBox(const float& width, const float& height, const glm::vec2& center);
     private:
         PhysicsSystem();
         static PhysicsSystem* system;
 
-
-
+        glm::vec2 updateBoxMax;
+        glm::vec2 updateBoxMin;
     };
 }
